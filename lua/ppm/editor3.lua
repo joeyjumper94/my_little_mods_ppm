@@ -4,7 +4,7 @@ list.Set(
 	"DesktopWindows", 
 	"PPMitor3",
 	{
-		title           = "Pony Editor v3",
+		title           = "EWPPM Editor",
 		icon            = "gui/pped_icon.png",
 		width           = 960,
 		height          = 700,
