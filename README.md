@@ -1,16 +1,14 @@
 # Equestrian-Wastelanders-PPM
 
-
 there are a few convars you should know
 
 ----------------------------------------------------------------------------------------------------------
 
-
 ppm_use_ulx
 
-if set to 1, the admin panel will use ULX to switch the convars
+if set to 1, ULX+ULib must be installed and the player needs to have access to ULX Rcon
 
-if set to 0, the admin panel will check if the player is a superadmin or some rank derived from superadmin
+if set to 0, The player MUST be a superadmin or have a rank derived from superadmin
 
 ----------------------------------------------------------------------------------------------------------
 
