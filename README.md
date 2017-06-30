@@ -1,6 +1,6 @@
 # Equestrian-Wastelanders-PPM
 
-----------------------------------------------------------------------------------------------------------
+
 there are a few convars you should know
 
 ppm_use_ulx
@@ -20,5 +20,4 @@ if set to 0, the spawning of pony NPCs via toolpanel is unrestricted
 if set to 1, the spawning of pony NPCs via toolpanel is restricted to admins and up
 if set to 2, the spawning of pony NPCs via toolpanel is restricted to superadmins only
 if set to 3, the spawning of pony NPCs via toolpanel is disabled
-----------------------------------------------------------------------------------------------------------
 
