@@ -36,3 +36,18 @@ if set to 3, the spawning of pony NPCs via toolpanel is disabled
 
 ----------------------------------------------------------------------------------------------------------
 
+there are some clientside commands that were added on July 9th
+
+----------------------------------------------------------------------------------------------------------
+
+ppm_fix_render
+
+fixes bleached ponies( where everypony is white)
+
+----------------------------------------------------------------------------------------------------------
+
+ppm_fix_giraffe
+
+fixes giraffe necks by reapplying your pony data then kills you.
+
+----------------------------------------------------------------------------------------------------------
