@@ -119,12 +119,31 @@ function TOOL.BuildCPanel(panel)
 		"Set Pony playermodel without jigglebones",
 		"ppm_setpmodel_nojigglebones"
 	)
+	panel:Button(
+		"click me if everypony is white",
+		"ppm_fix_render"
+	)
+	panel:Button(
+		"click me if you have a giraffe neck",
+		"ppm_fix_giraffe"
+	)
 end
-concommand.Add("ppm_setpmodel",function()
-	RunConsoleCommand("cl_playermodel", "pony")
-	RunConsoleCommand("kill")
-end)
-concommand.Add("ppm_setpmodel_nojigglebones",function()
-	RunConsoleCommand("cl_playermodel", "ponynj")
-	RunConsoleCommand("kill")
-end)
+if CLIENT then
+	concommand.Add("ppm_setpmodel",function()
+		RunConsoleCommand("cl_playermodel", "pony")
+		RunConsoleCommand("kill")
+	end)
+	concommand.Add("ppm_setpmodel_nojigglebones",function()
+		RunConsoleCommand("cl_playermodel", "ponynojiggle")
+		RunConsoleCommand("kill")
+	end)
+	concommand.Add("ppm_fix_render", function()
+		RunConsoleCommand("ppm_reload")
+		RunConsoleCommand("ppm_update")
+	end)
+	concommand.Add("ppm_fix_giraffe", function(ply)
+		RunConsoleCommand("ppm_reload")
+		RunConsoleCommand("ppm_update")
+		RunConsoleCommand("kill")
+	end)
+end
