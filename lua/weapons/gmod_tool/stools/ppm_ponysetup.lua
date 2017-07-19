@@ -127,6 +127,14 @@ function TOOL.BuildCPanel(panel)
 		"click me if you have a giraffe neck",
 		"ppm_fix_giraffe"
 	)
+	panel:Button(
+		"click me if you do want to see socks and such",
+		"ppm_do_draw_socks"
+	)
+	panel:Button(
+		"click me if Socks and such are missing textures.",
+		"ppm_dont_draw_socks"
+	)
 end
 if CLIENT then
 	concommand.Add("ppm_setpmodel",function()
@@ -141,9 +149,17 @@ if CLIENT then
 		RunConsoleCommand("ppm_reload")
 		RunConsoleCommand("ppm_update")
 	end)
-	concommand.Add("ppm_fix_giraffe", function(ply)
+	concommand.Add("ppm_fix_giraffe", function()
 		RunConsoleCommand("ppm_reload")
 		RunConsoleCommand("ppm_update")
 		RunConsoleCommand("kill")
+	end)
+	concommand.Add("ppm_dont_draw_socks",function(ply)
+		ply:PrintMessage(HUD_PRINTTALK, "your client will not try to draw socks and such next time you join the server.")
+		RunConsoleCommand("ppm_limit_to_vanilla", "1")
+	end)
+	concommand.Add("ppm_do_draw_socks",function(ply)
+		ply:PrintMessage(HUD_PRINTTALK, "your client will try to draw socks and such next time you join the server.")
+		RunConsoleCommand("ppm_limit_to_vanilla", "0")
 	end)
 end
