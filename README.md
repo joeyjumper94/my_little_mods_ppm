@@ -51,3 +51,15 @@ ppm_fix_giraffe
 fixes giraffe necks by reapplying your pony data then kills you.
 
 ----------------------------------------------------------------------------------------------------------
+
+as of 7/18/2017
+
+----------------------------------------------------------------------------------------------------------
+
+new clientside convar, 
+
+PPM_limit_to_vanilla
+
+if set to 1, it will only draw the stuff from vanilla PPM
+
+if set to 0, it will try ti draw all matarials.
