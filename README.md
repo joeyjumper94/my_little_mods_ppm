@@ -62,4 +62,4 @@ PPM_limit_to_vanilla
 
 if set to 1, it will only draw the stuff from vanilla PPM
 
-if set to 0, it will try ti draw all matarials.
+if set to 0, it will try to draw all matarials.
