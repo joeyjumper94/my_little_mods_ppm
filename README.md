@@ -1,3 +1,5 @@
+http://steamcommunity.com/sharedfiles/filedetails/?id=945735699 workshop version
+
 # Equestrian-Wastelanders-PPM
 
 there are a few convars you should know
