@@ -11,7 +11,7 @@ include("resources.lua")
 include("preset.lua")
 include("gui_toolpanel.lua")
 --include("net.lua")
---include("ccmark_sys.lua")
+include("ccmark_sys.lua")
 include("admin.lua")
 if CLIENT then   
     include("render_texture.lua")

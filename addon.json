@@ -1,6 +1,6 @@
 {
-        "title"     :   "Pony Player Models EWP",
+        "title"     :   "Pony Player Models",
         "type"      :   "model",
-        "tags"      :   [ "cartoon", "roleplay", "pony" ],
+        "tags"      :   [ "cartoon", "roleplay" ],
         "ignore"    :   []
 }

@@ -560,37 +560,74 @@ if CLIENT then
 		PPM.manecolorcounts[5]=1
 		PPM.manecolorcounts[6]=1
 		PPM.defaultHairColors={Vector(252, 92, 82) / 256, Vector(254, 134, 60) / 256, Vector(254, 241, 160) / 256, Vector(98, 188, 80) / 256, Vector(38, 165, 245) / 256, Vector(124, 80, 160) / 256}
-
 		PPM.rendertargettasks["ccmarktex"]={
-			size=256,
-			renderTrue=function(ENT, PONY)
-				PPM.m_cmark:SetTexture("$basetexture", ENT.ponydata_tex.ccmarktex)
+			renderTrue=function(ENT,PONY)
+				PPM.m_cmark:SetTexture("$basetexture",ENT.ponydata_tex.ccmarktex)
 			end,
-			renderFalse=function(ENT, PONY)
-				--PPM.m_cmark:SetTexture("$basetexture",Material("models/ppm/partrender/clean.png"):GetTexture("$basetexture")) 
-				if (PONY==nil) then return end
-				if (PONY.cmark==nil) then return end
-				if (PPM.m_cmarks[PONY.cmark]==nil) then return end
-				if (PPM.m_cmarks[PONY.cmark][2]==nil) then return end
-				if (PPM.m_cmarks[PONY.cmark][2]:GetTexture("$basetexture")==nil) then return end
-				if (PPM.m_cmarks[PONY.cmark][2]:GetTexture("$basetexture")==NULL) then return end
-				PPM.m_cmark:SetTexture("$basetexture", PPM.m_cmarks[PONY.cmark][2]:GetTexture("$basetexture"))
+			renderFalse=function(ENT,PONY)
+				--PPM.m_cmark:SetTexture("$basetexture",Material("models/mlp/partrender/clean.png"):GetTexture("$basetexture")) 
+				if (PONY==nil) then  print("1") return end
+				if (PONY.cmark==nil) then  print("2") return end
+				if (PPM.m_cmarks[PONY.cmark]==nil) then  print("3") return end
+				if (PPM.m_cmarks[PONY.cmark][2]==nil) then  print("4") return end
+				if (PPM.m_cmarks[PONY.cmark][2]:GetTexture("$basetexture")==nil) then print("5") return end
+				if (PPM.m_cmarks[PONY.cmark][2]:GetTexture("$basetexture")==NULL) then  print("6") return end
+				PPM.m_cmark:SetTexture("$basetexture",PPM.m_cmarks[PONY.cmark][2]:GetTexture("$basetexture"))
 			end,
 			drawfunc=function()
 				local pony=PPM.currt_ponydata
-				local data=pony._cmark[1]
 
-				if pony.custom_mark and data then
+				print("LOAD STATUS CHANGED!")
+				if (pony._cmark_loaded and pony._cmark~=nil) then
+					render.Clear(255,255,255,255)
+					print("DATA HAS BEEN LOADED...RENDERING!")
+					local material=Material("gui/pixel.png")
+					--render.SetMaterial(material) 
 					render.SetColorMaterialIgnoreZ()
 					render.SetBlend(1)
-					PPM.BinaryImageToRT(data)
+					local data=pony._cmark
+
+					for x=0,256 do
+						--local xsub=string.sub(data,x*256*3,x*256*3+256*3)
+						for y=0,256 do
+							local postition=(x * 257 + y) * 3
+							--local ysub=string.sub(xsub,y*3,y*3+3)
+							local r=string.byte(string.sub(pony._cmark,postition,postition)) or 1
+							local g=string.byte(string.sub(pony._cmark,postition+1,postition+1)) or 1
+							local b=string.byte(string.sub(pony._cmark,postition+2,postition+2)) or 0
+
+							--print(r)
+							if (r > 250 and g==0 and b > 250) or (x < 45 or x > 250) or (y < 5 or y > 250) then
+								--[[
+							render.DrawQuadEasy(Vector(x*2+1,y*2+1,0),	--position of the rect
+								Vector(0,0,-1),		--direction to face in
+								2,2,			  --size of the rect
+								Color(0,0,0,0),--color
+								-90					 --rotate 90 degrees
+								)  
+							]]
+								render.SetScissorRect(x * 2,y * 2,x * 2 + 2,y * 2 + 2,true)
+								render.Clear(0,0,0,0)
+								--position of the rect
+								--direction to face in
+								--size of the rect
+								--color
+								--rotate 90 degrees
+							else
+								render.SetScissorRect(x * 2,y * 2,x * 2 + 2,y * 2 + 2,false)
+								render.DrawQuadEasy(Vector(x * 2 + 1,y * 2 + 1,0),Vector(0,0,-1),2,2,Color(r,g,b,255),-90)
+							end
+						end
+					end
+
 					PPM.currt_success=true
+					print("cleaned_Surface_")
 				else
-					render.Clear(0, 0, 0, 0)
+					render.Clear(0,0,0,0)
 					PPM.currt_success=false
 				end
 			end,
-			hash=function(ponydata) return tostring(ponydata._cmark[1] ~=nil) .. (ponydata.custom_mark or "") end
+			hash=function(ponydata) return tostring(ponydata._cmark_loaded) end
 		}
 	end
 end
