@@ -577,7 +577,7 @@ if CLIENT then
 			drawfunc=function()
 				local pony=PPM.currt_ponydata
 
-				print("LOAD STATUS CHANGED!")
+				--print("LOAD STATUS CHANGED!")
 				if (pony._cmark_loaded and pony._cmark~=nil) then
 					render.Clear(255,255,255,255)
 					print("DATA HAS BEEN LOADED...RENDERING!")
