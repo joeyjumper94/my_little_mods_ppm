@@ -13,6 +13,7 @@ include("gui_toolpanel.lua")
 --include("net.lua")
 include("ccmark_sys.lua")
 include("admin.lua")
+include("readme.lua")
 if CLIENT then   
     include("render_texture.lua")
     include("render.lua")
