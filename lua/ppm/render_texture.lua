@@ -1,6 +1,6 @@
 if CLIENT then
 
-	CreateConVar("ppm_limit_to_vanilla", "0", {FCVAR_ARCHIVE}, "if set to 1, socks and other custom textures will not be drawn by the client, if ")
+	CreateConVar("ppm_limit_to_vanilla", "0", {FCVAR_ARCHIVE}, "if the client sets it to 1, socks and other custom textures will not be drawn by said client")
 	if (GetConVarNumber("ppm_limit_to_vanilla")==1) then
 		PPM_Render_Cap = 13
 	else
@@ -252,7 +252,7 @@ if CLIENT then
 					local detailvalue=pony["bodydetail" .. C] or 1
 					local detailcolor=pony["bodydetail" .. C .. "_c"] or Vector(0, 0, 0)
 
-					if (detailvalue > 1) and (detailvalue<PPM_Render_Cap) and (PPM.m_bodydetails[detailvalue - 1]) then
+					if (detailvalue<PPM_Render_Cap) and (detailvalue > 1) and (PPM.m_bodydetails[detailvalue - 1]) then
 						--MsgN("rendering tex id: ",detailvalue," col: ",detailcolor)
 						render.SetMaterial(PPM.m_bodydetails[detailvalue - 1][1]) --Material("models/ppm/base/render/clothes_sbs_full")) 
 						--surface.SetTexture(surface.GetTextureID("models/ppm/base/render/horn"))

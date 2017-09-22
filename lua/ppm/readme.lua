@@ -1,13 +1,5 @@
-PPM_readme_table={'',
+local PPM_readme_table={'',
 'serverside/superadmin stuff',
-'_________________________________________________________________________________________',
-'',
-'ppm_use_ulx',
-'default is 0, restart is required after switching',
-'',
-'if set to 1, ULX+ULib must be installed and the player needs to have access to ULX Rcon',
-'',
-'if set to 0, The player MUST be a superadmin or have a rank derived from superadmin',
 '_________________________________________________________________________________________',
 '',
 'ppm_restrict_ragdoll',
@@ -42,6 +34,16 @@ PPM_readme_table={'',
 'if you have the appropriate access, you can also run "ppm_restrict_npc_3"',
 '_________________________________________________________________________________________',
 '',
+'ppm_antispam_time',
+'default is 4',
+'',
+'if set to 0, the antispam timer is disabled',
+'',
+'if set to anything more than 0, a timer will be created after spawning pony ragdoll/NPC',
+'this timer will stop further pony NPC/ragdoll spawns untill the timer runs out',
+'',
+'_________________________________________________________________________________________',
+'',
 'clientside',
 '_________________________________________________________________________________________',
 '',
@@ -69,46 +71,11 @@ PPM_readme_table={'',
 '',
 'http://steamcommunity.com/sharedfiles/filedetails/?id=945735699 is the workshop version',
 '',
-'https://github.com/joeyjumper94/Equestrian-Wastelanders-PPM is the githb version'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-}concommand.Add('ppm_readme', function()
+'https://github.com/joeyjumper94/Equestrian-Wastelanders-PPM is the githb version'}
+concommand.Add('ppm_readme', function()
 	if PPM_readme_table!=nil then
-		for P=1,#PPM_readme_table do
-			if PPM_readme_table[P]!=nil then
-				print(PPM_readme_table[P]) 
-			else return	end
-		end 
+		for P,v in pairs(PPM_readme_table) do
+			print(v)
+		end
 	end
 end)
---[[PPM_update_table={}
-concommand.Add('ppm_update', function()
-	if PPM_update_table!=nil then
-		for r=1,#PPM_update_table do
-			if PPM_update_table[r]!=nil then
-				print(PPM_update_table[r])
-			else return end
-		end 
-	end
-end)]]

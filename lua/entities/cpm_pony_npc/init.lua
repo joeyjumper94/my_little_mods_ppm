@@ -38,7 +38,7 @@ function ENT:Initialize()
 end
 
 function ENT:SpawnFunction(ply, tr)
-	if (not tr.Hit) then return end
+	if (!tr.Hit) then return end
 	local ent = ents.Create("cpm_pony_npc")
 	ent:SetPos(tr.HitPos + tr.HitNormal * 16)
 	ent:Spawn()
@@ -53,21 +53,29 @@ end
 
 CreateConVar("ppm_restrict_npc", "0", {FCVAR_ARCHIVE, FCVAR_SERVER_CAN_EXECUTE}, "Restricts npc spawning via tool, 0=anyone, 1=admin, 2=superadmin, 3=disabled.")
 
+CreateConVar("ppm_antispam_time", "4", {FCVAR_ARCHIVE, FCVAR_SERVER_CAN_EXECUTE}, "decide how long someone has to wait after spawning a pony NPC or Ragdoll before another can be spawned.")
+
 concommand.Add("ppm_spawn_pnpc", function(ply, tr)
-	if (not IsValid(ply)) then return end
+	if !IsValid(ply) then return end
 
-	if (tobool(GetConVarNumber("ppm_restrict_npc") == 1) and not ply:IsAdmin()) then
+	if GetConVarNumber("ppm_restrict_npc") == 1 and !ply:IsAdmin() then
 		ply:PrintMessage(HUD_PRINTTALK, "the spawning of pony NPCs was restricted to admins and above.")
-
 		return
-	elseif (tobool(GetConVarNumber("ppm_restrict_npc") == 2) and not ply:IsSuperAdmin()) then
+	elseif GetConVarNumber("ppm_restrict_npc") == 2 and !ply:IsSuperAdmin() then
 		ply:PrintMessage(HUD_PRINTTALK, "the spawning of pony NPCs was restricted to Superadmins and above.")
-
 		return
-	elseif (tobool(GetConVarNumber("ppm_restrict_npc") == 3)) then
+	elseif GetConVarNumber("ppm_restrict_npc") == 3 then
 		ply:PrintMessage(HUD_PRINTTALK, "the spawning of pony NPCs was disabled.")
-
 		return
+	end
+
+	if timer.Exists("ppm_spawn_antispam_timer") then
+		ply:PrintMessage(HUD_PRINTTALK, "please wait "..math.Round(timer.TimeLeft("ppm_spawn_antispam_timer"),2).." second(s) before trying that")
+		return
+	end
+
+	if GetConVarNumber("ppm_antispam_time") > 0 then
+		timer.Create( "ppm_spawn_antispam_timer", GetConVarNumber("ppm_antispam_time"), 1, function() timer.Remove("ppm_spawn_antispam_timer") end)
 	end
 
 	print(ply:Nick() .. " (" .. ply:SteamID() .. ") attempted to spawn a pony npc.")
@@ -78,25 +86,31 @@ end)
 CreateConVar("ppm_restrict_ragdoll", "1", {FCVAR_ARCHIVE, FCVAR_SERVER_CAN_EXECUTE}, "Restricts ragdoll spawning via tool, 0=anyone, 1=admin, 2=superadmin, 3=disabled.")
 
 concommand.Add("ppm_spawn_pragdoll", function(ply, tr)
-	if (not IsValid(ply)) then return end
+	if !IsValid(ply) then return end
 
-	if (tobool(GetConVarNumber("ppm_restrict_ragdoll") == 1) and not ply:IsAdmin()) then
+	if GetConVarNumber("ppm_restrict_ragdoll") == 1 and !ply:IsAdmin() then
 		ply:PrintMessage(HUD_PRINTTALK, "the spawning of pony ragdolls was restricted to admins and above.")
-
 		return
-	elseif (tobool(GetConVarNumber("ppm_restrict_ragdoll") == 2) and not ply:IsSuperAdmin()) then
+	elseif GetConVarNumber("ppm_restrict_ragdoll") == 2 and !ply:IsSuperAdmin() then
 		ply:PrintMessage(HUD_PRINTTALK, "the spawning of pony ragdolls was restricted to superadmins only.")
-
 		return
-	elseif (tobool(GetConVarNumber("ppm_restrict_ragdoll") == 3)) then
+	elseif GetConVarNumber("ppm_restrict_ragdoll") == 3 then
 		ply:PrintMessage(HUD_PRINTTALK, "the spawning of pony ragdolls was disabled.")
-
 		return
+	end
+
+	if timer.Exists("ppm_spawn_antispam_timer") then
+		ply:PrintMessage(HUD_PRINTTALK, "please wait "..math.Round(timer.TimeLeft("ppm_spawn_antispam_timer"),2).." second(s) before trying that")
+		return
+	end
+
+	if GetConVarNumber("ppm_antispam_time") > 0 then
+		timer.Create( "ppm_spawn_antispam_timer", GetConVarNumber("ppm_antispam_time"), 1, function() timer.Remove("ppm_spawn_antispam_timer") end)
 	end
 
 	print(ply:Nick() .. " (" .. ply:SteamID() .. ") attempted to spawn a pony ragdoll.")
 	tr = ply:GetEyeTrace()
-	if (not tr.Hit) then return end
+	if (!tr.Hit) then return end
 	local ent = ents.Create("prop_ragdoll")
 	ent:SetPos(tr.HitPos + tr.HitNormal * 16)
 	ent:SetModel("models/ppm/player_default_base_ragdoll.mdl")

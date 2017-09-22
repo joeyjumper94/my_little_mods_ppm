@@ -1,4 +1,4 @@
-AdminMod="ulx"
+
 
 function Menu(panel)
 	panel:Button(
