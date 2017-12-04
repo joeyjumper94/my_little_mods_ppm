@@ -1,12 +1,10 @@
 if ConVarExists("ulx_rslots") then
-	local ppm_admin_mod ="ulx"
+	local ppm_admin_mod="ulx"
 elseif ConVarExists("FAdmin_logging") then
-	local ppm_admin_mod = FAdmin
+	local ppm_admin_mod="FAdmin"
 else
-	local ppm_admin_mod = nil
+	local ppm_admin_mod=nil
 end
-
-
 if ppm_admin_mod==nil then
 	if SERVER then
 		concommand.Add("ppm_restrict_npc_0",function(ply)

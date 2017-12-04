@@ -252,7 +252,7 @@ if CLIENT then
 					local detailvalue=pony["bodydetail" .. C] or 1
 					local detailcolor=pony["bodydetail" .. C .. "_c"] or Vector(0, 0, 0)
 
-					if (detailvalue<PPM_Render_Cap) and (detailvalue > 1) and (PPM.m_bodydetails[detailvalue - 1]) then
+					if (detailvalue<PPM_Render_Cap) and (detailvalue>1) and (PPM.m_bodydetails[detailvalue-1]) then
 						--MsgN("rendering tex id: ",detailvalue," col: ",detailcolor)
 						render.SetMaterial(PPM.m_bodydetails[detailvalue - 1][1]) --Material("models/ppm/base/render/clothes_sbs_full")) 
 						--surface.SetTexture(surface.GetTextureID("models/ppm/base/render/horn"))

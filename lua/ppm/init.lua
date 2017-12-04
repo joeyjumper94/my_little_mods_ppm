@@ -1,7 +1,7 @@
 
-PPM = PPM or {}
-PPM.serverPonydata = PPM.serverPonydata or {}
-PPM.isLoaded =false
+PPM=PPM or {}
+PPM.serverPonydata=PPM.serverPonydata or {}
+PPM.isLoaded=false
 
 include("cache.lua")
 include("items.lua")
@@ -14,6 +14,10 @@ include("gui_toolpanel.lua")
 include("ccmark_sys.lua")
 include("admin.lua")
 include("readme.lua")
+include("chatcommands.lua")
+
+include("draw_text.lua")
+
 if CLIENT then   
     include("render_texture.lua")
     include("render.lua")
@@ -23,8 +27,6 @@ if CLIENT then
     include("editor3_presets.lua")
     include("presets_base.lua")
     include("gui_toolpanel.lua")
-end
-
-if SERVER then 
+else
     include("serverside.lua")
 end

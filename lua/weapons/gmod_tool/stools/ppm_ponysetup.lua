@@ -3,20 +3,20 @@ TOOL.Name			="User Panel"
 TOOL.Command		=nil
 TOOL.ConfigName		=""
 TOOL.Tab			="Options"
-if (CLIENT) then
+if CLIENT then
 	language.Add("Tool.ppm_ponysetup.name", "Pony setup tool")
 	language.Add("Tool.ppm_ponysetup.desc", "Setup Pony Ragdoll or NPC with your settings.")
 	language.Add("Tool.ppm_ponysetup.0", "Left: Paste settings.   Right: Copy settings.   Reload: Paste player settings")
 end
 function TOOL:LeftClick(trace)
 	local ent=trace.Entity
-	if (!ent) then return false end
-	if (CLIENT) then return true end
+	if !ent then return false end
+	if CLIENT then return true end
 	local ply=self:GetOwner()
 	if not ply.tool_ponydatapasterTarget then return false end
 	ply.tool_ponydatapaster=ply.tool_ponydatapaster or {}
 	PPM.setupPony(ply.tool_ponydatapaster,true)
-	if (ent:IsNPC()) or (ent:GetClass()=="prop_ragdoll") then
+	if ent:IsNPC() or ent:GetClass()=="prop_ragdoll" then
 		if PPM.isValidPonyLight(ent) then
 			ent.ponyCacheTarget=ply.tool_ponydatapasterTarget
 			PPM.copyLocalPonyTo(ply.tool_ponydatapaster, ent)
@@ -25,14 +25,14 @@ function TOOL:LeftClick(trace)
 			PPM.setBodygroups(ent)
 			return true
 		end
-	elseif (ent:IsPlayer()) then
-		if (ply:IsAdmin() and PPM.isValidPonyLight(ent)) then
+	elseif ent:IsPlayer() or ent:GetModel():find("ppm/player_") then
+		if ply:IsAdmin() and PPM.isValidPonyLight(ent) then
 			--ent.ponyCacheTarget=ply.tool_ponydatapasterTarget
 			if ply.tool_ponydatapaster.ponydata.custom_mark then
 				local markdata=PPM.LoadFromCache(PPM.CacheGroups.PONY_MARK, ply.tool_ponydatapasterTarget, ply.tool_ponydatapaster.ponydata.custom_mark)
 				if markdata then
-					PPM.SaveToCache(PPM.CacheGroups.PONY_MARK, ent, PPM.GetResolvedName(ply.tool_ponydatapaster.ponydata.custom_mark), markdata, true)
-					PPM.MarkData[ent]={ ply.tool_ponydatapaster.ponydata.custom_mark, markdata }
+					PPM.SaveToCache(PPM.CacheGroups.PONY_MARK,ent,PPM.GetResolvedName(ply.tool_ponydatapaster.ponydata.custom_mark),markdata,true)
+					PPM.MarkData[ent]={ply.tool_ponydatapaster.ponydata.custom_mark,markdata}
 				end
 			end
 			PPM.copyLocalPonyTo(ply.tool_ponydatapaster, ent)
@@ -46,21 +46,21 @@ function TOOL:LeftClick(trace)
 end
 function TOOL:RightClick(trace)
 	local ent=trace.Entity
-	if (!ent) then return false end
-	if (CLIENT) then return true end
+	if !ent then return false end
+	if CLIENT then return true end
 	local ply=self:GetOwner()
 	ply.tool_ponydatapaster=ply.tool_ponydatapaster or {}
 	PPM.setupPony(ply.tool_ponydatapaster, true)
-	if (ent:IsNPC()) or (ent:GetClass()=="prop_ragdoll") then
+	if ent:IsNPC() or ent:GetClass()=="prop_ragdoll" then
 		if PPM.isValidPonyLight(ent) then
 			ply.tool_ponydatapasterTarget=ent.ponyCacheTarget
-			PPM.copyPonyTo(ent, ply.tool_ponydatapaster)
+			PPM.copyPonyTo(ent,ply.tool_ponydatapaster)
 			return true
 		end
-	elseif (ent:IsPlayer()) then
+	elseif ent:IsPlayer() or ent:GetModel():find("ppm/player_") then
 		if (ply:IsAdmin() and PPM.isValidPonyLight(ent)) then
 			ply.tool_ponydatapasterTarget=ent:SteamID64()
-			PPM.copyPonyTo(ent, ply.tool_ponydatapaster)
+			PPM.copyPonyTo(ent,ply.tool_ponydatapaster)
 			return true
 		end
 	end
@@ -71,7 +71,7 @@ function TOOL:Reload(trace)
 	if (!ent) then return false end
 	if (CLIENT) then return true end
 	local ply=self:GetOwner()
-	if (ent:IsNPC()) or (ent:GetClass()=="prop_ragdoll") then
+	if ent:IsNPC() or ent:GetClass()=="prop_ragdoll" then
 		if PPM.isValidPonyLight(ent) then
 			ent.ponyCacheTarget=ply:SteamID64()
 			PPM.copyPonyTo(ply,ent)
@@ -80,12 +80,12 @@ function TOOL:Reload(trace)
 			PPM.setBodygroups(ent)
 			return true
 		end
-	elseif (ent:IsPlayer()) then
-		if (ply:IsAdmin() and PPM.isValidPonyLight(ent)) then
+	elseif ent:IsPlayer() or ent:GetModel():find("ppm/player_") then
+		if ply:IsAdmin() and PPM.isValidPonyLight(ent) then
 			--ent.ponyCacheTarget=ply:SteamID64()
-			//PPM.copyLocalPonyTo(ply.tool_ponydatapaster,ent)
+			--PPM.copyLocalPonyTo(ply.tool_ponydatapaster,ent)
 			if PPM.MarkData[ply] then
-				PPM.SaveToCache(PPM.CacheGroups.PONY_MARK, ent, PPM.GetResolvedName(PPM.MarkData[ply][1]), PPM.MarkData[ply][2], true)
+				PPM.SaveToCache(PPM.CacheGroups.PONY_MARK,ent,PPM.GetResolvedName(PPM.MarkData[ply][1]),PPM.MarkData[ply][2], true)
 				PPM.MarkData[ent]=PPM.MarkData[ply]
 			end
 			PPM.copyPonyTo(ply,ent)
@@ -98,7 +98,7 @@ function TOOL:Reload(trace)
 	return false
 end
 function TOOL.BuildCPanel(panel)
-	panel:AddControl("Header", { Text="#Tool.ppm_ponysetup.name", Description="Setup Pony Ragdoll or NPC with your settings. Set and edit your pony model too." })
+	panel:AddControl("Header",{Text="#Tool.ppm_ponysetup.name",Description="Setup Pony Ragdoll or NPC with your settings. Set and edit your pony model too." })
 	panel:Button(
 		"Spawn Pony Base Ragdoll",
 		"ppm_spawn_pragdoll"
@@ -137,28 +137,33 @@ function TOOL.BuildCPanel(panel)
 	)
 end
 if CLIENT then
-	concommand.Add("ppm_setpmodel",function()
-		RunConsoleCommand("cl_playermodel", "pony")
+	concommand.Add("ppm_setpmodel",function(ply)
+		if !ply:IsValid() then print("this only works on the clientside") return end
+		RunConsoleCommand("cl_playermodel","pony")
 		RunConsoleCommand("kill")
 	end)
-	concommand.Add("ppm_setpmodel_nojigglebones",function()
-		RunConsoleCommand("cl_playermodel", "ponynojiggle")
+	concommand.Add("ppm_setpmodel_nojigglebones",function(ply)
+		if !ply:IsValid() then print("this only works on the clientside") return end
+		RunConsoleCommand("cl_playermodel","ponynojiggle")
 		RunConsoleCommand("kill")
 	end)
-	concommand.Add("ppm_fix_render", function()
+	concommand.Add("ppm_fix_render",function(ply)
+		if !ply:IsValid() then print("this only works on the clientside") return end
 		RunConsoleCommand("ppm_reload")
 		RunConsoleCommand("ppm_update")
 	end)
-	concommand.Add("ppm_fix_giraffe", function()
---		RunConsoleCommand("ppm_reload")
+	concommand.Add("ppm_fix_giraffe",function(ply)
+		if !ply:IsValid() then print("this only works on the clientside") return end
 		RunConsoleCommand("ppm_update")
-		timer.Create("ppm_fix_giraffe_timer_1",2,1,function() RunConsoleCommand("kill") end)
+		timer.Simple(2,function() RunConsoleCommand("kill") end)
 	end)
 	concommand.Add("ppm_dont_draw_socks",function(ply)
+		if !ply:IsValid() then print("this only works on the clientside") return end
 		ply:PrintMessage(HUD_PRINTTALK, "your client will not try to draw socks and such next time you join the server.")
 		RunConsoleCommand("ppm_limit_to_vanilla", "1")
 	end)
 	concommand.Add("ppm_do_draw_socks",function(ply)
+		if !ply:IsValid() then print("this only works on the clientside") return end
 		ply:PrintMessage(HUD_PRINTTALK, "your client will try to draw socks and such next time you join the server.")
 		RunConsoleCommand("ppm_limit_to_vanilla", "0")
 	end)

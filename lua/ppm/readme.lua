@@ -44,6 +44,18 @@ local PPM_readme_table={'',
 '',
 '_________________________________________________________________________________________',
 '',
+'ppm_draw_in_editor',
+'default is 1',
+'',
+'if set to 1, "in PPM editor" will be drawn above someone\'s head when in PPM editor',
+'_________________________________________________________________________________________',
+'',
+"ppm_draw_visibly_armed",
+'default is 1',
+'',
+'if set to 1, "visibly armed" will be drawn above someone\'s head when they weapon',
+'_________________________________________________________________________________________',
+'',
 'clientside',
 '_________________________________________________________________________________________',
 '',
@@ -72,10 +84,24 @@ local PPM_readme_table={'',
 'http://steamcommunity.com/sharedfiles/filedetails/?id=945735699 is the workshop version',
 '',
 'https://github.com/joeyjumper94/Equestrian-Wastelanders-PPM is the githb version'}
-concommand.Add('ppm_readme', function()
-	if PPM_readme_table!=nil then
-		for P,v in pairs(PPM_readme_table) do
-			print(v)
-		end
+concommand.Add('ppm_readme',function(ply,cmd,args)
+	for k,v in pairs(PPM_readme_table) do
+		print(v)
 	end
 end)
+
+
+--[['_________________________________________________________________________________________',
+'',
+'ppm_render_always',
+'default is 1',
+'',
+'if set to 1, all ponies will be rendered',
+'if set to 0, rendering will happen if you are close enough and there\'s nothing in the way',
+'_________________________________________________________________________________________',
+'',
+'ppm_render_distances',
+'default is 1000',
+'',
+'if ppm_render_always is set to 1, then this setting won\'t matter',
+'decide how close ponies must be to render',]]
