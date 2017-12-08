@@ -3,17 +3,18 @@ local draw_visibly_armed=CreateConVar("ppm_draw_visibly_armed","1",FCVAR_ARCHIVE
 if SERVER then
 	util.AddNetworkString("ppm_editor_status_cl_2_sv")
 	util.AddNetworkString("ppm_editor_status_sv_2_cl")
-	if !draw_in_editor_text then return end
-	net.Receive("ppm_editor_status_cl_2_sv",function(ply,len)
-		if ply and ply:IsValid() then
-			local bool=net.ReadBool()
-			net.Start("ppm_editor_status_sv_2_cl",false)
-			net.WriteEntity(ply)
-			net.WriteBool(bool)
-			net.Send()--Omit(ply)
-		end
-	end)
-else
+	if draw_in_editor_text then
+		net.Receive("ppm_editor_status_cl_2_sv",function(len,ply)
+			if ply and ply:IsValid() then
+				local bool=net.ReadBool()
+				net.Start("ppm_editor_status_sv_2_cl",false)
+				net.WriteEntity(ply)
+				net.WriteBool(bool)
+				net.SendOmit(ply)
+			end
+		end)
+	end
+elseif draw_in_editor_text then
 	PPM.notify_editor=function(bool)
 		if !draw_in_editor_text then return end
 		net.Start("ppm_editor_status_cl_2_sv",false)
@@ -21,7 +22,7 @@ else
 		net.SendToServer()
 	end
 
-	net.Receive("ppm_editor_status_sv_2_cl",function(sender,len)
+	net.Receive("ppm_editor_status_sv_2_cl",function(len,sender)
 		local ply=net.ReadEntity()
 		local bool=net.ReadBool()
 		if ply and ply:IsValid() then
@@ -34,13 +35,13 @@ else
 			if ply.in_ppm_editor and ply!=LocalPlayer() then
 				local pos_3d = ply:EyePos() + Vector(0,0,0)
 				local pos_2d = (pos_3d):ToScreen()
-				draw.DrawText("In PPM Editor",PPM.EDM_FONT,pos_2d.x,pos_2d.y,Color(255,255,255,math.Clamp((pos_3d):Distance(EyePos()) * -1 + 500, 0, 500)/500*255),TEXT_ALIGN_CENTER)
+				draw.DrawText("In PPM Editor",PPM.EDM_FONT,pos_2d.x,pos_2d.y,Color(255,255,255,math.Clamp(500-(pos_3d):Distance(EyePos()),0,500)*0.51),TEXT_ALIGN_CENTER)
 			end
 		end
 	end)
 end
 
-if CLIENT then
+if CLIENT and draw_visibly_armed then
 	local visibly_not_armed={
 		--common weapons in darkrp and sandbox
 		["gmod_camera"]=true,
@@ -59,14 +60,20 @@ if CLIENT then
 		["weapon_ttt_wtester"]=true,
 		["weapon_zm_carry"]=true,		
 	}
-	print("hello")
 
 	hook.Add("HUDPaint","ppm_draw_armed_text",function()
 		for k,ply in pairs(player.GetAll()) do
-			if ply:GetActiveWeapon():IsValid() and !visibly_not_armed[ply:GetActiveWeapon():GetClass()] and ply!=LocalPlayer() and !util.TraceLine({start=GetViewEntity():GetPos(),endpos=ply:GetShootPos(),filter={ply,GetViewEntity()}}).Hit then
+			if ply:GetActiveWeapon():IsValid() 
+			and !visibly_not_armed[ply:GetActiveWeapon():GetClass()] --do they have a dangerous weapon?
+			and ply!=LocalPlayer() --no need to draw text on the client
+			and !util.TraceLine({
+				start=GetViewEntity():GetPos(),--start a trace from where their camera is
+				endpos=ply:GetShootPos(),--end the trace where the target is
+				filter={ply,GetViewEntity()}--don't need to hit the target or what the client is looking through
+			}).Hit then
 				local pos_3d = ply:EyePos()
 				local pos_2d = (pos_3d):ToScreen()
-				draw.DrawText("\nVisbly Armed",PPM.EDM_FONT,pos_2d.x,pos_2d.y,Color(255,255,255,math.Clamp((pos_3d):Distance(EyePos())*-1+500,0,500)/500*255),TEXT_ALIGN_CENTER)
+				draw.DrawText("\nVisbly Armed",PPM.EDM_FONT,pos_2d.x,pos_2d.y,Color(255,255,255,math.Clamp(500-(pos_3d):Distance(EyePos()),0,500)*0.51),TEXT_ALIGN_CENTER)
 			end
 		end
 	end)

@@ -18,15 +18,12 @@ if SEVER then--[[
 	end)]]
 else
 	hook.Add("OnPlayerChat","ppm_chat_commands",function(ply,text,Team,Dead)
+		text=string.lower(text)
 		if string.StartWith(text,"!ppm") or string.StartWith(text,"/ppm") then
-			if !timer.Exists("ppm_no_spam") then 
-				timer.Adjust("ppm_no_spam",1,1,function()
-					cmd="ppm"..table.concat(string.Split(string.Split(text,"ppm")[2]," "),'","')
-					RunConsoleCommand(cmd)
-					if string.StartWith(text,"ppm_readme") then
-						RunConsoleCommand("toggleconsole")
-					end
-				end)
+			cmd="ppm"..table.concat(string.Split(string.Split(text,"ppm")[2]," "),'","')
+			RunConsoleCommand(cmd)
+			if string.StartWith(cmd,"ppm_readme") then
+				LocalPlayer():PrintMessage(HUD_PRINTTALK,"look in console")
 			end
 		end
 	end)
