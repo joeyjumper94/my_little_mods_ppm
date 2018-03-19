@@ -90,7 +90,7 @@ if CLIENT then
 		if (ent.ponydata_tex.bodytex ~=nil) then
 			rttex=ent.ponydata_tex.bodytex
 		else
-			rttex=GetRenderTarget(tostring(ent) .. "body", tW(512), tH(512), false)
+			rttex=GetRenderTarget(string.Replace(tostring(ent),".","//point//") .. "body", tW(512), tH(512), false)
 		end
 
 		local OldRT=render.GetRenderTarget()
@@ -177,7 +177,7 @@ if CLIENT then
 								PPM.currt_ent=ent
 								PPM.currt_ponydata=pony
 								PPM.currt_success=false
-								ent.ponydata_tex[k]=PPM.CreateTexture(tostring(ent) .. k, v)
+								ent.ponydata_tex[k]=PPM.CreateTexture(string.Replace(tostring(ent),".","//point//") .. k, v)
 								ent.ponydata_tex[k .. "_hash"]=v.hash(pony)
 								ent.ponydata_tex[k .. "_draw"]=PPM.currt_success
 								texturespreframe=texturespreframe - 1
@@ -185,7 +185,7 @@ if CLIENT then
 						end
 					end
 				end
-				--MsgN("Outdated texture at "..tostring(ent)..tostring(ent:GetClass()))
+				--MsgN("Outdated texture at "..string.Replace(tostring(ent),".","//point//")..tostring(ent:GetClass()))
 			else
 				if (ent.isEditorPony) then
 					local pony=PPM.getPonyValues(ent, true)
@@ -200,7 +200,7 @@ if CLIENT then
 							PPM.currt_ent=ent
 							PPM.currt_ponydata=pony
 							PPM.currt_success=false
-							ent.ponydata_tex[k]=PPM.CreateTexture(tostring(ent) .. k, v)
+							ent.ponydata_tex[k]=PPM.CreateTexture(string.Replace(tostring(ent),".","//point//") .. k, v)
 							ent.ponydata_tex[k .. "_hash"]=v.hash(pony)
 							ent.ponydata_tex[k .. "_draw"]=PPM.currt_success
 						end
