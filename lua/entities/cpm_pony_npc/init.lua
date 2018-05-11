@@ -51,76 +51,67 @@ function ENT:SpawnFunction(ply, tr)
 	return ent
 end
 
-CreateConVar("ppm_restrict_npc", "0", {FCVAR_ARCHIVE, FCVAR_SERVER_CAN_EXECUTE}, "Restricts npc spawning via tool, 0=anyone, 1=admin, 2=superadmin, 3=disabled.")
+local ppm_restrict_npc=CreateConVar("ppm_restrict_npc", "0", {FCVAR_ARCHIVE, FCVAR_SERVER_CAN_EXECUTE}, "Restricts npc spawning via tool, 0=anyone, 1=admin, 2=superadmin, 3=disabled."):GetInt()
+cvars.AddChangeCallback("ppm_restrict_npc",function(var,old,new) ppm_restrict_npc=tonumber(new) end,"ppm_restrict_npc") 
 
-CreateConVar("ppm_antispam_time", "4", {FCVAR_ARCHIVE, FCVAR_SERVER_CAN_EXECUTE}, "decide how long someone has to wait after spawning a pony NPC or Ragdoll before another can be spawned.")
+local ppm_antispam_time=CreateConVar("ppm_antispam_time", "4", {FCVAR_ARCHIVE, FCVAR_SERVER_CAN_EXECUTE}, "decide how long someone has to wait after spawning a pony NPC or Ragdoll before another can be spawned."):GetFloat()
+cvars.AddChangeCallback("ppm_antispam_time",function(var,old,new) ppm_antispam_time=tonumber(new) end,"ppm_antispam_time") 
 
-concommand.Add("ppm_spawn_pnpc", function(ply, tr)
-	if !IsValid(ply) then return end
-
-	if GetConVarNumber("ppm_restrict_npc") == 1 and !ply:IsAdmin() then
+concommand.Add("ppm_spawn_pnpc", function(ply)
+	if !IsValid(ply) then
+	elseif ppm_restrict_npc == 1 and !ply:IsAdmin() then
 		ply:PrintMessage(HUD_PRINTTALK, "the spawning of pony NPCs was restricted to admins and above.")
-		return
-	elseif GetConVarNumber("ppm_restrict_npc") == 2 and !ply:IsSuperAdmin() then
+	elseif ppm_restrict_npc == 2 and !ply:IsSuperAdmin() then
 		ply:PrintMessage(HUD_PRINTTALK, "the spawning of pony NPCs was restricted to Superadmins and above.")
-		return
-	elseif GetConVarNumber("ppm_restrict_npc") == 3 then
+	elseif ppm_restrict_npc == 3 then
 		ply:PrintMessage(HUD_PRINTTALK, "the spawning of pony NPCs was disabled.")
-		return
-	end
+	elseif timer.Exists("ppm_spawn_antispam_timer"..ply:SteamID64()) then
+		ply:PrintMessage(HUD_PRINTTALK, "please wait "..math.Round(timer.TimeLeft("ppm_spawn_antispam_timer"..ply:SteamID64()),2).." second(s) before trying that")
+	else
+		if ppm_antispam_time > 0 then
+			timer.Create( "ppm_spawn_antispam_timer"..ply:SteamID64(),ppm_antispam_time, 1, function() end)
+		end
 
-	if timer.Exists("ppm_spawn_antispam_timer") then
-		ply:PrintMessage(HUD_PRINTTALK, "please wait "..math.Round(timer.TimeLeft("ppm_spawn_antispam_timer"),2).." second(s) before trying that")
-		return
+		print(ply:Nick() .. " (" .. ply:SteamID() .. ") attempted to spawn a pony npc.")
+		local ent = scripted_ents.GetStored("cpm_pony_npc")
+		ent.t:SpawnFunction(ply, ply:GetEyeTrace())
 	end
-
-	if GetConVarNumber("ppm_antispam_time") > 0 then
-		timer.Create( "ppm_spawn_antispam_timer", GetConVarNumber("ppm_antispam_time"), 1, function() timer.Remove("ppm_spawn_antispam_timer") end)
-	end
-
-	print(ply:Nick() .. " (" .. ply:SteamID() .. ") attempted to spawn a pony npc.")
-	local ent = scripted_ents.GetStored("cpm_pony_npc")
-	ent.t:SpawnFunction(ply, ply:GetEyeTrace())
 end)
 
-CreateConVar("ppm_restrict_ragdoll", "1", {FCVAR_ARCHIVE, FCVAR_SERVER_CAN_EXECUTE}, "Restricts ragdoll spawning via tool, 0=anyone, 1=admin, 2=superadmin, 3=disabled.")
+local ppm_restrict_ragdoll=CreateConVar("ppm_restrict_ragdoll", "1", {FCVAR_ARCHIVE, FCVAR_SERVER_CAN_EXECUTE}, "Restricts ragdoll spawning via tool, 0=anyone, 1=admin, 2=superadmin, 3=disabled."):GetInt()
+cvars.AddChangeCallback("ppm_restrict_ragdoll",function(var,old,new) ppm_restrict_ragdoll=tonumber(new) end,"ppm_restrict_ragdoll")
 
-concommand.Add("ppm_spawn_pragdoll", function(ply, tr)
-	if !IsValid(ply) then return end
-
-	if GetConVarNumber("ppm_restrict_ragdoll") == 1 and !ply:IsAdmin() then
+concommand.Add("ppm_spawn_pragdoll", function(ply)
+	if !IsValid(ply) then
+	elseif GetConVarNumber("ppm_restrict_ragdoll") == 1 and !ply:IsAdmin() then
 		ply:PrintMessage(HUD_PRINTTALK, "the spawning of pony ragdolls was restricted to admins and above.")
-		return
 	elseif GetConVarNumber("ppm_restrict_ragdoll") == 2 and !ply:IsSuperAdmin() then
 		ply:PrintMessage(HUD_PRINTTALK, "the spawning of pony ragdolls was restricted to superadmins only.")
-		return
 	elseif GetConVarNumber("ppm_restrict_ragdoll") == 3 then
 		ply:PrintMessage(HUD_PRINTTALK, "the spawning of pony ragdolls was disabled.")
-		return
-	end
-
-	if timer.Exists("ppm_spawn_antispam_timer") then
+	elseif timer.Exists("ppm_spawn_antispam_timer") then
 		ply:PrintMessage(HUD_PRINTTALK, "please wait "..math.Round(timer.TimeLeft("ppm_spawn_antispam_timer"),2).." second(s) before trying that")
-		return
-	end
+	elseif timer.Exists("ppm_spawn_antispam_timer"..ply:SteamID64()) then
+		ply:PrintMessage(HUD_PRINTTALK, "please wait "..math.Round(timer.TimeLeft("ppm_spawn_antispam_timer"..ply:SteamID64()),2).." second(s) before trying that")
+	else
+		if ppm_antispam_time > 0 then
+			timer.Create( "ppm_spawn_antispam_timer"..ply:SteamID64(),ppm_antispam_time, 1, function() end)
+		end
 
-	if GetConVarNumber("ppm_antispam_time") > 0 then
-		timer.Create( "ppm_spawn_antispam_timer", GetConVarNumber("ppm_antispam_time"), 1, function() timer.Remove("ppm_spawn_antispam_timer") end)
+		print(ply:Nick() .. " (" .. ply:SteamID() .. ") attempted to spawn a pony ragdoll.")
+		tr = ply:GetEyeTrace()
+		if (!tr.Hit) then return end
+		local ent = ents.Create("prop_ragdoll")
+		ent:SetPos(tr.HitPos + tr.HitNormal * 16)
+		ent:SetModel("models/ppm/player_default_base_ragdoll.mdl")
+		ent:Spawn()
+		PPM.setupPony(ent)
+		ent:Activate()
+		undo.Create("ragdoll")
+		undo.AddEntity(ent)
+		undo.SetPlayer(ply)
+		undo.Finish()
 	end
-
-	print(ply:Nick() .. " (" .. ply:SteamID() .. ") attempted to spawn a pony ragdoll.")
-	tr = ply:GetEyeTrace()
-	if (!tr.Hit) then return end
-	local ent = ents.Create("prop_ragdoll")
-	ent:SetPos(tr.HitPos + tr.HitNormal * 16)
-	ent:SetModel("models/ppm/player_default_base_ragdoll.mdl")
-	ent:Spawn()
-	PPM.setupPony(ent)
-	ent:Activate()
-	undo.Create("ragdoll")
-	undo.AddEntity(ent)
-	undo.SetPlayer(ply)
-	undo.Finish()
 end)
 
 function ENT:OnTakeDamage(dmg)

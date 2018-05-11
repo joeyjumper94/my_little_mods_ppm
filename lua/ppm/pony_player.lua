@@ -48,6 +48,7 @@ function PPM.LOAD()
 end
 
 function PPM.setupPony(ent, fake)
+	if !ent:IsValid() then return end
 	--if ent.ponydata!=nil then return end 
 	ent.ponydata_tex = ponydata_tex or {}
 	ent.ponydata = ent.ponydata or {}
@@ -432,6 +433,7 @@ if SERVER then
 
 		if (m == "pony") or (m == "ponynj") then
 			timer.Simple(1, function()
+				if !ply:IsValid() then return end
 				if ply.ponydata == nil then
 					PPM.setupPony(ply)
 				end

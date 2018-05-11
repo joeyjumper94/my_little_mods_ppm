@@ -166,7 +166,7 @@ function PPM_OpenCCmarkSelectorMenu(parent)
 	--IMAGE:SetImage("gui/items/none.png")
 	local LIST=vgui.Create("DListView")
 	LIST:SetParent(PANEL)
-	LIST:SetSize(256,256+128)
+	LIST:SetSize(256,384)
 	LIST:SetPos(512,0)
 	LIST:SetMultiSelect(false)
 	--LIST:Dock(RIGHT)
@@ -184,21 +184,26 @@ function PPM_OpenCCmarkSelectorMenu(parent)
 		IMAGE:SetImage("materials/ppm_custom/" .. line:GetValue(1))
 	end
 
-	local CLOSEBUTTON=vgui.Create("DButton",PANEL)
 	local BUTTON=vgui.Create("DButton",PANEL)
+	local CLOSEBUTTON=vgui.Create("DButton",PANEL)
 	BUTTON:SetText("Select Image")
+	CLOSEBUTTON:SetText("Close")
 	--BUTTON:Dock(RIGHT)
-	BUTTON:SetPos(512,256+128)
+	--BUTTON:Dock(RIGHT)
+	BUTTON:SetPos(512,384)
+	CLOSEBUTTON:SetPos(512,384+20)
 	BUTTON:SetSize(256,20)
-
-	--local scan_process_activated=false
+	CLOSEBUTTON:SetSize(256,20)
+	local scan_process_activated=false
+	local caching=false
 	--local x=0
 	--local data=""
 	BUTTON.DoClick=function()
-		if not scan_process_activated then
+		if !scan_process_activated then
+			timer.Remove("ppm_create_texture")
 			usedcolors={}
 			last=1
-			render.CapturePixels()
+--			render.CapturePixels()
 			data=""
 			local bytecount=0
 			BUTTON:SetText("SCANNING...")
@@ -207,16 +212,24 @@ function PPM_OpenCCmarkSelectorMenu(parent)
 			scan_process_activated=true
 		end
 	end
-
-	BUTTON.Think=function()
+	CLOSEBUTTON.DoClick=function()
+		if not scan_process_activated then
+			PANEL:Remove()
+			timer.Remove("ppm_create_texture")
+		end
+	end
+--	BUTTON.Think=(function()
+	hook.Add("PostRender","PPM_image",function()
 		if scan_process_activated then
+			render.CapturePixels()
 			local localdata=""
 
 			for i=0,16 do
 				for y=0,512,2 do
 					local r,g,b=render.ReadPixel(uppercorner_x+x,uppercorner_y+y)
+					--print(r,g,b)
 					--bytecount=bytecount+3
-					--print(r,"\t\t",g,"\t\t",b)
+					print(r,"\t\t",g,"\t\t",b)
 					localdata=localdata..PPM_rgbtoHex(r,g,b)
 				end
 
@@ -250,17 +263,8 @@ function PPM_OpenCCmarkSelectorMenu(parent)
 			data=data..localdata
 			--x=x+1
 		end
-	end
-	CLOSEBUTTON:SetText("Close")
-	--BUTTON:Dock(RIGHT)
-	CLOSEBUTTON:SetPos(512,256+128+20)
-	CLOSEBUTTON:SetSize(256,20)
+	end)
 
-	CLOSEBUTTON.DoClick=function()
-		if not scan_process_activated then
-			PANEL:Remove()
-		end
-	end
 end
 
 local usedcolors={}

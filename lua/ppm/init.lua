@@ -17,16 +17,16 @@ include("readme.lua")
 include("chatcommands.lua")
 
 include("draw_text.lua")
-
+include("disguise.lua")
 if CLIENT then   
-    include("render_texture.lua")
-    include("render.lua")
-    include("bonesystem.lua")
-    include("editor3.lua")
-    include("editor3_body.lua")
-    include("editor3_presets.lua")
-    include("presets_base.lua")
-    include("gui_toolpanel.lua")
+	include("render_texture.lua")
+	include("render.lua")
+	include("bonesystem.lua")
+	include("editor3.lua")
+	include("editor3_body.lua")
+	include("editor3_presets.lua")
+	include("presets_base.lua")
+	include("gui_toolpanel.lua")
 else
-    include("serverside.lua")
+	include("serverside.lua")
 end

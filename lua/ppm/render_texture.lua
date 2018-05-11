@@ -1,11 +1,16 @@
 if CLIENT then
-
-	CreateConVar("ppm_limit_to_vanilla", "0", {FCVAR_ARCHIVE}, "if the client sets it to 1, socks and other custom textures will not be drawn by said client")
-	if (GetConVarNumber("ppm_limit_to_vanilla")==1) then
+	if CreateConVar("ppm_limit_to_vanilla", "0", {FCVAR_ARCHIVE}, "if the client sets it to 1, socks and other custom textures will not be drawn by said client"):GetBool() then
 		PPM_Render_Cap = 13
 	else
 		PPM_Render_Cap = 1000000000000000
 	end
+	cvars.AddChangeCallback("ppm_limit_to_vanilla",function(var,old,new)
+		if new!="0" then
+			PPM_Render_Cap=13
+		else
+			PPM_Render_Cap=10000000000000000000
+		end
+	end,"ppm_limit_to_vanilla")
 
 	function PPM.TextureIsOutdated(ent, name, newhash)
 		if not PPM.isValidPony(ent) then return true end

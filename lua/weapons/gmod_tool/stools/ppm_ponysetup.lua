@@ -16,7 +16,7 @@ function TOOL:LeftClick(trace)
 	if not ply.tool_ponydatapasterTarget then return false end
 	ply.tool_ponydatapaster=ply.tool_ponydatapaster or {}
 	PPM.setupPony(ply.tool_ponydatapaster,true)
-	if ent:IsNPC() or ent:GetClass()=="prop_ragdoll" then
+	if ent:IsNPC() or ent:GetClass()=="prop_ragdoll" or ent:IsBot() then
 		if PPM.isValidPonyLight(ent) then
 			ent.ponyCacheTarget=ply.tool_ponydatapasterTarget
 			PPM.copyLocalPonyTo(ply.tool_ponydatapaster, ent)
@@ -51,7 +51,7 @@ function TOOL:RightClick(trace)
 	local ply=self:GetOwner()
 	ply.tool_ponydatapaster=ply.tool_ponydatapaster or {}
 	PPM.setupPony(ply.tool_ponydatapaster, true)
-	if ent:IsNPC() or ent:GetClass()=="prop_ragdoll" then
+	if ent:IsNPC() or ent:GetClass()=="prop_ragdoll" or ent:IsBot() then
 		if PPM.isValidPonyLight(ent) then
 			ply.tool_ponydatapasterTarget=ent.ponyCacheTarget
 			PPM.copyPonyTo(ent,ply.tool_ponydatapaster)
@@ -71,7 +71,7 @@ function TOOL:Reload(trace)
 	if (!ent) then return false end
 	if (CLIENT) then return true end
 	local ply=self:GetOwner()
-	if ent:IsNPC() or ent:GetClass()=="prop_ragdoll" then
+	if ent:IsNPC() or ent:GetClass()=="prop_ragdoll" or ent:IsBot() then
 		if PPM.isValidPonyLight(ent) then
 			ent.ponyCacheTarget=ply:SteamID64()
 			PPM.copyPonyTo(ply,ent)
