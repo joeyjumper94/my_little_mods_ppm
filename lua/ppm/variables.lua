@@ -3,7 +3,7 @@ PPM.Pony_variables = PPM.Pony_variables or {}
 PPM.Pony_variables.default_pony = 
 {
 	//main
-	kind =			{ default = 1, min = 1, max = 4 },
+	kind =			{ default = 4, min = 1, max = 4 },
 	age =			{ default = 2, min = 2, max = 2 },
 	gender = 		{ default = 1, min = 1, max = 2 },
 	body_type = 	{ default = 1, min = 1, max = 1 },

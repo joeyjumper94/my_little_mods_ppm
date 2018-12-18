@@ -9,31 +9,31 @@ local BODYGROUP_CMARK = 7
 local BODYGROUP_EYELASH = 8
 local EYES_COUNT = 10
 local MARK_COUNT = 27
-PPM.pony_models = {}
-
-PPM.pony_models["models/ppm/player_default_base.mdl"] = {
-	isPonyModel = true,
-	BgroupCount = 8
-}
-
-PPM.pony_models["models/ppm/player_default_base_nj.mdl"] = {
-	isPonyModel = true,
-	BgroupCount = 8
-}
-
-PPM.pony_models["models/ppm/player_default_base_ragdoll.mdl"] = {
-	isPonyModel = true,
-	BgroupCount = 8
-}
-
-PPM.pony_models["models/ppm/player_mature_base.mdl"] = {
-	isPonyModel = true,
-	BgroupCount = 6
-}
-
-PPM.pony_models["models/ppm/player_default_clothes1.mdl"] = {
-	isPonyModel = false,
-	BgroupCount = 8
+PPM.pony_models = {
+	["models/ppm/player_default_base.mdl"] = {
+		isPonyModel = true,
+		BgroupCount = 8
+	},
+	["models/ewppm/player_default_base.mdl"] = {
+		isPonyModel = true,
+		BgroupCount = 8
+	},
+	["models/ppm/player_default_base_nj.mdl"] = {
+		isPonyModel = true,
+		BgroupCount = 8
+	},
+	["models/ppm/player_default_base_ragdoll.mdl"] = {
+		isPonyModel = true,
+		BgroupCount = 8
+	},
+	["models/ppm/player_mature_base.mdl"] = {
+		isPonyModel = true,
+		BgroupCount = 6
+	},
+		["models/ppm/player_default_clothes1.mdl"] = {
+		isPonyModel = false,
+		BgroupCount = 8
+	},
 }
 
 function PPM.LOAD()
@@ -48,7 +48,6 @@ function PPM.LOAD()
 end
 
 function PPM.setupPony(ent, fake)
-	if !ent:IsValid() then return end
 	--if ent.ponydata!=nil then return end 
 	ent.ponydata_tex = ponydata_tex or {}
 	ent.ponydata = ent.ponydata or {}
@@ -156,8 +155,9 @@ function PPM.mergePonyData(destination, addition)
 end
 
 function PPM.hasPonyModel(model)
-	if PPM.pony_models[model] == nil then return false end
-
+	if PPM.pony_models[model] == nil then
+		return false
+	end
 	return PPM.pony_models[model].isPonyModel
 end
 

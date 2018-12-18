@@ -10,23 +10,15 @@ if CLIENT then
 end
 function TOOL:LeftClick(trace)
 	local ent=trace.Entity
-	if !ent then return false end
-	if CLIENT then return true end
+	if !ent or ent and !ent:IsValid() then return false end
 	local ply=self:GetOwner()
 	if not ply.tool_ponydatapasterTarget then return false end
-	ply.tool_ponydatapaster=ply.tool_ponydatapaster or {}
+	ply.tool_ponydatapaster=ply.tool_ponydatapaster or NULL
 	PPM.setupPony(ply.tool_ponydatapaster,true)
-	if ent:IsNPC() or ent:GetClass()=="prop_ragdoll" or ent:IsBot() then
-		if PPM.isValidPonyLight(ent) then
-			ent.ponyCacheTarget=ply.tool_ponydatapasterTarget
-			PPM.copyLocalPonyTo(ply.tool_ponydatapaster, ent)
-			PPM.setupPony(ent)
-			PPM.setPonyValues(ent)
-			PPM.setBodygroups(ent)
-			return true
-		end
-	elseif ent:IsPlayer() or ent:GetModel():find("ppm/player_") then
-		if ply:IsAdmin() and PPM.isValidPonyLight(ent) then
+	if !ent:GetModel():find("ppm/player_") then return false end
+	if ent:IsPlayer() and !ent:IsBot() then
+		if ply:IsAdmin() and (PPM.isValidPonyLight(ent) or ent:GetModel()=="models/ewppm/player_default_base.mdl") then
+			if CLIENT then return true end
 			--ent.ponyCacheTarget=ply.tool_ponydatapasterTarget
 			if ply.tool_ponydatapaster.ponydata.custom_mark then
 				local markdata=PPM.LoadFromCache(PPM.CacheGroups.PONY_MARK, ply.tool_ponydatapasterTarget, ply.tool_ponydatapaster.ponydata.custom_mark)
@@ -41,47 +33,47 @@ function TOOL:LeftClick(trace)
 			PPM.setBodygroups(ent)
 			return true
 		end
+	elseif PPM.isValidPonyLight(ent) or ent:GetModel()=="models/ewppm/player_default_base.mdl" then
+		if CLIENT then return true end
+		ent.ponyCacheTarget=ply.tool_ponydatapasterTarget
+		PPM.copyLocalPonyTo(ply.tool_ponydatapaster, ent)
+		PPM.setupPony(ent)
+		PPM.setPonyValues(ent)
+		PPM.setBodygroups(ent)
+		return true
 	end
 	return false
 end
 function TOOL:RightClick(trace)
 	local ent=trace.Entity
-	if !ent then return false end
-	if CLIENT then return true end
+	if !ent or ent and !ent:IsValid() then return false end
 	local ply=self:GetOwner()
 	ply.tool_ponydatapaster=ply.tool_ponydatapaster or {}
 	PPM.setupPony(ply.tool_ponydatapaster, true)
-	if ent:IsNPC() or ent:GetClass()=="prop_ragdoll" or ent:IsBot() then
-		if PPM.isValidPonyLight(ent) then
-			ply.tool_ponydatapasterTarget=ent.ponyCacheTarget
-			PPM.copyPonyTo(ent,ply.tool_ponydatapaster)
-			return true
-		end
-	elseif ent:IsPlayer() or ent:GetModel():find("ppm/player_") then
-		if (ply:IsAdmin() and PPM.isValidPonyLight(ent)) then
+	if !ent:GetModel():find("ppm/player_") then return false end
+	if ent:IsPlayer() and !ent:IsBot() then
+		if ply:IsAdmin() and (PPM.isValidPonyLight(ent) or ent:GetModel()=="models/ewppm/player_default_base.mdl") then
+			if CLIENT then return true end
 			ply.tool_ponydatapasterTarget=ent:SteamID64()
 			PPM.copyPonyTo(ent,ply.tool_ponydatapaster)
 			return true
 		end
+	elseif PPM.isValidPonyLight(ent) then
+		if CLIENT then return true end
+		ply.tool_ponydatapasterTarget=ent.ponyCacheTarget
+		PPM.copyPonyTo(ent,ply.tool_ponydatapaster)
+		return true
 	end
 	return false
 end
 function TOOL:Reload(trace)
 	local ent=trace.Entity
-	if (!ent) then return false end
-	if (CLIENT) then return true end
+	if !ent or ent and !ent:IsValid() then return false end
 	local ply=self:GetOwner()
-	if ent:IsNPC() or ent:GetClass()=="prop_ragdoll" or ent:IsBot() then
-		if PPM.isValidPonyLight(ent) then
-			ent.ponyCacheTarget=ply:SteamID64()
-			PPM.copyPonyTo(ply,ent)
-			PPM.setupPony(ent)
-			PPM.setPonyValues(ent)
-			PPM.setBodygroups(ent)
-			return true
-		end
-	elseif ent:IsPlayer() or ent:GetModel():find("ppm/player_") then
-		if ply:IsAdmin() and PPM.isValidPonyLight(ent) then
+	if !ent:GetModel():find("ppm/player_") then return false end
+	if ent:IsPlayer() and !ent:IsBot() then
+		if ply:IsAdmin() and (PPM.isValidPonyLight(ent) or ent:GetModel()=="models/ewppm/player_default_base.mdl") then
+			if CLIENT then return true end
 			--ent.ponyCacheTarget=ply:SteamID64()
 			--PPM.copyLocalPonyTo(ply.tool_ponydatapaster,ent)
 			if PPM.MarkData[ply] then
@@ -94,6 +86,14 @@ function TOOL:Reload(trace)
 			PPM.setBodygroups(ent)
 			return true
 		end
+	elseif PPM.isValidPonyLight(ent) or ent:GetModel()=="models/ewppm/player_default_base.mdl" then
+		if CLIENT then return true end
+		ent.ponyCacheTarget=ply:SteamID64()
+		PPM.copyPonyTo(ply,ent)
+		PPM.setupPony(ent)
+		PPM.setPonyValues(ent)
+		PPM.setBodygroups(ent)
+		return true
 	end
 	return false
 end
@@ -155,7 +155,7 @@ if CLIENT then
 	concommand.Add("ppm_fix_giraffe",function(ply)
 		if !ply:IsValid() then print("this only works on the clientside") return end
 		RunConsoleCommand("ppm_update")
-		timer.Simple(2,function() RunConsoleCommand("kill") end)
+		timer.Simple(0,function() RunConsoleCommand("kill") end)
 	end)
 	concommand.Add("ppm_dont_draw_socks",function(ply)
 		if !ply:IsValid() then print("this only works on the clientside") return end

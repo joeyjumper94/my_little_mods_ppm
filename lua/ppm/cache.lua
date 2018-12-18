@@ -19,19 +19,13 @@ function PPM.SaveToCache(group, ply, name, data, skipNameResolve)
 	if not game.SinglePlayer() then
 		if type(ply) == "string" then
 			id = ply
+		elseif not IsValid(ply) then
+			error("PPM.SaveToCache was called with an invalid entity")
+		elseif not ply:IsPlayer() then
+			error("PPM.SaveToCache was called with a non-player entity")
+		elseif not ply.SteamID64 then
+			error("PPM.SaveToCache was called during startup")
 		else
-			if not IsValid(ply) then
-				error("PPM.SaveToCache was called with an invalid entity")
-			end
-
-			if not ply:IsPlayer() then
-				error("PPM.SaveToCache was called with a non-player entity")
-			end
-
-			if not ply.SteamID64 then
-				error("PPM.SaveToCache was called during startup")
-			end
-
 			id = ply:SteamID64()
 		end
 	end
@@ -66,19 +60,16 @@ function PPM.LoadFromCache(group, ply, sig)
 		if type(ply) == "string" then
 			id = ply
 		else
+			print(ply)
 			if not IsValid(ply) then
-				error("PPM.LoadFromCache was called with an invalid entity")
-			end
-
-			if not ply:IsPlayer() then
-				error("PPM.LoadFromCache was called with a non-player entity")
-			end
-
-			if not ply.SteamID64 then
+				id = "0"--ErrorNoHalt("PPM.LoadFromCache was called with an invalid entity")
+			elseif not ply:IsPlayer() then
+				id = "0" ErrorNoHalt("PPM.LoadFromCache was called with a non-player entity")
+			elseif not ply.SteamID64 then
 				error("PPM.LoadFromCache was called during startup")
+			else
+				id = ply:SteamID64()
 			end
-
-			id = ply:SteamID64()
 		end
 	end
 

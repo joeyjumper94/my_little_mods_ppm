@@ -59,17 +59,18 @@ cvars.AddChangeCallback("ppm_antispam_time",function(var,old,new) ppm_antispam_t
 
 concommand.Add("ppm_spawn_pnpc", function(ply)
 	if !IsValid(ply) then
+		print("this command only works when players run it")
 	elseif ppm_restrict_npc == 1 and !ply:IsAdmin() then
 		ply:PrintMessage(HUD_PRINTTALK, "the spawning of pony NPCs was restricted to admins and above.")
 	elseif ppm_restrict_npc == 2 and !ply:IsSuperAdmin() then
 		ply:PrintMessage(HUD_PRINTTALK, "the spawning of pony NPCs was restricted to Superadmins and above.")
 	elseif ppm_restrict_npc == 3 then
 		ply:PrintMessage(HUD_PRINTTALK, "the spawning of pony NPCs was disabled.")
-	elseif timer.Exists("ppm_spawn_antispam_timer"..ply:SteamID64()) then
-		ply:PrintMessage(HUD_PRINTTALK, "please wait "..math.Round(timer.TimeLeft("ppm_spawn_antispam_timer"..ply:SteamID64()),2).." second(s) before trying that")
+	elseif ply.ppm_spawn_antispam_timer and ply.ppm_spawn_antispam_timer>CurTime() then
+		ply:PrintMessage(HUD_PRINTTALK, "please wait "..math.Round(ppm_spawn_antispam_timer-CurTime,2).." second(s) before trying that")
 	else
 		if ppm_antispam_time > 0 then
-			timer.Create( "ppm_spawn_antispam_timer"..ply:SteamID64(),ppm_antispam_time, 1, function() end)
+			ply.ppm_spawn_antispam_timer=CurTime()+ppm_antispam_time
 		end
 
 		print(ply:Nick() .. " (" .. ply:SteamID() .. ") attempted to spawn a pony npc.")
@@ -83,19 +84,18 @@ cvars.AddChangeCallback("ppm_restrict_ragdoll",function(var,old,new) ppm_restric
 
 concommand.Add("ppm_spawn_pragdoll", function(ply)
 	if !IsValid(ply) then
+		print("this command only works when players run it")
 	elseif GetConVarNumber("ppm_restrict_ragdoll") == 1 and !ply:IsAdmin() then
 		ply:PrintMessage(HUD_PRINTTALK, "the spawning of pony ragdolls was restricted to admins and above.")
 	elseif GetConVarNumber("ppm_restrict_ragdoll") == 2 and !ply:IsSuperAdmin() then
 		ply:PrintMessage(HUD_PRINTTALK, "the spawning of pony ragdolls was restricted to superadmins only.")
 	elseif GetConVarNumber("ppm_restrict_ragdoll") == 3 then
 		ply:PrintMessage(HUD_PRINTTALK, "the spawning of pony ragdolls was disabled.")
-	elseif timer.Exists("ppm_spawn_antispam_timer") then
-		ply:PrintMessage(HUD_PRINTTALK, "please wait "..math.Round(timer.TimeLeft("ppm_spawn_antispam_timer"),2).." second(s) before trying that")
-	elseif timer.Exists("ppm_spawn_antispam_timer"..ply:SteamID64()) then
-		ply:PrintMessage(HUD_PRINTTALK, "please wait "..math.Round(timer.TimeLeft("ppm_spawn_antispam_timer"..ply:SteamID64()),2).." second(s) before trying that")
+	elseif ply.ppm_spawn_antispam_timer and ply.ppm_spawn_antispam_timer>CurTime() then
+		ply:PrintMessage(HUD_PRINTTALK, "please wait "..math.Round(ppm_spawn_antispam_timer-CurTime,2).." second(s) before trying that")
 	else
 		if ppm_antispam_time > 0 then
-			timer.Create( "ppm_spawn_antispam_timer"..ply:SteamID64(),ppm_antispam_time, 1, function() end)
+			ply.ppm_spawn_antispam_timer=CurTime()+ppm_antispam_time
 		end
 
 		print(ply:Nick() .. " (" .. ply:SteamID() .. ") attempted to spawn a pony ragdoll.")

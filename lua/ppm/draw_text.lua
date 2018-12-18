@@ -52,7 +52,23 @@ if CLIENT and draw_visibly_armed then
 		["weapon_keypadchecker"]=true,
 		["weapon_physgun"]=true,
 		["weaponchecker"]=true,
+		unarrest_stick=true,
+		itemstore_pickup=true,
 
+		gmod_camera=true,
+		gmod_tool=true,
+		pocket=true,
+		keys=true,
+		med_kit=true,
+		weapon_blowtorch=true,
+		weapon_medkit=true,
+		weapon_keypadchecker=true,
+		weapon_physcannon=true,
+		weapon_physgun=true,
+		weaponchecker=true,
+		weaponchecker=true,
+		none=true,
+		unarrest_stick=true,
 		--trouble in terrorist town weapons
 		["weapon_ttt_binoculars"]=true,
 		["weapon_ttt_health_station"]=true,
@@ -60,10 +76,24 @@ if CLIENT and draw_visibly_armed then
 		["weapon_ttt_wtester"]=true,
 		["weapon_zm_carry"]=true,		
 	}
+	local ponyarray_temp={
+		["models/ppm/player_mature_base.mdl"]=true,
+		["models/ppm/player_default_base.mdl"]=true,
+		["models/cppm/player_default_base.mdl"]=true,
+		["models/ppm/player_default_base_nj.mdl"]=true,
+		["models/cppm/player_default_base_nj.mdl"]=true,
+		["models/ppm/player_default_base_new.mdl"]=true,
+		["models/ppm_veh/player_default_base.mdl"]=true,
+		["models/ppm_veh/player_default_base_nj.mdl"]=true,
+		["models/ppm/player_default_base_new_nj.mdl"]=true,
+		["models/ppm/player_default_base_ragdoll.mdl"]=true,
+		["models/cppm/player_default_base_ragdoll.mdl"]=true,
+	}
 
 	hook.Add("HUDPaint","ppm_draw_armed_text",function()
 		for k,ply in pairs(player.GetAll()) do
-			if ply:GetActiveWeapon():IsValid() 
+			if ponyarray_temp[ply:GetModel()]
+			and ply:GetActiveWeapon():IsValid() 
 			and !visibly_not_armed[ply:GetActiveWeapon():GetClass()] --do they have a dangerous weapon?
 			and ply!=LocalPlayer() --no need to draw text on the client
 			and !util.TraceLine({
