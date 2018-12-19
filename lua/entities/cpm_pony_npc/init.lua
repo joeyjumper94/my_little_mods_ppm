@@ -67,7 +67,7 @@ concommand.Add("ppm_spawn_pnpc", function(ply)
 	elseif ppm_restrict_npc == 3 then
 		ply:PrintMessage(HUD_PRINTTALK, "the spawning of pony NPCs was disabled.")
 	elseif ply.ppm_spawn_antispam_timer and ply.ppm_spawn_antispam_timer>CurTime() then
-		ply:PrintMessage(HUD_PRINTTALK, "please wait "..math.Round(ppm_spawn_antispam_timer-CurTime,2).." second(s) before trying that")
+		ply:PrintMessage(HUD_PRINTTALK, "please wait "..math.Round(ply.ppm_spawn_antispam_timer-CurTime(),2).." second(s) before trying that")
 	else
 		if ppm_antispam_time > 0 then
 			ply.ppm_spawn_antispam_timer=CurTime()+ppm_antispam_time
@@ -92,7 +92,7 @@ concommand.Add("ppm_spawn_pragdoll", function(ply)
 	elseif GetConVarNumber("ppm_restrict_ragdoll") == 3 then
 		ply:PrintMessage(HUD_PRINTTALK, "the spawning of pony ragdolls was disabled.")
 	elseif ply.ppm_spawn_antispam_timer and ply.ppm_spawn_antispam_timer>CurTime() then
-		ply:PrintMessage(HUD_PRINTTALK, "please wait "..math.Round(ppm_spawn_antispam_timer-CurTime,2).." second(s) before trying that")
+		ply:PrintMessage(HUD_PRINTTALK, "please wait "..math.Round(ply.ppm_spawn_antispam_timer-CurTime(),2).." second(s) before trying that")
 	else
 		if ppm_antispam_time > 0 then
 			ply.ppm_spawn_antispam_timer=CurTime()+ppm_antispam_time
