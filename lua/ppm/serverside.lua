@@ -18,8 +18,8 @@ if SERVER then
 	}
 
 	net.Receive("player_equip_item",function(len,ply)
-		local id =net.ReadFloat()
-		local item =PPM:pi_GetItemById(id)
+		local id=net.ReadFloat()
+		local item=PPM:pi_GetItemById(id)
 		if item then
 			PPM.setupPony(ply,false)
 			PPM:pi_SetupItem(item,ply)
@@ -29,7 +29,7 @@ if SERVER then
 	local PlayerSetModel=function(ply)
 		timer.Simple(0.1,function()
 			if ply and ply:IsValid() then
-				local newmodel=ply:GetInfo("cl_playermodel")
+				local newmodel=ply:GetModel()--ply:GetInfo("cl_playermodel")
 				if newmodel!=ply.pi_prevplmodel then
 					PPM:pi_UnequipAll(ply)
 					if ponyarray_temp[newmodel] then
@@ -38,7 +38,7 @@ if SERVER then
 						end
 						PPM.setPonyValues(ply)
 						PPM.setBodygroups(ply)
-						if PPM.camoffcetenabled and ponyarray_temp[ply:GetModel()] then 
+						if PPM.camoffcetenabled then 
 							ply:SetViewOffset(Vector(0,0,42))
 							ply:SetViewOffsetDucked(Vector(0,0,35))
 						end

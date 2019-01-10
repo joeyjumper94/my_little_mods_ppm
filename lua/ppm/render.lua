@@ -43,9 +43,9 @@ if CLIENT then
 		--MsgN("pony begin")
 		if (table.Count(pony)==0) then return end
 
-		for k,v in SortedPairs(pony) do
+--		for k,v in SortedPairs(pony) do
 			--MsgN(k,"\t\t\t",pony[k] )
-		end
+--		end
 
 		--{--rigscalething
 		local SCALEVAL0=pony.bodyweight or 1--(1+math.sin(time)/4)  
@@ -111,56 +111,11 @@ if CLIENT then
 
 --	function PonyPropDraw(ent) end
 
-	function HOOK_PrePlayerDraw(PLY)
-		--PLY:SetRenderMode(RENDERMODE_NORMAL ) 
-		--if !PPM.isValidPonyLight(PLY) then 
-		--local cne=PLY.ponydata.clothes1:GetNWEntity("pny_clothing")
-		--if(IsValid(cne)) then
-		--	PLY.ponydata.clothes1=cne
-		--MsgN("OK")
-		--else
-		--PPM.SendCharToServer(PLY)
-		--MsgN("RESET")
-		--end
-		if PLY.ponydata!=nil then
-			if PLY.ponydata.clothes1!=nil then
-				if IsValid(PLY.ponydata.clothes1) then
-					PLY.ponydata.clothes1:SetNoDraw(not PLY:Alive())
-				end
-			end
-		end
+	
 
-		PPM.PrePonyDraw(PLY,false)
-		--end
+	
 
-		return not PLY:Alive()
-	end
-
-	function HOOK_PostPlayerDraw(PLY)
-		if PLY==nil then return end
-		if not IsValid(PLY) then return end
-
-		--local clothes=PLY:GetNWEntity("pny_clothing")
-		--MsgN(clothes)
-		if (PPM.isLoaded) then
-			if not PPM.isValidPonyLight(PLY) then return end
-			if PPM.m_hair1==nil then return end
-			PPM.m_hair1:SetVector("$color2",Vector(0,0,0))
-			PPM.m_hair2:SetVector("$color2",Vector(0,0,0))
-			PPM.m_body:SetVector("$color2",Vector(1,1,1))
-			PPM.m_wings:SetVector("$color2",Vector(1,1,1))
-			PPM.m_horn:SetVector("$color2",Vector(1,1,1))
-			PPM.m_eyel:SetFloat("$ParallaxStrength",0.1)
-			PPM.m_eyer:SetFloat("$ParallaxStrength",0.1)
-			PPM.m_eyel:SetTexture("$Iris",PPM.t_eyes[1][1]:GetTexture("$basetexture"))
-			PPM.m_eyer:SetTexture("$Iris",PPM.t_eyes[1][1]:GetTexture("$detail"))
-			--PPM.m_eyer:SetTexture("$Iris",PPM.t_eyes[1][2])
-			PPM.m_cmark:SetTexture("$basetexture",PPM.m_cmarks[1][2]:GetTexture("$basetexture"))
-			PPM.m_body:SetTexture("$basetexture",PPM.m_bodyf:GetTexture("$basetexture"))
-		end
-	end
-
-	function HOOK_PostDrawOpaqueRenderables()
+	hook.Add("PostDrawOpaqueRenderables","test_Redraw",function()
 		--PPM.bones_testDraw("pony_mature") 	
 		--			MsgN("Ponies:")
 		--------------------STRARTUPHOOK
@@ -261,14 +216,59 @@ if CLIENT then
 				end
 			end
 		end
-	end
+	end)
 	function HOOK_PostDrawTranslucentRenderables()
 	end
-	function OnReloaded() 
-	end
-	hook.Add("PostDrawOpaqueRenderables","test_Redraw",HOOK_PostDrawOpaqueRenderables)
-	hook.Add("PrePlayerDraw","pony_draw",HOOK_PrePlayerDraw)
-	hook.Add("PostPlayerDraw","pony_postdraw",HOOK_PostPlayerDraw)
-	hook.Add("OnReloaded","pony_reload",OnReloaded)
+
+	hook.Add("PrePlayerDraw","pony_draw",function(PLY)
+		--PLY:SetRenderMode(RENDERMODE_NORMAL ) 
+		--if !PPM.isValidPonyLight(PLY) then 
+		--local cne=PLY.ponydata.clothes1:GetNWEntity("pny_clothing")
+		--if(IsValid(cne)) then
+		--	PLY.ponydata.clothes1=cne
+		--MsgN("OK")
+		--else
+		--PPM.SendCharToServer(PLY)
+		--MsgN("RESET")
+		--end
+		if PLY.ponydata!=nil then
+			if PLY.ponydata.clothes1!=nil then
+				if IsValid(PLY.ponydata.clothes1) then
+					PLY.ponydata.clothes1:SetNoDraw(not PLY:Alive())
+				end
+			end
+		end
+
+		PPM.PrePonyDraw(PLY,false)
+		--end
+		if not PLY:Alive()then
+			return false
+		end
+	end)
+	hook.Add("PostPlayerDraw","pony_postdraw",function(PLY)
+		if PLY==nil then return end
+		if not IsValid(PLY) then return end
+
+		--local clothes=PLY:GetNWEntity("pny_clothing")
+		--MsgN(clothes)
+		if (PPM.isLoaded) then
+			if not PPM.isValidPonyLight(PLY) then return end
+			if PPM.m_hair1==nil then return end
+			PPM.m_hair1:SetVector("$color2",Vector(0,0,0))
+			PPM.m_hair2:SetVector("$color2",Vector(0,0,0))
+			PPM.m_body:SetVector("$color2",Vector(1,1,1))
+			PPM.m_wings:SetVector("$color2",Vector(1,1,1))
+			PPM.m_horn:SetVector("$color2",Vector(1,1,1))
+			PPM.m_eyel:SetFloat("$ParallaxStrength",0.1)
+			PPM.m_eyer:SetFloat("$ParallaxStrength",0.1)
+			PPM.m_eyel:SetTexture("$Iris",PPM.t_eyes[1][1]:GetTexture("$basetexture"))
+			PPM.m_eyer:SetTexture("$Iris",PPM.t_eyes[1][1]:GetTexture("$detail"))
+			--PPM.m_eyer:SetTexture("$Iris",PPM.t_eyes[1][2])
+			PPM.m_cmark:SetTexture("$basetexture",PPM.m_cmarks[1][2]:GetTexture("$basetexture"))
+			PPM.m_body:SetTexture("$basetexture",PPM.m_bodyf:GetTexture("$basetexture"))
+		end
+	end)
+	hook.Add("OnReloaded","pony_reload",	function() 
+	end)
 	CreateClientConVar("ppm_oldeyes","0",true,false)
 end

@@ -162,10 +162,15 @@ if CLIENT then
 	end
 
 	PPM.VALIDPONY_CLASSES={"player", "prop_ragdoll", "prop_physics", "cpm_pony_npc"}
-
-	function HOOK_HUDPaint()
+	local VALIDPONY_CLASSES={
+		player=true,
+		prop_physics=true,
+		prop_ragdoll=true,
+		cpm_pony_npc=true,
+	}
+	hook.Add("HUDPaint", "pony_render_textures",function()
 		for name, ent in pairs(ents.GetAll()) do
-			if (ent ~=nil and (table.HasValue(PPM.VALIDPONY_CLASSES, ent:GetClass()) or string.match(ent:GetClass(), "^(npc_)") ~=nil)) then
+			if ent!=nil and (VALIDPONY_CLASSES[ent:GetClass()] or string.match(ent:GetClass(), "^(npc_)") ~=nil) then
 				if (PPM.isValidPonyLight(ent)) then
 					local pony=PPM.getPonyValues(ent, false)
 
@@ -213,9 +218,7 @@ if CLIENT then
 				end
 			end
 		end
-	end
-
-	hook.Add("HUDPaint", "pony_render_textures", HOOK_HUDPaint)
+	end)
 
 	PPM.loadrt=function()
 		PPM.currt_success=false
