@@ -58,7 +58,7 @@ function PPM.setupPony(ent, fake)
 
 	if not fake then
 		if SERVER then
-			if not IsValid(ent.ponydata.clothes1) then
+			if not IsValid(ent.ponydata.clothes1) and PPM.pony_models[ent:GetModel()] then
 				ent.ponydata.clothes1 = ents.Create("prop_dynamic")
 				ent.ponydata.clothes1:SetModel("models/ppm/player_default_clothes1.mdl")
 				ent.ponydata.clothes1:SetParent(ent)
@@ -164,7 +164,6 @@ end
 function PPM.isValidPonyLight(ent)
 	if not IsValid(ent) then return false end
 	if not PPM.hasPonyModel(ent:GetModel()) then return false end
-
 	return true
 end
 
@@ -172,7 +171,6 @@ function PPM.isValidPony(ent)
 	if not IsValid(ent) then return false end
 	if ent.ponydata == nil then return false end
 	if not PPM.hasPonyModel(ent:GetModel()) then return false end
-
 	return true
 end
 
@@ -280,56 +278,12 @@ function PPM.getPonyValues(ent, localvals)
 	end
 end
 
-if CLIENT then
-	PPM.jiggleboneids = {}
-
-	function PPM.fixJigglebones(ent)
-		local bonecount = ent:GetBoneCount()
-		print("PLAYER BONECOUNT:", bonecount)
-		bboneeez(ent, bonecount, bonecount)
-		ent.BuildBonePositions(ent, bonecount)
-		--Entity:GetBoneMatrix(number boneID)
-	end
-end
-
 --///////////////////////////////////////////////////////////////CLIENT
 if CLIENT then
 	function PPM.RELOAD()
 	end
 
-	function getValues()
-		local pony = PPM.getPonyValues(LocalPlayer(), false)
-
-		for k, v in SortedPairs(pony) do
-			MsgN(k .. "=" .. tostring(v))
-		end
-	end
-
-	function getValuesl()
-		local pony = PPM.getPonyValues(LocalPlayer(), true)
-
-		for k, v in SortedPairs(pony) do
-			MsgN(k .. "=" .. tostring(v))
-		end
-	end
-
-	function reloadPPM()
-		PPM.isLoaded = false
-	end
-
-	function OnEntityCreated(ent)
-		--[[		print("3456345")
-		if ent:IsPlayer() then -- We want to define this for each player that gets created.
-			print("BONE:235235")
-			ent.BuildBonePositions=function(self, NumBones, NumPhysBones)
-				print("BONE:")
-				-- Do stuff
-				bboneeez(self, NumBones, NumPhysBones)
-			end
-		end]]
-	end
-
-	function getLocalBoneAng(ent, boneid)
+	local getLocalBoneAng=function(ent, boneid)
 		local wangle = ent:GetBoneMatrix(boneid):GetAngles()
 		local parentbone = ent:GetBoneParent(boneid)
 		local wangle_parent = ent:GetBoneMatrix(parentbone):GetAngles()
@@ -338,7 +292,7 @@ if CLIENT then
 		return la
 	end
 
-	function getWorldAng(ent, boneid, ang)
+	local getWorldAng=function(ent, boneid, ang)
 		--local wangle=ent:GetBoneMatrix(boneid):GetAngles()
 		local parentbone = ent:GetBoneParent(boneid)
 		local wangle_parent = ent:GetBoneMatrix(parentbone):GetAngles()
@@ -347,7 +301,7 @@ if CLIENT then
 		return la
 	end
 
-	function bboneeez(self, NumBones, NumPhysBones)
+	local bboneeez=function(self, NumBones, NumPhysBones)
 		for k = 1, NumBones - 1 do
 			print("BONE:", k, self:GetBoneName(k))
 			local bmatrix = self:GetBoneMatrix(k)
@@ -381,10 +335,43 @@ if CLIENT then
 		end	--An entity cannot have more than 128 bones
 	end
 
-	hook.Add("OnEntityCreated", "pony_spawnent", OnEntityCreated)
-	concommand.Add("ppm_getvalues", getValues)
-	concommand.Add("ppm_getvaluesl", getValuesl)
-	concommand.Add("ppm_reload", reloadPPM)
+	PPM.jiggleboneids = {}
+
+	function PPM.fixJigglebones(ent)
+		local bonecount = ent:GetBoneCount()
+		print("PLAYER BONECOUNT:", bonecount)
+		bboneeez(ent, bonecount, bonecount)
+		ent.BuildBonePositions(ent, bonecount)
+		--Entity:GetBoneMatrix(number boneID)
+	end
+	hook.Add("OnEntityCreated", "pony_spawnent",function(ent)
+		--[[		print("3456345")
+		if ent:IsPlayer() then -- We want to define this for each player that gets created.
+			print("BONE:235235")
+			ent.BuildBonePositions=function(self, NumBones, NumPhysBones)
+				print("BONE:")
+				-- Do stuff
+				bboneeez(self, NumBones, NumPhysBones)
+			end
+		end--]]
+	end)
+	concommand.Add("ppm_getvalues",function()
+		local pony = PPM.getPonyValues(LocalPlayer(), false)
+
+		for k, v in SortedPairs(pony) do
+			MsgN(k .. "=" .. tostring(v))
+		end
+	end)
+	concommand.Add("ppm_getvaluesl",function()
+		local pony = PPM.getPonyValues(LocalPlayer(), true)
+
+		for k, v in SortedPairs(pony) do
+			MsgN(k .. "=" .. tostring(v))
+		end
+	end)
+	concommand.Add("ppm_reload",function()
+		PPM.isLoaded = false
+	end)
 
 	concommand.Add("ppm_getbones", function(ply)
 		for i = 0, ply:GetBoneCount() - 1 do
@@ -417,34 +404,29 @@ if SERVER then
 		--end
 	end
 
-	local function HOOK_SpawnedRagdoll(ply, model, ent)
+	hook.Add("PlayerSpawnedRagdoll", "pony_spawnragdoll",function(ply, model, ent)
 		if PPM.isValidPonyLight(ent) then
 			PPM.randomizePony(ent)
 			--PPM.initPonyValues(ent)
-			print("Setting cache target")
+--			print("Setting cache target")
 			ent.ponyCacheTarget = ply:SteamID64()
 			PPM.setPonyValues(ent)
 			PPM.setBodygroups(ent)
 		end
-	end
+	end)
 
-	local function HOOK_PlayerSpawn(ply)
-		local m = ply:GetInfo("cl_playermodel")
-
-		if (m == "pony") or (m == "ponynj") then
-			timer.Simple(1, function()
+	hook.Add("PlayerSpawn", "pony_spawn",function(ply)
+		timer.Simple(1,function()
+			if PPM.pony_models[ply:GetModel()] then
 				if !ply:IsValid() then return end
-				if ply.ponydata == nil then
+				if ply.ponydata==nil then
 					PPM.setupPony(ply)
 				end
 
 				PPM.setBodygroups(ply, false)
 				--PPM.setPonyValues(ply)
 				--PPM.ccmakr_onplyinitspawn(ply)
-			end)
-		end
-	end
-
-	hook.Add("PlayerSpawnedRagdoll", "pony_spawnragdoll", HOOK_SpawnedRagdoll)
-	hook.Add("PlayerSpawn", "pony_spawn", HOOK_PlayerSpawn)
+			end
+		end)
+	end)
 end

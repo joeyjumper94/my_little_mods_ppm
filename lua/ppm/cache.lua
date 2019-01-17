@@ -31,7 +31,7 @@ function PPM.SaveToCache(group, ply, name, data, skipNameResolve)
 	end
 
 	if id == nil then
-		id = "0"
+		id = ppm.SteamID64(ply) or "0"
 	end
 
 	-- Determine the target director and create the signature
@@ -60,9 +60,8 @@ function PPM.LoadFromCache(group, ply, sig)
 		if type(ply) == "string" then
 			id = ply
 		else
-			print(ply)
 			if not IsValid(ply) then
-				id = "0"--ErrorNoHalt("PPM.LoadFromCache was called with an invalid entity")
+				id = "0" ErrorNoHalt("PPM.LoadFromCache was called with an invalid entity")
 			elseif not ply:IsPlayer() then
 				id = "0" ErrorNoHalt("PPM.LoadFromCache was called with a non-player entity")
 			elseif not ply.SteamID64 then
@@ -828,7 +827,7 @@ else
 				local id
 
 				if entry[1]:IsPlayer() then
-					id = entry[1]:SteamID64()
+					id = entry[1]:SteamID64() or PPM.SteamID64(entry[1])
 				else
 					id = entry[1].ponyCacheTarget
 				end
@@ -879,7 +878,7 @@ else
 				local id
 
 				if entry[1]:IsPlayer() then
-					id = entry[1]:SteamID64()
+					id = entry[1]:SteamID64() or PPM.SteamID64(entry[1])
 				else
 					id = entry[1].ponyCacheTarget
 				end
@@ -1115,7 +1114,16 @@ else
 		end
 	end
 end
-
+PPM.SteamID64=function(ply)
+	local ret=ply:SteamID64()
+	if ret then
+		return ret
+	end
+	return ply:GetNWString("SteamID64","00000000")
+end
+hook.Add("PlayerSpawn","NWSID64",function(ply)
+	ply:SetNWString("SteamID64",ply:SteamID64())
+end)
 net.Receive("ppm_message", PPM.HandleNetMessage)
 hook.Add("EntityRemoved", "pony_entityremoved", PPM.HOOK_EntityRemoved)
 hook.Add("PlayerDisconnected", "pony_playerdisconnected", PPM.HOOK_EntityRemoved)

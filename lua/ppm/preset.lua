@@ -53,24 +53,23 @@ function PPM.StringToPonyData( str )
 end
 
 if CLIENT then
-function PPM.Save(filename, ponydata)
-    local saveframe = PPM.PonyDataToString( ponydata )
-	
-	if !string.EndsWith( filename,".txt" ) then
-		filename = filename .. ".txt"
+	function PPM.Save(filename, ponydata)
+		local saveframe = PPM.PonyDataToString( ponydata )
+		
+		if !string.EndsWith( filename,".txt" ) then
+			filename = filename .. ".txt"
+		end
+		if !file.Exists( "ppm", "DATA" ) then
+			file.CreateDir( "ppm" )
+		end
+		MsgN( "saving .... " .. "ppm/" .. filename )
+		file.Write( "ppm/" .. filename, saveframe )
+		return PPM.SaveToCache( PPM.CacheGroups.OC_DATA, LocalPlayer(), filename, saveframe )
 	end
-	if !file.Exists( "ppm", "DATA" ) then
-		file.CreateDir( "ppm" )
-	end
-	MsgN( "saving .... " .. "ppm/" .. filename )
-	file.Write( "ppm/" .. filename, saveframe )
-    return PPM.SaveToCache( PPM.CacheGroups.OC_DATA, LocalPlayer(), filename, saveframe )
-end
 
-function PPM.Load(filename)
-	local data = file.Read("data/ppm/"..filename,"GAME")
-	
-    return PPM.StringToPonyData( data )
-end
+	function PPM.Load(filename)
+		local data = file.Read("data/ppm/"..filename,"GAME")
+		return PPM.StringToPonyData( data )
+	end
 
 end
