@@ -110,12 +110,7 @@ if CLIENT then
 	end
 
 --	function PonyPropDraw(ent) end
-
-	
-
-	
-
-	hook.Add("PostDrawOpaqueRenderables","test_Redraw",function()
+	PPM.PostDrawOpaqueRenderables=function()
 		--PPM.bones_testDraw("pony_mature") 	
 		--			MsgN("Ponies:")
 		--------------------STRARTUPHOOK
@@ -127,9 +122,9 @@ if CLIENT then
 		--if true then return end
 		--------------------RENDER
 		for name,ent in pairs(ents.GetAll()) do
-			if (IsValid(ent)) then
-				if (not ent:IsPlayer()) then
-					if (PPM.isValidPonyLight(ent)) then
+			if IsValid(ent) then
+				if not ent:IsPlayer() then
+					if PPM.isValidPonyLight(ent) then
 						if (ent:IsNPC()) then
 							ent:SetNoDraw(true)
 							PPM.PrePonyDraw(ent,false)
@@ -143,7 +138,7 @@ if CLIENT then
 							--	end
 							--PPM.randomizePony(ent)
 							--ent:SetupBones()
-						elseif (table.HasValue(PPM.VALIDPONY_CLASSES,ent:GetClass()) or string.match(ent:GetClass(),"^(npc_)")!=nil) then
+						elseif PPM.VALIDPONY_CLASSES[ent:GetClass()] or string.match(ent:GetClass(),"^(npc_)")!=nil then
 							if (not ent.isEditorPony) then
 								if (not PPM.isValidPony(ent)) then end
 								ent:SetNoDraw(true)
@@ -163,7 +158,7 @@ if CLIENT then
 					--if plyrag.cloth1!=nil then
 					--	plyrag.cloth1:DrawModel()  
 					--end
-					----[[
+					----
 					--if ent.ponydata.clothes1==NULL  then 
 					--	PPM.setupPony(ent) 
 					--end
@@ -216,11 +211,9 @@ if CLIENT then
 				end
 			end
 		end
-	end)
-	function HOOK_PostDrawTranslucentRenderables()
 	end
-
-	hook.Add("PrePlayerDraw","pony_draw",function(PLY)
+	hook.Add("PostDrawOpaqueRenderables","test_Redraw",PPM.PostDrawOpaqueRenderables)
+	PPM.PrePlayerDraw=function(PLY)
 		--PLY:SetRenderMode(RENDERMODE_NORMAL ) 
 		--if !PPM.isValidPonyLight(PLY) then 
 		--local cne=PLY.ponydata.clothes1:GetNWEntity("pny_clothing")
@@ -244,8 +237,10 @@ if CLIENT then
 		if not PLY:Alive()then
 			return false
 		end
-	end)
-	hook.Add("PostPlayerDraw","pony_postdraw",function(PLY)
+	end
+	hook.Add("PrePlayerDraw","pony_draw",PPM.PrePlayerDraw)
+	
+	PPM.PostPlayerDraw=function(PLY)
 		if PLY==nil then return end
 		if not IsValid(PLY) then return end
 
@@ -267,8 +262,9 @@ if CLIENT then
 			PPM.m_cmark:SetTexture("$basetexture",PPM.m_cmarks[1][2]:GetTexture("$basetexture"))
 			PPM.m_body:SetTexture("$basetexture",PPM.m_bodyf:GetTexture("$basetexture"))
 		end
-	end)
-	hook.Add("OnReloaded","pony_reload",	function() 
+	end
+	hook.Add("PostPlayerDraw","pony_postdraw",PPM.PostPlayerDraw)
+	hook.Add("OnReloaded","pony_reload",function() 
 	end)
 	CreateClientConVar("ppm_oldeyes","0",true,false)
 end

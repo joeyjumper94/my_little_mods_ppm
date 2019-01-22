@@ -161,16 +161,19 @@ if CLIENT then
 		return rttex
 	end
 
-	PPM.VALIDPONY_CLASSES={"player", "prop_ragdoll", "prop_physics", "cpm_pony_npc"}
-	local VALIDPONY_CLASSES={
+	PPM.VALIDPONY_CLASSES={
+		"player",
+		"prop_ragdoll",
+		"prop_physics",
+		"cpm_pony_npc"
 		player=true,
 		prop_physics=true,
 		prop_ragdoll=true,
 		cpm_pony_npc=true,
 	}
 	hook.Add("HUDPaint", "pony_render_textures",function()
-		for name, ent in pairs(ents.GetAll()) do
-			if ent!=nil and (VALIDPONY_CLASSES[ent:GetClass()] or string.match(ent:GetClass(), "^(npc_)") ~=nil) then
+		for index, ent in pairs(ents.GetAll()) do
+			if PPM.VALIDPONY_CLASSES[ent:GetClass()] or ent:GetClass():match("^(npc_)")!=nil then
 				if (PPM.isValidPonyLight(ent)) then
 					local pony=PPM.getPonyValues(ent, false)
 
