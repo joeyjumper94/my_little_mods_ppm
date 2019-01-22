@@ -110,7 +110,7 @@ if CLIENT then
 	end
 
 --	function PonyPropDraw(ent) end
-	PPM.PostDrawOpaqueRenderables=function()
+	hook.Add("PostDrawOpaqueRenderables","test_Redraw",function()
 		--PPM.bones_testDraw("pony_mature") 	
 		--			MsgN("Ponies:")
 		--------------------STRARTUPHOOK
@@ -138,7 +138,7 @@ if CLIENT then
 							--	end
 							--PPM.randomizePony(ent)
 							--ent:SetupBones()
-						elseif PPM.VALIDPONY_CLASSES[ent:GetClass()] or string.match(ent:GetClass(),"^(npc_)")!=nil then
+						elseif PPM.VALIDPONY_CLASSES[ent:GetClass()] then
 							if (not ent.isEditorPony) then
 								if (not PPM.isValidPony(ent)) then end
 								ent:SetNoDraw(true)
@@ -211,9 +211,8 @@ if CLIENT then
 				end
 			end
 		end
-	end
-	hook.Add("PostDrawOpaqueRenderables","test_Redraw",PPM.PostDrawOpaqueRenderables)
-	PPM.PrePlayerDraw=function(PLY)
+	end)
+	hook.Add("PrePlayerDraw","pony_draw",function(PLY)
 		--PLY:SetRenderMode(RENDERMODE_NORMAL ) 
 		--if !PPM.isValidPonyLight(PLY) then 
 		--local cne=PLY.ponydata.clothes1:GetNWEntity("pny_clothing")
@@ -237,10 +236,9 @@ if CLIENT then
 		if not PLY:Alive()then
 			return false
 		end
-	end
-	hook.Add("PrePlayerDraw","pony_draw",PPM.PrePlayerDraw)
+	end)
 	
-	PPM.PostPlayerDraw=function(PLY)
+	hook.Add("PostPlayerDraw","pony_postdraw",function(PLY)
 		if PLY==nil then return end
 		if not IsValid(PLY) then return end
 
@@ -262,8 +260,7 @@ if CLIENT then
 			PPM.m_cmark:SetTexture("$basetexture",PPM.m_cmarks[1][2]:GetTexture("$basetexture"))
 			PPM.m_body:SetTexture("$basetexture",PPM.m_bodyf:GetTexture("$basetexture"))
 		end
-	end
-	hook.Add("PostPlayerDraw","pony_postdraw",PPM.PostPlayerDraw)
+	end)
 	hook.Add("OnReloaded","pony_reload",function() 
 	end)
 	CreateClientConVar("ppm_oldeyes","0",true,false)

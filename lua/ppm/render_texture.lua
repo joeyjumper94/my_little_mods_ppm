@@ -165,15 +165,15 @@ if CLIENT then
 		"player",
 		"prop_ragdoll",
 		"prop_physics",
-		"cpm_pony_npc"
+		"cpm_pony_npc",
 		player=true,
 		prop_physics=true,
 		prop_ragdoll=true,
 		cpm_pony_npc=true,
 	}
-	hook.Add("HUDPaint", "pony_render_textures",function()
+	hook.Add("HUDPaint","pony_render_textures",function()
 		for index, ent in pairs(ents.GetAll()) do
-			if PPM.VALIDPONY_CLASSES[ent:GetClass()] or ent:GetClass():match("^(npc_)")!=nil then
+			if PPM.VALIDPONY_CLASSES[ent:GetClass()] then
 				if (PPM.isValidPonyLight(ent)) then
 					local pony=PPM.getPonyValues(ent, false)
 
@@ -199,24 +199,22 @@ if CLIENT then
 					end
 				end
 				--MsgN("Outdated texture at "..string.Replace(tostring(ent),".","//point//")..tostring(ent:GetClass()))
-			else
-				if (ent.isEditorPony) then
-					local pony=PPM.getPonyValues(ent, true)
+			elseif ent.isEditorPony then
+				local pony=PPM.getPonyValues(ent, true)
 
-					if (not PPM.isValidPony(ent)) then
-						PPM.setupPony(ent)
-					end
+				if (not PPM.isValidPony(ent)) then
+					PPM.setupPony(ent)
+				end
 
-					for k, v in pairs(PPM.rendertargettasks) do
-						if (PPM.TextureIsOutdated(ent, k, v.hash(pony))) then
-							ent.ponydata_tex=ent.ponydata_tex or {}
-							PPM.currt_ent=ent
-							PPM.currt_ponydata=pony
-							PPM.currt_success=false
-							ent.ponydata_tex[k]=PPM.CreateTexture(string.Replace(tostring(ent),".","//point//") .. k, v)
-							ent.ponydata_tex[k .. "_hash"]=v.hash(pony)
-							ent.ponydata_tex[k .. "_draw"]=PPM.currt_success
-						end
+				for k, v in pairs(PPM.rendertargettasks) do
+					if (PPM.TextureIsOutdated(ent, k, v.hash(pony))) then
+						ent.ponydata_tex=ent.ponydata_tex or {}
+						PPM.currt_ent=ent
+						PPM.currt_ponydata=pony
+						PPM.currt_success=false
+						ent.ponydata_tex[k]=PPM.CreateTexture(string.Replace(tostring(ent),".","//point//") .. k, v)
+						ent.ponydata_tex[k .. "_hash"]=v.hash(pony)
+						ent.ponydata_tex[k .. "_draw"]=PPM.currt_success
 					end
 				end
 			end
