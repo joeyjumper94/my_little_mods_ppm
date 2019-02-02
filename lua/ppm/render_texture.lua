@@ -172,7 +172,8 @@ if CLIENT then
 		cpm_pony_npc=true,
 	}
 	hook.Add("HUDPaint","pony_render_textures",function()
-		for index, ent in pairs(ents.GetAll()) do
+		for index, ent in pairs(PPM.Ents) do
+			if !ent:IsValid() then continue end
 			if PPM.VALIDPONY_CLASSES[ent:GetClass()] then
 				if (PPM.isValidPonyLight(ent)) then
 					local pony=PPM.getPonyValues(ent, false)

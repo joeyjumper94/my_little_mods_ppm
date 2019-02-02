@@ -110,6 +110,15 @@ if CLIENT then
 	end
 
 --	function PonyPropDraw(ent) end
+	PPM.Ents={}
+	timer.Create("PPM_ENT_CACHE",1,0,function()
+		PPM.Ents={}
+		for i,ent in ipairs(ents.GetAll()) do
+			if PPM.isValidPonyLight(ent) or ent.isEditorPony then
+				table.insert(PPM.Ents,ent)
+			end
+		end
+	end)
 	hook.Add("PostDrawOpaqueRenderables","test_Redraw",function()
 		--PPM.bones_testDraw("pony_mature") 	
 		--			MsgN("Ponies:")
@@ -121,7 +130,7 @@ if CLIENT then
 
 		--if true then return end
 		--------------------RENDER
-		for name,ent in pairs(ents.GetAll()) do
+		for name,ent in ipairs(PPM.Ents) do
 			if IsValid(ent) then
 				if not ent:IsPlayer() then
 					if PPM.isValidPonyLight(ent) then

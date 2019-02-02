@@ -88,6 +88,20 @@ function PPM.undisguise(ply)
 end
 hook.Add("PlayerPostDisguiseTo","ppm_decieve_support",PPM.disguise)
 hook.Add("PostDisguiseBlowing","ppm_decieve_support",PPM.undisguise)
+hook.Add("PlayerSpawn","ppm_fix_render",function(ply)
+	timer.Simple(0.05,function()
+		if ply:IsValid() and PPM.isValidPonyLight(ply) then
+			PPM.NetworkLua(ply,[[PPM.UpdateSignature(PPM.Save_settings())]])
+		end
+	end)
+end)
+hook.Add("OnPlayerChangedTeam","ppm_decieve_support",function(ply)
+	timer.Simple(0,function()
+		if ply:IsValid() and PPM.isValidPonyLight(ply) then
+			PPM.NetworkLua(ply,[[PPM.UpdateSignature(PPM.Save_settings())]])
+		end
+	end)
+end)
 --[[
 PPM.disguise(player who is disguising, player who's idplyity is being stolen)
 PPM.undisguise(player who is undisguising)
