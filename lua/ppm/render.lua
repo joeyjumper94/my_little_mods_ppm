@@ -111,7 +111,7 @@ if CLIENT then
 
 --	function PonyPropDraw(ent) end
 	PPM.Ents={}
-	timer.Create("PPM_ENT_CACHE",1,0,function()
+	timer.Create("PPM_ENT_CACHE",2.5,0,function()
 		PPM.Ents={}
 		for i,ent in ipairs(ents.GetAll()) do
 			if PPM.isValidPonyLight(ent) or ent.isEditorPony then
