@@ -17,7 +17,7 @@ function TOOL:LeftClick(trace)
 	PPM.setupPony(ply.tool_ponydatapaster,true)
 	if !ent:GetModel():find("ppm/player_") then return false end
 	if ent:IsPlayer() and !ent:IsBot() then
-		if ply:IsAdmin() and (PPM.isValidPonyLight(ent) or ent:GetModel()=="models/ewppm/player_default_base.mdl") then
+		if ply:IsAdmin() and PPM.isValidPonyLight(ent) then
 			if CLIENT then return true end
 			--ent.ponyCacheTarget=ply.tool_ponydatapasterTarget
 			if ply.tool_ponydatapaster.ponydata.custom_mark then
@@ -33,7 +33,7 @@ function TOOL:LeftClick(trace)
 			PPM.setBodygroups(ent)
 			return true
 		end
-	elseif PPM.isValidPonyLight(ent) or ent:GetModel()=="models/ewppm/player_default_base.mdl" then
+	elseif PPM.isValidPonyLight(ent) then
 		if CLIENT then return true end
 		ent.ponyCacheTarget=ply.tool_ponydatapasterTarget
 		PPM.copyLocalPonyTo(ply.tool_ponydatapaster, ent)
@@ -52,7 +52,7 @@ function TOOL:RightClick(trace)
 	PPM.setupPony(ply.tool_ponydatapaster, true)
 	if !ent:GetModel():find("ppm/player_") then return false end
 	if ent:IsPlayer() and !ent:IsBot() then
-		if ply:IsAdmin() and (PPM.isValidPonyLight(ent) or ent:GetModel()=="models/ewppm/player_default_base.mdl") then
+		if ply:IsAdmin() and PPM.isValidPonyLight(ent) then
 			if CLIENT then return true end
 			ply.tool_ponydatapasterTarget=ent:SteamID64()
 			PPM.copyPonyTo(ent,ply.tool_ponydatapaster)
@@ -72,7 +72,7 @@ function TOOL:Reload(trace)
 	local ply=self:GetOwner()
 	if !ent:GetModel():find("ppm/player_") then return false end
 	if ent:IsPlayer() and !ent:IsBot() then
-		if ply:IsAdmin() and (PPM.isValidPonyLight(ent) or ent:GetModel()=="models/ewppm/player_default_base.mdl") then
+		if ply:IsAdmin() and PPM.isValidPonyLight(ent) then
 			if CLIENT then return true end
 			--ent.ponyCacheTarget=ply:SteamID64()
 			--PPM.copyLocalPonyTo(ply.tool_ponydatapaster,ent)
@@ -86,7 +86,7 @@ function TOOL:Reload(trace)
 			PPM.setBodygroups(ent)
 			return true
 		end
-	elseif PPM.isValidPonyLight(ent) or ent:GetModel()=="models/ewppm/player_default_base.mdl" then
+	elseif PPM.isValidPonyLight(ent) then
 		if CLIENT then return true end
 		ent.ponyCacheTarget=ply:SteamID64()
 		PPM.copyPonyTo(ply,ent)

@@ -31,7 +31,7 @@ function PPM.SaveToCache(group, ply, name, data, skipNameResolve)
 	end
 
 	if id == nil then
-		id = ppm.SteamID64(ply) or "0"
+		id = PPM.SteamID64(ply) or "0"
 	end
 
 	-- Determine the target director and create the signature
