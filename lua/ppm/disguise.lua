@@ -10,6 +10,12 @@ if CLIENT then
 			ply["original_mdl"]=nil
 		end
 	end)
+	local a=false
+	hook.Add("KeyPress","ppm_decieve_support",function(ply,key)
+		if a or not LocalPlayer().ponydata then return end
+		PPM.UpdateSignature(PPM.Save_settings())
+		a=true
+	end)
 	return
 end
 util.AddNetworkString("ppm_lua_net")
@@ -98,7 +104,7 @@ end)
 hook.Add("OnPlayerChangedTeam","ppm_decieve_support",function(ply)
 	timer.Simple(0,function()
 		if ply:IsValid() and PPM.isValidPonyLight(ply) then
-			PPM.NetworkLua(ply,[[PPM.UpdateSignature(PPM.Save_settings())]])
+			PPM.NetworkLua(ply,'if LocalPlayer().ponydata then PPM.UpdateSignature(PPM.Save_settings())end')
 		end
 	end)
 end)
