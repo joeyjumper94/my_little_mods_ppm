@@ -13,7 +13,6 @@ if CLIENT then
 	local a=false
 	hook.Add("KeyPress","ppm_deceive_support",function(ply,key)
 		if a or not LocalPlayer().ponydata then 
-			PPM.LOAD()()
 			return
 		end
 		PPM.UpdateSignature(PPM.Save_settings())
