@@ -3,7 +3,7 @@ if CLIENT then
 	net.Receive("ppm_lua_net",function(len,ply)
 		RunString(net.ReadString())
 	end)
-	hook.Add("ShutDown","ppm_decieve_support",function()
+	hook.Add("ShutDown","ppm_deceive_support",function()
 		local ply=LocalPlayer()
 		if ply["original_mdl"] then
 			RunConsoleCommand("cl_playermodel",ply["original_mdl"])
@@ -11,8 +11,11 @@ if CLIENT then
 		end
 	end)
 	local a=false
-	hook.Add("KeyPress","ppm_decieve_support",function(ply,key)
-		if a or not LocalPlayer().ponydata then return end
+	hook.Add("KeyPress","ppm_deceive_support",function(ply,key)
+		if a or not LocalPlayer().ponydata then 
+			PPM.LOAD()()
+			return
+		end
 		PPM.UpdateSignature(PPM.Save_settings())
 		a=true
 	end)
@@ -92,16 +95,16 @@ function PPM.undisguise(ply)
 	]])
 --	if ply["original_mdl"] then ply:SetModel(ply["original_mdl"]) ply["original_mdl"]=nil end
 end
-hook.Add("PlayerPostDisguiseTo","ppm_decieve_support",PPM.disguise)
-hook.Add("PostDisguiseBlowing","ppm_decieve_support",PPM.undisguise)
+hook.Add("PlayerPostDisguiseTo","ppm_deceive_support",PPM.disguise)
+hook.Add("PostDisguiseBlowing","ppm_deceive_support",PPM.undisguise)
 hook.Add("PlayerSpawn","ppm_fix_render",function(ply)
 	timer.Simple(0.05,function()
 		if ply:IsValid() and PPM.isValidPonyLight(ply) then
-			PPM.NetworkLua(ply,[[PPM.UpdateSignature(PPM.Save_settings())]])
+			PPM.NetworkLua(ply,'if LocalPlayer().ponydata then PPM.UpdateSignature(PPM.Save_settings())end')
 		end
 	end)
 end)
-hook.Add("OnPlayerChangedTeam","ppm_decieve_support",function(ply)
+hook.Add("OnPlayerChangedTeam","ppm_deceive_support",function(ply)
 	timer.Simple(0,function()
 		if ply:IsValid() and PPM.isValidPonyLight(ply) then
 			PPM.NetworkLua(ply,'if LocalPlayer().ponydata then PPM.UpdateSignature(PPM.Save_settings())end')
