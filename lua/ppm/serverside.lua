@@ -44,8 +44,8 @@ if SERVER then
 	hook.Add("playerSpawn","items_Flush",PlayerSetModel)
 	hook.Add("OnPlayerChangedTeam","items_Flush",PlayerSetModel)
 	hook.Add("PlayerSwitchWeapon","pony_weapons_autohide",function(ply,old,new)
-		if PPM.pony_models[ply:GetModel()]then--ply:GetInfo("cl_playermodel")] then
-			new:SetMaterial"Models/effects/vol_light001"
+		if PPM.pony_models[ply:GetModel()] and new:IsValid() then
+			--new:SetMaterial"Models/effects/vol_light001"
 		end
 	end)
 	hook.Add("PlayerLeaveVehicle","pony_fixclothes",function(ply,ent)

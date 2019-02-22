@@ -30,3 +30,9 @@ if CLIENT then
 else
 	include("serverside.lua")
 end
+if SERVER and file.Exists("ppm/pony_hoofstep_sounds.lua","LUA") then
+	SetGlobalBool("ppm/pony_hoofstep_sounds.lua",true)
+end
+if GetGlobalBool("ppm/pony_hoofstep_sounds.lua",false) then
+	include("ppm/pony_hoofstep_sounds.lua")
+end

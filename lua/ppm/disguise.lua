@@ -20,6 +20,16 @@ if CLIENT then
 	end)
 	return
 end
+if game.SinglePlayer() then
+	local a=false
+	hook.Add("KeyPress","ppm_deceive_support",function(ply,key)
+		if a or not ply.ponydata then 
+			return
+		end
+		PPM.NetworkLua(ply,'if LocalPlayer().ponydata then PPM.UpdateSignature(PPM.Save_settings())end')
+		a=true
+	end)
+end
 util.AddNetworkString("ppm_lua_net")
 function PPM.NetworkLua(ply,lua)
 	net.Start("ppm_lua_net")
