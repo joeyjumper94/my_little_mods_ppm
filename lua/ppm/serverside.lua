@@ -45,16 +45,22 @@ end
 hook.Add("PlayerSetModel","items_Flush",PlayerSetModel)
 hook.Add("playerSpawn","items_Flush",PlayerSetModel)
 hook.Add("OnPlayerChangedTeam","items_Flush",PlayerSetModel)
-local ppm_hide_weapon=CreateConVar("ppm_hide_weapon","0",FCVAR_REPLICATED,FCVAR_ARCHIVE,"hide weapons held by ponies"):GetBool()
-cvars.AddChangeCallback("ppm_hide_weapon",function(v,o,n)ppm_hide_weapon=n!="0"end,"ppm_hide_weapon")
+PPM.hide_weapon=CreateConVar("ppm_hide_weapon","1",FCVAR_REPLICATED,FCVAR_ARCHIVE,"hide weapons held by ponies"):GetBool()
+cvars.AddChangeCallback("ppm_hide_weapon",function(v,o,n)
+	PPM.hide_weapon=n!="0"
+end,"ppm_hide_weapon")
 hook.Add("PlayerSwitchWeapon","pony_weapons_autohide",function(ply,old,new)
 	if PPM.pony_models[ply:GetModel()] and new:IsValid() then
-		if ppm_hide_weapon then
+		if PPM.hide_weapon then
+			new.OldColor=new.OldColor or new:GetColor()
 			new:SetColor(Color(0,0,0,0))
+			new.OldMaterial=new.OldMaterial or new:GetMaterial()
 			new:SetMaterial"Models/effects/vol_light001"
 		else
-			new:SetColor(Color(255,255,255))
-			new:SetMaterial""
+			new:SetColor(new.OldColor or Color(255,255,255,255))
+			new.OldColor=nil
+			new:SetMaterial(new.OldMaterial or "")
+			new.OldMaterial=nil
 		end
 	end
 end)
