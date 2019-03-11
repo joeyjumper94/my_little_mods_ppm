@@ -65,7 +65,7 @@ function PPM.setupPony(ent, fake)
 				ent.ponydata.clothes1:AddEffects(EF_BONEMERGE)
 				ent.ponydata.clothes1:SetRenderMode(RENDERMODE_TRANSALPHA)
 				--ent.ponydata.clothes1:SetNoDraw(true)	
-				ent:SetNetworkedEntity("pny_clothing", ent.ponydata.clothes1)
+				ent:SetNWEntity("pny_clothing", ent.ponydata.clothes1)
 			end
 			--PPM.setPonyValues(ent)
 		end
