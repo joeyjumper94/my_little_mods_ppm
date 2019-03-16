@@ -54,7 +54,7 @@ local PlayerSetModel=function(ply)
 					local clothes1=ply.ponydata and ply.ponydata.clothes1 or NULL
 					if clothes1:IsValid() then
 						ply.ponydata.bdata = ply.ponydata.bdata or {0,0,0,0,0,0,0,0,0,0,0,0,0,0,}
-						for k=0,14 do
+						for i=0,14 do
 							ply.ponydata.bdata[i]=ply.ponydata.clothes1:GetBodygroup(i)
 						end
 						clothes1:Remove()

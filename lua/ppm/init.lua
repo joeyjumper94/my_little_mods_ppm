@@ -1,4 +1,6 @@
-
+if CLIENT and PPM then
+	goto END
+end
 PPM=PPM or {}
 PPM.serverPonydata=PPM.serverPonydata or {}
 PPM.isLoaded=false
@@ -32,6 +34,7 @@ if CLIENT then
 else
 	include("serverside.lua")
 end
+::END::
 if SERVER and file.Exists("ppm/pony_hoofstep_sounds.lua","LUA") then
 	SetGlobalBool("ppm/pony_hoofstep_sounds.lua",true)
 end
