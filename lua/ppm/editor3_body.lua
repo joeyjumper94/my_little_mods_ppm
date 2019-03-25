@@ -499,7 +499,7 @@ PPM.Editor3_nodes.pony_normal_body = {
 */
 }
 
-timer.Simple(0,function()
+timer.Simple(1,function()
 	local choises={"NONE",}
 	for k,v in ipairs(PPM.m_bodydetails)do
 		choises[k+1]=tostring(v[2])
