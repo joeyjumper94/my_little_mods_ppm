@@ -95,19 +95,23 @@ end
 
 function PPM.randomizePony(ent)
 	PPM.setupPony(ent)
-	ent.ponydata.kind = math.Round(math.Rand(1, 4))
-	ent.ponydata.gender = math.Round(math.Rand(1, 2))
+	ent.ponydata.kind = math.random(1, 4)
+	ent.ponydata.gender = math.random(1, 2)
 	ent.ponydata.body_type = 1
-	ent.ponydata.mane = math.Round(math.Rand(1, 15))
-	ent.ponydata.manel = math.Round(math.Rand(1, 12))
-	ent.ponydata.tail = math.Round(math.Rand(1, 14))
+	ent.ponydata.mane = math.random(1, 15)
+	ent.ponydata.manel = math.random(1, 12)
+	ent.ponydata.tail = math.random(1, 14)
 	ent.ponydata.tailsize = math.Rand(0.8, 1)
-	ent.ponydata.eye = math.Round(math.Rand(1, EYES_COUNT))
-	ent.ponydata.eyelash = math.Round(math.Rand(1, 5))
+	ent.ponydata.eye = math.random(1, EYES_COUNT)
+	ent.ponydata.eyelash = math.random(1, 5)
 	ent.ponydata.coatcolor = Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1))
+	ent.ponydata.wingcolor = Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1))
+	ent.ponydata.horncolor = Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1))
 
 	for I = 1, 6 do
 		ent.ponydata["haircolor" .. I] = Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1))
+		ent.ponydata["manecolor" .. I] = Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1))
+		ent.ponydata["tailcolor" .. I] = Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1))
 	end
 
 	for I = 1, 8 do
@@ -115,19 +119,28 @@ function PPM.randomizePony(ent)
 		ent.ponydata["bodydetail" .. I .. "_c"] = Vector(0, 0, 0)
 	end
 
-	ent.ponydata.cmark = math.Round(math.Rand(1, MARK_COUNT))
+	ent.ponydata.cmark = math.random(1, MARK_COUNT)
 	ent.ponydata.bodyweight = math.Rand(0.8, 1.2)
-	ent.ponydata.bodyt0 = 1 --math.Round(math.Rand(1,4)) 
+	ent.ponydata.bodyt0 = 1 --math.random(1,4))
 	ent.ponydata.bodyt1_color = Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1))
-	local iriscolor = Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1)) * 2
+
 	ent.ponydata.eyecolor_bg = Vector(1, 1, 1)
 	ent.ponydata.eyeirissize = 0.7 + math.Rand(-0.1, 0.1)
-	ent.ponydata.eyecolor_iris = iriscolor
-	ent.ponydata.eyecolor_grad = iriscolor / 3
-	ent.ponydata.eyecolor_line1 = iriscolor * 0.9
-	ent.ponydata.eyecolor_line2 = iriscolor * 0.8
+	ent.ponydata.eyecolor_iris = Vector(math.Rand(0, 2), math.Rand(0, 2), math.Rand(0, 2))
+	ent.ponydata.eyecolor_grad = Vector(math.Rand(0, 2), math.Rand(0, 2), math.Rand(0, 2)) / 3
+	ent.ponydata.eyecolor_line1 = Vector(math.Rand(0, 2), math.Rand(0, 2), math.Rand(0, 2)) * 0.9
+	ent.ponydata.eyecolor_line2 = Vector(math.Rand(0, 2), math.Rand(0, 2), math.Rand(0, 2)) * 0.8
 	ent.ponydata.eyeholesize = 0.7 + math.Rand(-0.1, 0.1)
 	ent.ponydata.eyecolor_hole = Vector(0, 0, 0)
+
+	ent.ponydata.eyecolor_bg_r = Vector(1, 1, 1)
+	ent.ponydata.eyeirissize_r = 0.7 + math.Rand(-0.1, 0.1)
+	ent.ponydata.eyecolor_iris_r = Vector(math.Rand(0, 2), math.Rand(0, 2), math.Rand(0, 2))
+	ent.ponydata.eyecolor_grad_r = Vector(math.Rand(0, 2), math.Rand(0, 2), math.Rand(0, 2)) / 3
+	ent.ponydata.eyecolor_line1_r = Vector(math.Rand(0, 2), math.Rand(0, 2), math.Rand(0, 2)) * 0.9
+	ent.ponydata.eyecolor_line2_r = Vector(math.Rand(0, 2), math.Rand(0, 2), math.Rand(0, 2)) * 0.8
+	ent.ponydata.eyeholesize_r = 0.7 + math.Rand(-0.1, 0.1)
+	ent.ponydata.eyecolor_hole_r = Vector(0, 0, 0)
 end
 
 function PPM.copyLocalPonyTo(from, to)

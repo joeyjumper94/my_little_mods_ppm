@@ -33,12 +33,12 @@ if CLIENT then
 		outline=false
 	})
 	concommand.Add("ppm_chared3",function()
-		if timer.Exists("ppm_editor_anti_spam") then return end
-		timer.Create("ppm_editor_anti_spam",0.1,1,PPM.Editor3Open)
+		if PPM.Editor3 and PPM.Editor3:IsValid() then return end
+		PPM.Editor3Open()
 	end)
 	concommand.Add("ppm_editor",function()
-		if timer.Exists("ppm_editor_anti_spam") then return end
-		timer.Create("ppm_editor_anti_spam",0.1,1,PPM.Editor3Open)
+		if PPM.Editor3 and PPM.Editor3:IsValid() then return end
+		PPM.Editor3Open()
 	end)
 	PPM.Editor3=nil
 	PPM.Editor3_ponies=PPM.Editor3_ponies or {}
@@ -140,11 +140,11 @@ if CLIENT then
 			PPM.editor3_pony.ponyCacheTarget=LocalPlayer():SteamID64()
 			self.Entity.isEditorPony=true 
 			if mdl.model2==nil then
-			mdl.model2=ClientsideModel("models/ppm/player_default_clothes1.mdl",RENDER_GROUP_OPAQUE_ENTITY) 
-			mdl.model2:SetNoDraw(true)
-			mdl.model2:SetParent(self.Entity)
-			mdl.model2:AddEffects(EF_BONEMERGE) 
-			PPM.editor3_clothing=mdl.model2
+				mdl.model2=ClientsideModel("models/ppm/player_default_clothes1.mdl",RENDER_GROUP_OPAQUE_ENTITY) 
+				mdl.model2:SetNoDraw(true)
+				mdl.model2:SetParent(self.Entity)
+				mdl.model2:AddEffects(EF_BONEMERGE) 
+				PPM.editor3_clothing=mdl.model2
 			end
 			if LocalPlayer().pi_wear[50]!=nil then
 				self.Entity.ponydata.bodyt0=LocalPlayer().pi_wear[50].wearid or 1

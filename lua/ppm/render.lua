@@ -74,9 +74,9 @@ if CLIENT then
 		--}
 		if PPM.m_hair1==nil then return end
 		PPM.m_hair1:SetVector("$color2",pony.haircolor1)
-		PPM.m_hair2:SetVector("$color2",pony.haircolor2)
-		PPM.m_wings:SetVector("$color2",pony.coatcolor)
-		PPM.m_horn:SetVector("$color2",pony.coatcolor)
+		PPM.m_hair2:SetVector("$color2",pony.manecolor1 or pony.haircolor1)
+		PPM.m_wings:SetVector("$color2",pony.wingcolor or pony.coatcolor)
+		PPM.m_horn:SetVector("$color2",pony.horncolor or pony.coatcolor)
 		PPM.m_eyel:SetFloat("$ParallaxStrength",0.2)
 		PPM.m_eyer:SetFloat("$ParallaxStrength",0.1)
 		--PPM.m_eyel:SetTexture("$Iris",PPM.t_eyes[pony.eye][1]:GetTexture("$basetexture"))

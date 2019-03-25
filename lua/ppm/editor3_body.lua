@@ -109,7 +109,7 @@ PPM.Editor3_nodes.pony_equipment = {
 PPM.Editor3_nodes.pony_normal_face = {
 	eyelashes = {
 		name = "Eyelashes",
-		pos = Vector(13,8,43.5),
+		pos = Vector(15,8,45),
 		controlls = {
 			{
 				name = "Type",
@@ -120,8 +120,8 @@ PPM.Editor3_nodes.pony_normal_face = {
 		}
 	},
 	eyes = {
-		name = "Eyes",
-		pos = Vector(15,-5,40),
+		name = "Left Eye",
+		pos = Vector(15,5,40),
 		controlls = {
 /*			{
 				name = "View",
@@ -186,10 +186,99 @@ PPM.Editor3_nodes.pony_normal_face = {
 				param = "eyecolor_hole"
 			}
 		}
-	}
+	},
+	right_eye = {
+		name = "Right Eye",
+		pos = Vector(15,-5,40),
+		controlls = {
+/*			{
+				name = "View",
+				type = "view_eye_r" 
+			},*/
+			{
+				name = "Back color",
+				type = "edit_color",
+				param = "eyecolor_bg_r"
+			},
+			{
+				name = "Iris size",
+				type = "edit_number",
+				param = "eyeirissize_r",
+				min = 0.2,
+				max = 2
+			},
+			{
+				name = "Iris color",
+				type = "edit_color",
+				param = "eyecolor_iris_r"
+			},
+			{
+				name = "Iris color 2",
+				type = "edit_color",
+				param = "eyecolor_grad_r"
+			},
+			{
+				name = "No lines",
+				type = "edit_bool",
+				param = "eyehaslines_r",
+				onvalue = 2,
+				offvalue = 1
+			},
+			{
+				name = "Line 1 color",
+				type = "edit_color",
+				param = "eyecolor_line1_r"
+			},
+			{
+				name = "Line 2 color",
+				type = "edit_color",
+				param = "eyecolor_line2_r"
+			},
+			{
+				name = "Pupil size",
+				type = "edit_number",
+				param = "eyeholesize_r",
+				min = 0.3,
+				max = 1
+			},
+			{
+				name = "Pupil width",
+				type = "edit_number",
+				param = "eyejholerssize_r",
+				min = 0.2,
+				max = 1
+			},
+			{
+				name = "Pupil color",
+				type = "edit_color",
+				param = "eyecolor_hole_r"
+			}
+		}
+	},
 }
-
 PPM.Editor3_nodes.pony_normal_body = {
+	horn = {
+		name = "Horn",
+		pos = Vector(22,0,60),
+		controlls = {
+			{
+				name = "horn color",
+				type = "edit_color",
+				param = "horncolor"
+			}
+		}
+	},
+	wings={
+		name = "Wings",
+		pos = Vector(0,0,30),
+		controlls = {
+			{
+				name = "wing color",
+				type = "edit_color",
+				param = "wingcolor"
+			}
+		}
+	},
 	body = {
 		name = "Body",
 		pos = Vector(10,0,20),
@@ -281,32 +370,32 @@ PPM.Editor3_nodes.pony_normal_body = {
 			{
 				name = "Color 1",
 				type = "edit_color",
-				param = "haircolor1"
+				param = "tailcolor1"
 			},
 			{
 				name = "Color 2",
 				type = "edit_color",
-				param = "haircolor2"
+				param = "tailcolor2"
 			},
 			{
 				name = "Color 3",
 				type = "edit_color",
-				param = "haircolor3"
+				param = "tailcolor3"
 			},
 			{
 				name = "Color 4",
 				type = "edit_color",
-				param = "haircolor4"
+				param = "tailcolor4"
 			},
 			{
 				name = "Color 5",
 				type = "edit_color",
-				param = "haircolor5"
+				param = "tailcolor5"
 			},
 			{
 				name = "Color 6",
 				type = "edit_color",
-				param = "haircolor6"
+				param = "tailcolor6"
 			}
 		}
 	},
@@ -373,32 +462,32 @@ PPM.Editor3_nodes.pony_normal_body = {
 			{
 				name = "Color 1",
 				type = "edit_color",
-				param = "haircolor1"
+				param = "manecolor1"
 			},
 			{
 				name = "Color 2",
 				type = "edit_color",
-				param = "haircolor2"
+				param = "manecolor2"
 			},
 			{
 				name = "Color 3",
 				type = "edit_color",
-				param = "haircolor3"
+				param = "manecolor3"
 			},
 			{
 				name = "Color 4",
 				type = "edit_color",
-				param = "haircolor4"
+				param = "manecolor4"
 			},
 			{
 				name = "Color 5",
 				type = "edit_color",
-				param = "haircolor5"
+				param = "manecolor5"
 			},
 			{
 				name = "Color 6",
 				type = "edit_color",
-				param = "haircolor6"
+				param = "manecolor6"
 			}
 		}
 	},
@@ -410,36 +499,29 @@ PPM.Editor3_nodes.pony_normal_body = {
 */
 }
 
-
-
-for i=1,8 do
-	local div=math.rad(i*(360/8))
-	PPM.Editor3_nodes.pony_normal_body["bdetail"..i]={
-		name="B"..i,
-		pos=Vector(math.cos(div)*25,math.sin(div)*25,-5),
-		controlls={
-			{
-				name="Detail type",
-				type="edit_type",
-				param="bodydetail"..i,
-				choises={
-					"None",
-					"Leg gradient","Lines","Stripes","Head stripes","Freckles",
-					"Hooves big","Hooves small","Head layer","Hooves big rnd",
-					"Hooves small rnd","Spots 1","Head gradient1","Head gradient2",
-					"Socks 1","Socks 1 Back","Socks 1 Back Left","Socks 1 Back Right",
-					"Socks 1 Front","Socks 1 Front Left","Socks 1 Front Right",
-					"Socks 2","Socks 2 Back","Socks 2 Back Left","Socks 2 Back Right",
-					"Socks 2 Front","Socks 2 Front Left","Socks 2 Front Right",
-					"Socks Solid","Socks Solid Back","Socks Solid Back Left","Socks Solid Back Right",
-					"Socks Solid Front","Socks Solid Front Left","Socks Solid Front Right","experiment"
+timer.Simple(0,function()
+	local choises={"NONE",}
+	for k,v in ipairs(PPM.m_bodydetails)do
+		choises[k+1]=tostring(v[2])
+	end
+	for i=1,8 do
+		local div=math.rad(i*45)
+		PPM.Editor3_nodes.pony_normal_body["bdetail"..i]={
+			name="B"..i,
+			pos=Vector(math.cos(div)*25,math.sin(div)*25,-5),
+			controlls={
+				{
+					name="Detail type",
+					type="edit_type",
+					param="bodydetail"..i,
+					choises=choises,
+				},
+				{
+					name="Color",
+					type="edit_color",
+					param="bodydetail"..i.."_c",
 				}
-			},
-			{
-				name="Color",
-				type="edit_color",
-				param="bodydetail"..i.."_c"
 			}
 		}
-	}
-end
+	end
+end)

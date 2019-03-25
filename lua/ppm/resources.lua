@@ -1,4 +1,3 @@
-
 function PPM.loadResources()
 	if CLIENT then
 		PPM.m_body = Material( "models/ppm/base/body" ) 
@@ -17,26 +16,16 @@ function PPM.loadResources()
 		PPM.m_eyer = Material( "models/ppm/base/eye_r" )
 
 		PPM.t_eyes = {
-			{Material( "models/ppm/base/face/tc00"),"Gray"
-			,"models/ppm/base/face/tc00" },
-			{Material( "models/ppm/base/face/tc01"),"Turquoise"
-			,"models/ppm/base/face/tc01" },
-			{Material( "models/ppm/base/face/tc02"),"Yellow"
-			,"models/ppm/base/face/tc02" },
-			{Material( "models/ppm/base/face/tc03"),"Red"
-			,"models/ppm/base/face/tc03" },
-			{Material( "models/ppm/base/face/tc04"),"Blue"
-			,"models/ppm/base/face/tc04" },
-			{Material( "models/ppm/base/face/tc05"),"Purple"
-			,"models/ppm/base/face/tc05" },
-			{Material( "models/ppm/base/face/tc06"),"Slate Blue"
-			,"models/ppm/base/face/tc06" },
-			{Material( "models/ppm/base/face/tc07"),"Green"
-			,"models/ppm/base/face/tc07" },
-			{Material( "models/ppm/base/face/tc08"),"Gold"
-			,"models/ppm/base/face/tc08" },
-			{Material( "models/ppm/base/face/tc09"),"Orange"
-			,"models/ppm/base/face/tc09" }
+			{Material( "models/ppm/base/face/tc00"),"Gray","models/ppm/base/face/tc00" },
+			{Material( "models/ppm/base/face/tc01"),"Turquoise","models/ppm/base/face/tc01" },
+			{Material( "models/ppm/base/face/tc02"),"Yellow","models/ppm/base/face/tc02" },
+			{Material( "models/ppm/base/face/tc03"),"Red","models/ppm/base/face/tc03" },
+			{Material( "models/ppm/base/face/tc04"),"Blue","models/ppm/base/face/tc04" },
+			{Material( "models/ppm/base/face/tc05"),"Purple","models/ppm/base/face/tc05" },
+			{Material( "models/ppm/base/face/tc06"),"Slate Blue","models/ppm/base/face/tc06" },
+			{Material( "models/ppm/base/face/tc07"),"Green","models/ppm/base/face/tc07" },
+			{Material( "models/ppm/base/face/tc08"),"Gold","models/ppm/base/face/tc08" },
+			{Material( "models/ppm/base/face/tc09"),"Orange","models/ppm/base/face/tc09" }
 		}
 				 
 		PPM.m_cmarks = { 
@@ -102,19 +91,23 @@ function PPM.loadResources()
 			Material("models/ppm/texclothes/clothes_sbs_light.png"),
 			Material("models/ppm/texclothes/clothes_royalguard.png")
 		}
-        PPM.m_bodyt0[6] = PPM.m_bodyt0[5] -- Done to prevent bizarre memory bug in GMOD itself...
-        
-        PPM.m_bodydetails = {
-			{Material("models/ppm/partrender/body_leggrad1.png"),"Leg grad"}, 
-			{Material("models/ppm/partrender/body_lines1.png"),"Lines"}, 
-			{Material("models/ppm/partrender/body_stripes1.png"),"Stripes"}, 
-			{Material("models/ppm/partrender/body_headstripes1.png"),"Head stripes"}, 
-			{Material("models/ppm/partrender/body_freckles.png"),"Freckles"}, 
-			{Material("models/ppm/partrender/body_hooves1.png"),"Hooves big"}, 
+		PPM.m_bodyt0[6] = PPM.m_bodyt0[5] -- Done to prevent bizarre memory bug in GMOD itself...
+		
+
+
+
+
+		PPM.m_bodydetails = {
+			{Material("models/ppm/partrender/body_leggrad1.png"),"Leg grad"},
+			{Material("models/ppm/partrender/body_lines1.png"),"Lines"},
+			{Material("models/ppm/partrender/body_stripes1.png"),"Stripes"},
+			{Material("models/ppm/partrender/body_headstripes1.png"),"Head stripes"},
+			{Material("models/ppm/partrender/body_freckles.png"),"Freckles"},
+			{Material("models/ppm/partrender/body_hooves1.png"),"Hooves big"},
 			{Material("models/ppm/partrender/body_hooves2.png"),"Hooves small"}, 
-			{Material("models/ppm/partrender/body_headmask1.png"),"Head layer"}, 
-			{Material("models/ppm/partrender/body_hooves1_crit.png"),"Hooves big rnd"}, 
-			{Material("models/ppm/partrender/body_hooves2_crit.png"),"Hooves small rnd"}, 
+			{Material("models/ppm/partrender/body_headmask1.png"),"Head layer"},
+			{Material("models/ppm/partrender/body_hooves1_crit.png"),"Hooves big rnd"},
+			{Material("models/ppm/partrender/body_hooves2_crit.png"),"Hooves small rnd"},
 			{Material("models/ppm/partrender/body_spots1.png"),"Spots 1"},
 			{Material("models/ppm/partrender/body_headmask2.png"),"Head gradient1"},
 			{Material("models/ppm/partrender/body_headmask3.png"),"Head gradient2"},
@@ -139,7 +132,19 @@ function PPM.loadResources()
 			{Material("models/ppm/partrender/pony_sockssf.png"),"Socks Solid Front"},
 			{Material("models/ppm/partrender/pony_sockssfl.png"),"Socks Solid Front Left"},
 			{Material("models/ppm/partrender/pony_sockssfr.png"),"Socks Solid Front Right"},
-			{Material("models/ppm/partrender/xperiment.png"),"Experiment"}
+			{Material("models/ppm/partrender/fs_reye1.png"),"right_eye_scar_1"},
+			{Material("models/ppm/partrender/fs_reye2.png"),"right_eye_scar_2"},
+			{Material("models/ppm/partrender/fs_reye3.png"),"right_eye_scar_3"},
+			{Material("models/ppm/partrender/fs_leye1.png"),"left_eye_scar_1"},
+			{Material("models/ppm/partrender/fs_leye2.png"),"left_eye_scar_2"},
+			{Material("models/ppm/partrender/fs_leye3.png"),"left_eye_scar_3"},
+			{Material("models/ppm/partrender/xperiment.png"),"Experiment1"},
+			{Material("models/ppm/partrender/xperiment.png"),"Experiment2"},
+			{Material("models/ppm/partrender/xperiment.png"),"Experiment3"},
+			{Material("models/ppm/partrender/xperiment.png"),"Experiment4"},
+			{Material("models/ppm/partrender/xperiment.png"),"Experiment5"},
+			{Material("models/ppm/partrender/xperiment.png"),"Experiment6"},
+			{Material("models/ppm/partrender/xperiment.png"),"Experiment7"},
 		}
 	end
 end
