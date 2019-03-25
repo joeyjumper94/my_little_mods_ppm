@@ -499,7 +499,10 @@ PPM.Editor3_nodes.pony_normal_body = {
 */
 }
 
-timer.Simple(1,function()
+local FN=function()
+	if !PPM.m_bodydetails then
+		return
+	end
 	local choises={"NONE",}
 	for k,v in ipairs(PPM.m_bodydetails)do
 		choises[k+1]=tostring(v[2])
@@ -524,4 +527,6 @@ timer.Simple(1,function()
 			}
 		}
 	end
-end)
+end
+FN()
+hook.Add("InitPostEntity","ppm_load_details",FN)
