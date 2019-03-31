@@ -430,8 +430,7 @@ if SERVER then
 
 	hook.Add("PlayerSpawn", "pony_spawn",function(ply)
 		timer.Simple(1,function()
-			if PPM.pony_models[ply:GetModel()] then
-				if !ply:IsValid() then return end
+			if ply:IsValid() and PPM.pony_models[ply:GetModel()] then
 				if ply.ponydata==nil then
 					PPM.setupPony(ply)
 				end
