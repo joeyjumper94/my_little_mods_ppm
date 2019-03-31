@@ -1,6 +1,8 @@
 
 PPM.bannedVars = {
 	m_bodyt0=true,
+	_cmark=true,
+	_cmark_loaded=true,
 }
 
 -- NOTABLE LIMITATION: WILL REMOVE SPACES FROM STRINGS TYPE ITEMS BEFORE SAVING AND WILL REFUSE TO LOAD THEM PROPERLY

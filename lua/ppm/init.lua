@@ -1,4 +1,14 @@
 if CLIENT and PPM then
+	include("pony_player.lua")
+	include("resources.lua")
+	include("admin.lua")
+	include("readme.lua")
+	include("chatcommands.lua")
+	include("draw_text.lua")
+	include("disguise.lua")
+	include("editor3_body.lua")
+	include("gui_toolpanel.lua")
+	include("preset.lua")
 	goto END
 end
 PPM=PPM or {}

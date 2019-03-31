@@ -1,5 +1,4 @@
 PPM.Editor3_ponies = PPM.Editor3_ponies or {}
-
 PPM.Editor3_ponies = {
 	pony = {
 		node_main = "node_main",
@@ -16,9 +15,7 @@ PPM.Editor3_ponies = {
 		node_presets = "node_presets"
 	}
 }
-
 PPM.Editor3_nodes = PPM.Editor3_nodes or {}
-
 PPM.Editor3_nodes.node_main = {
 	name = "OMG !ROOT NODE!",
 	controlls = {
@@ -39,7 +36,6 @@ PPM.Editor3_nodes.node_main = {
 		}
 	}
 }
-
 PPM.Editor3_nodes.node_presets = {
 	name = "OMG !ROOT NODE!",
 	controlls = {
@@ -49,7 +45,6 @@ PPM.Editor3_nodes.node_presets = {
 		}
 	}
 }
-
 PPM.Editor3_nodes.pony_equipment = {
 	name = "Equipment",
 	controlls = {
@@ -105,7 +100,6 @@ PPM.Editor3_nodes.pony_equipment = {
 		}
 	}
 }
-
 PPM.Editor3_nodes.pony_normal_face = {
 	eyelashes = {
 		name = "Eyelashes",
@@ -268,7 +262,7 @@ PPM.Editor3_nodes.pony_normal_body = {
 			}
 		}
 	},
-	wings={
+	wings = {
 		name = "Wings",
 		pos = Vector(0,0,30),
 		controlls = {
@@ -340,7 +334,7 @@ PPM.Editor3_nodes.pony_normal_body = {
 					"surfboard","surfboard02","star",
 					"ussr","vault","anarchy",
 					"suit","deathscythe","shoop",
-					"smiley","dawsome","weegee"
+					"smiley","dawsome","weegee",
 				}
 			}
 		}
@@ -491,18 +485,12 @@ PPM.Editor3_nodes.pony_normal_body = {
 			}
 		}
 	},
-
-/*
-	PPM.Editor3_nodes["face"] = {
-		pos = Vector(20,0,43)
-	} 
-*/
 }
-
 local FN=function()
 	if !PPM.m_bodydetails then
 		return
 	end
+	timer.Remove("ppm_load_details")
 	local choises={"NONE",}
 	for k,v in ipairs(PPM.m_bodydetails)do
 		choises[k+1]=tostring(v[2])
@@ -529,4 +517,4 @@ local FN=function()
 	end
 end
 FN()
-hook.Add("InitPostEntity","ppm_load_details",FN)
+timer.Create("ppm_load_details",5,0,FN)

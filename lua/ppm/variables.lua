@@ -1,7 +1,6 @@
 PPM.Pony_variables=PPM.Pony_variables or {}
 
-PPM.Pony_variables.default_pony=
-{
+PPM.Pony_variables.default_pony={
 	--main
 	kind={default=4,min=1,max=4},
 	age={default=2,min=2,max=2},
@@ -22,6 +21,7 @@ PPM.Pony_variables.default_pony=
 	--coat and horn
 	coatcolor={default=Vector(1,1,1),min=Vector(0,0,0),max=Vector(1,1,1)},
 	horncolor={default=Vector(1,1,1),min=Vector(0,0,0),max=Vector(1,1,1)},
+	wingcolor={default=Vector(1,1,1),min=Vector(0,0,0),max=Vector(1,1,1)},
 
 	--upper mane
 	haircolor1={default=Vector(1,1,1),min=Vector(0,0,0),max=Vector(1,1,1)},

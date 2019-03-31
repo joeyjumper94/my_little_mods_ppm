@@ -8,7 +8,7 @@ local BODYGROUP_TAIL = 6
 local BODYGROUP_CMARK = 7
 local BODYGROUP_EYELASH = 8
 local EYES_COUNT = 10
-local MARK_COUNT = 27
+local MARK_COUNT = PPM.m_cmarks and #PPM.m_cmarks or 48
 PPM.pony_models = {
 	["models/ppm/player_default_base.mdl"] = {
 		isPonyModel = true,
@@ -30,7 +30,7 @@ PPM.pony_models = {
 		isPonyModel = true,
 		BgroupCount = 6
 	},
-		["models/ppm/player_default_clothes1.mdl"] = {
+	["models/ppm/player_default_clothes1.mdl"] = {
 		isPonyModel = false,
 		BgroupCount = 8
 	},
@@ -115,11 +115,11 @@ function PPM.randomizePony(ent)
 	end
 
 	for I = 1, 8 do
-		ent.ponydata["bodydetail" .. I] = 1
-		ent.ponydata["bodydetail" .. I .. "_c"] = Vector(0, 0, 0)
+		ent.ponydata["bodydetail" .. I] = math.random(1,#PPM.m_bodydetails+1)
+		ent.ponydata["bodydetail" .. I .. "_c"] = Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1))
 	end
-
-	ent.ponydata.cmark = math.random(1, MARK_COUNT)
+	MARK_COUNT=PPM.m_cmarks and #PPM.m_cmarks or MARK_COUNT
+	ent.ponydata.cmark = math.random(1,MARK_COUNT)
 	ent.ponydata.bodyweight = math.Rand(0.8, 1.2)
 	ent.ponydata.bodyt0 = 1 --math.random(1,4))
 	ent.ponydata.bodyt1_color = Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1))

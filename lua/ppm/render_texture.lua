@@ -302,7 +302,6 @@ PPM.loadrt=function()
 			return hash
 		end
 	}
-
 	PPM.rendertargettasks["hairtex1"]={--upper mane
 		renderTrue=function(ENT, PONY)
 			PPM.m_hair1:SetVector("$color2", Vector(1, 1, 1))
@@ -322,7 +321,6 @@ PPM.loadrt=function()
 		end,
 		hash=function(ponydata) return tostring(ponydata.haircolor1) .. tostring(ponydata.haircolor2) .. tostring(ponydata.haircolor3) .. tostring(ponydata.haircolor4) .. tostring(ponydata.haircolor5) .. tostring(ponydata.haircolor6) .. tostring(ponydata.mane) .. tostring(ponydata.manel) end
 	}
-
 	PPM.rendertargettasks["hairtex2"]={--lower mane
 		renderTrue=function(ENT, PONY)
 			--PPM.m_hair1:SetVector("$color2", Vector(1,1,1))
@@ -341,7 +339,6 @@ PPM.loadrt=function()
 		end,
 		hash=function(ponydata) return tostring(ponydata.haircolor1) .. tostring(ponydata.haircolor2) .. tostring(ponydata.haircolor3) .. tostring(ponydata.haircolor4) .. tostring(ponydata.haircolor5) .. tostring(ponydata.haircolor6) .. tostring(ponydata.mane) .. tostring(ponydata.manel) end
 	}
-
 	PPM.rendertargettasks["tailtex"]={--the tail
 		renderTrue=function(ENT, PONY)
 			PPM.m_tail1:SetVector("$color2", Vector(1, 1, 1))
@@ -360,7 +357,6 @@ PPM.loadrt=function()
 		end,
 		hash=function(ponydata) return tostring(ponydata.tailcolor1) .. tostring(ponydata.tailcolor2) .. tostring(ponydata.tailcolor3) .. tostring(ponydata.tailcolor4) .. tostring(ponydata.tailcolor5) .. tostring(ponydata.tailcolor6) .. tostring(ponydata.tail) end
 	}
-
 	PPM.rendertargettasks["eyeltex"]={--left eye
 		renderTrue=function(ENT, PONY)
 			PPM.m_eyel:SetTexture("$Iris", ENT.ponydata_tex.eyeltex)
@@ -374,7 +370,6 @@ PPM.loadrt=function()
 		end,
 		hash=function(ponydata) return tostring(ponydata.eyecolor_bg) .. tostring(ponydata.eyecolor_iris) .. tostring(ponydata.eyecolor_grad) .. tostring(ponydata.eyecolor_line1) .. tostring(ponydata.eyecolor_line2) .. tostring(ponydata.eyecolor_hole) .. tostring(ponydata.eyeirissize) .. tostring(ponydata.eyeholesize) .. tostring(ponydata.eyejholerssize) .. tostring(ponydata.eyehaslines) end
 	}
-
 	PPM.rendertargettasks["eyertex"]={--right eye
 		renderTrue=function(ENT, PONY)
 			PPM.m_eyer:SetTexture("$Iris", ENT.ponydata_tex.eyertex)
@@ -388,7 +383,6 @@ PPM.loadrt=function()
 		end,
 		hash=function(ponydata) return tostring(ponydata.eyecolor_bg_r) .. tostring(ponydata.eyecolor_iris_r) .. tostring(ponydata.eyecolor_grad_r) .. tostring(ponydata.eyecolor_line1_r) .. tostring(ponydata.eyecolor_line2_r) .. tostring(ponydata.eyecolor_hole_r) .. tostring(ponydata.eyeirissize_r) .. tostring(ponydata.eyeholesize_r) .. tostring(ponydata.eyejholerssize_r) .. tostring(ponydata.eyehaslines_r) end
 	}
-
 	PPM.tex_drawhairfunc=function(pony, UPDN, TAIL)
 		local hairnum=pony.mane
 		local PREFIX="hair"
@@ -445,7 +439,6 @@ PPM.loadrt=function()
 			end
 		end
 	end
-
 	PPM.tex_draweyefunc=function(pony, isR)
 		local prefix="l"
 		local SUFFIX=""
@@ -526,7 +519,6 @@ PPM.loadrt=function()
 		--rotate 90 degrees
 		PPM.currt_success=true
 	end
-
 	PPM.hairrenderOp=function(UPDN, TAIL, hairnum)
 		if TAIL then
 			if PPM.manerender["tl" .. hairnum] ~=nil then
@@ -538,7 +530,6 @@ PPM.loadrt=function()
 			end
 		end
 	end
-
 	--/PPM.currt_success=true
 	--MsgN(UPDN,TAIL,hairnum,"=",PPM.currt_success)
 	PPM.manerender={}
@@ -572,19 +563,19 @@ PPM.loadrt=function()
 	PPM.manecolorcounts[4]=1
 	PPM.manecolorcounts[5]=1
 	PPM.manecolorcounts[6]=1
-	PPM.defaultHairColors={Vector(252, 92, 82) / 256, Vector(254, 134, 60) / 256, Vector(254, 241, 160) / 256, Vector(98, 188, 80) / 256, Vector(38, 165, 245) / 256, Vector(124, 80, 160) / 256}
+	PPM.defaultHairColors={Vector(252,92,82)*0.00390625,Vector(254,134,60)*0.00390625,Vector(254,241,160)*0.00390625,Vector(98,188,80)*0.00390625,Vector(38,165,245)*0.00390625,Vector(124,80, 160)*0.00390625}
 	PPM.rendertargettasks["ccmarktex"]={
 		renderTrue=function(ENT,PONY)
 			PPM.m_cmark:SetTexture("$basetexture",ENT.ponydata_tex.ccmarktex)
 		end,
 		renderFalse=function(ENT,PONY)
 			--PPM.m_cmark:SetTexture("$basetexture",Material("models/mlp/partrender/clean.png"):GetTexture("$basetexture")) 
-			if (PONY==nil) then  print("1") return end
+			if (PONY==nil) then print("1") return end
 			if (PONY.cmark==nil) then  print("2") return end
-			if (PPM.m_cmarks[PONY.cmark]==nil) then  print("3") return end
-			if (PPM.m_cmarks[PONY.cmark][2]==nil) then  print("4") return end
+			if (PPM.m_cmarks[PONY.cmark]==nil) then print("3") return end
+			if (PPM.m_cmarks[PONY.cmark][2]==nil) then print("4") return end
 			if (PPM.m_cmarks[PONY.cmark][2]:GetTexture("$basetexture")==nil) then print("5") return end
-			if (PPM.m_cmarks[PONY.cmark][2]:GetTexture("$basetexture")==NULL) then  print("6") return end
+			if (PPM.m_cmarks[PONY.cmark][2]:GetTexture("$basetexture")==NULL) then print("6") return end
 			PPM.m_cmark:SetTexture("$basetexture",PPM.m_cmarks[PONY.cmark][2]:GetTexture("$basetexture"))
 		end,
 		drawfunc=function()

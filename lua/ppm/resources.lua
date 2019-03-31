@@ -3,7 +3,6 @@ function PPM.loadResources()
 		PPM.m_body = Material( "models/ppm/base/body" ) 
 		PPM.m_bodyf = Material( "models/ppm/base/bodyf" ) 
 		PPM.m_bodym = Material( "models/ppm/base/bodym" ) 
-		
 		PPM.m_wings = Material( "models/ppm/base/wings" ) 
 		PPM.m_horn = Material( "models/ppm/base/horn" ) 
 		PPM.m_cmark = Material( "models/ppm/base/cmark" ) 
@@ -11,10 +10,8 @@ function PPM.loadResources()
 		PPM.m_hair2 = Material( "models/ppm/base/hair_color_2" ) 
 		PPM.m_tail1 = Material( "models/ppm/base/tail_color_1" ) 
 		PPM.m_tail2 = Material( "models/ppm/base/tail_color_2" ) 
-
 		PPM.m_eyel = Material( "models/ppm/base/eye_l" ) 
 		PPM.m_eyer = Material( "models/ppm/base/eye_r" )
-
 		PPM.t_eyes = {
 			{Material( "models/ppm/base/face/tc00"),"Gray","models/ppm/base/face/tc00" },
 			{Material( "models/ppm/base/face/tc01"),"Turquoise","models/ppm/base/face/tc01" },
@@ -27,7 +24,6 @@ function PPM.loadResources()
 			{Material( "models/ppm/base/face/tc08"),"Gold","models/ppm/base/face/tc08" },
 			{Material( "models/ppm/base/face/tc09"),"Orange","models/ppm/base/face/tc09" }
 		}
-				 
 		PPM.m_cmarks = { 
 			{"models/ppm/cmarks/8ball.vtf"},
 			{"models/ppm/cmarks/dice.vtf"},
@@ -76,14 +72,12 @@ function PPM.loadResources()
 			{"models/ppm/cmarks/shoop.vtf"},
 			{"models/ppm/cmarks/smiley.vtf"},
 			{"models/ppm/cmarks/dawsome.vtf"},
-			{"models/ppm/cmarks/weegee.vtf"}
+			{"models/ppm/cmarks/weegee.vtf"},
 		}
-		
-		// Procedurally generate the material objects from their paths
-		for index, wrappedPath in ipairs( PPM.m_cmarks ) do
-			PPM.m_cmarks[index][2] = Material( wrappedPath[1] )
+		-- Procedurally generate the material objects from their paths
+		for i,t in ipairs( PPM.m_cmarks ) do
+			PPM.m_cmarks[i][2] = Material(t[1])
 		end
-		
 		PPM.m_bodyt0 = {
 			Material("models/ppm/texclothes/clothes_wbs_light.png"),
 			Material("models/ppm/texclothes/clothes_wbs_full.png"),
@@ -92,11 +86,6 @@ function PPM.loadResources()
 			Material("models/ppm/texclothes/clothes_royalguard.png")
 		}
 		PPM.m_bodyt0[6] = PPM.m_bodyt0[5] -- Done to prevent bizarre memory bug in GMOD itself...
-		
-
-
-
-
 		PPM.m_bodydetails = {
 			{Material("models/ppm/partrender/body_leggrad1.png"),"Leg grad"},
 			{Material("models/ppm/partrender/body_lines1.png"),"Lines"},

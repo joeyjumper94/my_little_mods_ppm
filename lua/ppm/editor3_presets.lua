@@ -22,7 +22,7 @@ PPM.Editor3_presets["view_cmark"]={
 			--Mat:SetTexture("$basetexture",LocalPlayer().ponydata_tex.eyeltex)
 			if LocalPlayer().ponydata.custom_mark then
 				IMAGER:SetMaterial(PPM.m_cmark)
-			else
+			elseif PPM.m_cmarks[LocalPlayer().ponydata.cmark] then
 				IMAGER:SetImage(PPM.m_cmarks[LocalPlayer().ponydata.cmark][1])
 			end
 		end
@@ -71,7 +71,7 @@ PPM.Editor3_presets["view_eye"]={
 local WEARSLOTS={}
 local item_selection_panel=nil
 
-function PPM_UpdateSlot(k,eqSlot)
+local function PPM_UpdateSlot(k,eqSlot)
 	if eqSlot~=nil and eqSlot~=NULL then
 		--MsgN(k,eqSlot.weareditem)
 		eqSlot.weareditem=LocalPlayer().pi_wear[k]
@@ -86,7 +86,7 @@ function PPM_UpdateSlot(k,eqSlot)
 	end
 end
 
-function PPM_UpdateSlots()
+local function PPM_UpdateSlots()
 	for k,eqSlot in pairs(WEARSLOTS)do
 		PPM_UpdateSlot(k,eqSlot)
 	end
