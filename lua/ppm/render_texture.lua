@@ -167,6 +167,7 @@ PPM.VALIDPONY_CLASSES={
 	prop_physics=true,
 	prop_ragdoll=true,
 	cpm_pony_npc=true,
+	["class C_HL2MPRagdoll"]=true,
 }
 hook.Add("HUDPaint","pony_render_textures",function()
 	for index, ent in pairs(PPM.Ents) do

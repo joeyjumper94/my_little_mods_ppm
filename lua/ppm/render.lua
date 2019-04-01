@@ -114,7 +114,7 @@ if CLIENT then
 	timer.Create("PPM_ENT_CACHE",2.5,0,function()
 		PPM.Ents={}
 		for i,ent in ipairs(ents.GetAll()) do
-			if PPM.isValidPonyLight(ent) or ent.isEditorPony then
+			if PPM.isValidPonyLight(ent) and ent:GetClass()!="class C_HL2MPRagdoll" or ent.isEditorPony then
 				table.insert(PPM.Ents,ent)
 			end
 		end

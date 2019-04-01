@@ -97,9 +97,7 @@ function PPM.undisguise(ply)
 				RunConsoleCommand("cl_playermodel",ply["original_mdl"])
 				ply["original_mdl"]=nil
 			end
-			timer.Simple(0,function()
-				PPM.Editor3.Close()
-			end)
+			timer.Simple(0,PPM.Editor3.Close)
 		end)
 	]])
 --	if ply["original_mdl"] then ply:SetModel(ply["original_mdl"]) ply["original_mdl"]=nil end
@@ -107,7 +105,7 @@ end
 hook.Add("PlayerPostDisguiseTo","ppm_deceive_support",PPM.disguise)
 hook.Add("PostDisguiseBlowing","ppm_deceive_support",PPM.undisguise)
 hook.Add("PlayerSpawn","ppm_fix_render",function(ply)
-	timer.Simple(0.05,function()
+	timer.Simple(1,function()
 		if ply:IsValid() and PPM.isValidPonyLight(ply) then
 			PPM.NetworkLua(ply,'if LocalPlayer().ponydata then PPM.UpdateSignature(PPM.Save_settings())end')
 		end

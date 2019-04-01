@@ -115,7 +115,7 @@ function PPM.randomizePony(ent)
 	end
 
 	for I = 1, 8 do
-		ent.ponydata["bodydetail" .. I] = math.random(1,#PPM.m_bodydetails+1)
+		ent.ponydata["bodydetail" .. I] = math.random(1,PPM and PPM.m_bodydetails and #PPM.m_bodydetails+1 or 41)
 		ent.ponydata["bodydetail" .. I .. "_c"] = Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1))
 	end
 	MARK_COUNT=PPM.m_cmarks and #PPM.m_cmarks or MARK_COUNT
@@ -255,11 +255,11 @@ function PPM.getPonyValues(ent, localvals)
 		local pony = ent.ponydata
 
 		if ent.ponydata == nil then
-			pony._cmark = nil
-			pony._cmark_loaded = false
+			PPM.setupPony(ent)
+			PPM.randomizePony(ent)
 		else
-			pony._cmark = ent.ponydata._cmark
-			pony._cmark_loaded = ent.ponydata._cmark_loaded
+			ent.ponydata._cmark = ent.ponydata._cmark
+			ent.ponydata._cmark_loaded = ent.ponydata._cmark_loaded
 		end
 		-- print(ent, pony.cmark_enabled - 1)
 
