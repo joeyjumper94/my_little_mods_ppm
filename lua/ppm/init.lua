@@ -1,16 +1,3 @@
-if CLIENT and PPM then
-	include("pony_player.lua")
-	include("resources.lua")
-	include("admin.lua")
-	include("readme.lua")
-	include("chatcommands.lua")
-	include("draw_text.lua")
-	include("disguise.lua")
-	include("editor3_body.lua")
-	include("gui_toolpanel.lua")
-	include("preset.lua")
-	goto END
-end
 PPM=PPM or {}
 PPM.serverPonydata=PPM.serverPonydata or {}
 PPM.isLoaded=false
@@ -39,15 +26,20 @@ if CLIENT then
 	include("editor3_presets.lua")
 	include("presets_base.lua")
 	include("gui_toolpanel.lua")
-	CreateConVar("ppm_hide_weapon","0",FCVAR_REPLICATED,"hide weapons held by ponies")
-	CreateConVar("ppm_enable_camerashift","1",FCVAR_REPLICATED,"Enables ViewOffset Setup")
+	CreateConVar("ppm_hide_weapon","0",FCVAR_REPLICATED,FCVAR_REPLICATED,"hide weapons held by ponies")
+	CreateConVar("ppm_enable_camerashift","1",FCVAR_REPLICATED,FCVAR_REPLICATED,"Enables ViewOffset Setup")
 else
 	include("serverside.lua")
 end
-::END::
-if SERVER and file.Exists("ppm/pony_hoofstep_sounds.lua","LUA") then
-	SetGlobalBool("ppm/pony_hoofstep_sounds.lua",true)
-end
-if GetGlobalBool("ppm/pony_hoofstep_sounds.lua",false) then
+if file.Exists("ppm/pony_hoofstep_sounds.lua","LUA") then
 	include("ppm/pony_hoofstep_sounds.lua")
+end
+if CLIENT and file.Exists("ppm/extension.lua","LUA") then
+	include("ppm/extension.lua")
+end
+if CPPM and CPPM.Inject then--reload CPPM's stuff
+	local ConVar=GetConVar"cppm_active"
+	if ConVar and ConVar:GetBool() then
+		CPPM:Inject()
+	end
 end

@@ -57,7 +57,7 @@ function PPM.StringToPonyData( str )
 			if( table.Count(args) == 2 ) then
 				ponydata[name] =tonumber( args[2] )
 			elseif( table.Count(args) == 4 ) then
-				ponydata[name] =Vector( tonumber( args[2] ),tonumber(args[3] ),tonumber(args[4]))
+				ponydata[name] = Vector( tonumber( args[2] ),tonumber(args[3] ),tonumber(args[4]))
 				if hair[name] then
 					ponydata["tailcolor"..hair[name]]=ponydata["tailcolor"..hair[name]]or ponydata[name]
 					ponydata["manecolor"..hair[name]]=ponydata["manecolor"..hair[name]]or ponydata[name]

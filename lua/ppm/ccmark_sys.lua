@@ -1,4 +1,4 @@
-if (SERVER) then
+if SERVER then
 	net.Receive("player_pony_cm_send",function(len,ply)
 		ply.ponydata._cmark=ply.ponydata._cmark or ""
 		local pnum=net.ReadFloat()
@@ -18,7 +18,7 @@ if (SERVER) then
 		ply.ponydata._cmark=ply.ponydata._cmark..newdata
 
 		--//print("received packet num: ",pnum," of all packets count ",pall," new data len ",string.len(newdata)," current length ",string.len(ply.ponydata._cmark))
-		if ((pnum+1)==pall) then
+		if pnum+1==pall then
 			--rebroadcast
 			--//print("Starting rebroadcast")
 			PPM.cmarksys_beginsend(ply,ply.ponydata._cmark)
@@ -88,7 +88,7 @@ if (SERVER) then
 	end
 end
 
-if (CLIENT) then
+if CLIENT then
 	local bool_sending=false
 
 	function PPM.cmarksys_beginsend(data)
@@ -139,7 +139,9 @@ if (CLIENT) then
 		if pnum==-1 then
 			ent.ponydata._cmark_loaded=false
 			ent.ponydata._cmark=nil
-			if true then return end
+			return
+		elseif pnum==0 then
+			ent.ponydata._cmark=""
 		end
 
 		local pall=net.ReadFloat()
@@ -147,15 +149,12 @@ if (CLIENT) then
 		ent.ponydata._cmark_loaded=false
 		ent.ponydata._cmark=ent.ponydata._cmark or ""
 
-		if pnum==0 then
-			ent.ponydata._cmark=""
-		end
 
 		ent.ponydata._cmark=ent.ponydata._cmark..newdata
 
 		--//print("received packet num: ",pnum," of all packets count ",pall
 		--//," new data len ",string.len(newdata or "")," current length ",string.len(ply.ponydata._cmark or ""))
-		if ((pnum+1)==pall) then
+		if pnum+1==pall then
 			ent.ponydata._cmark_loaded=true
 			--then do texture render shit
 		end

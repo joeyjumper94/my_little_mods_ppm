@@ -19,9 +19,35 @@ net.Receive("player_equip_item",function(len,ply)
 	end
 end)
 
+local PlayerSwitchWeapon=function(ply,old,new)
+	if PPM.pony_models[ply:GetModel()] and new:IsValid() then
+		if PPM.hide_weapon then
+			new.PPMColor=new.PPMColor or new:GetColor()
+			new:SetColor(Color(0,0,0,0))
+			new.PPMMaterial=new.PPMMaterial or new:GetMaterial()
+			new:SetMaterial"Models/effects/vol_light001"
+		else
+			new:SetColor(new.PPMColor or Color(255,255,255,255))
+			new.PPMColor=nil
+			new:SetMaterial(new.PPMMaterial or "")
+			new.PPMMaterial=nil
+		end
+	else
+		if new.PPMColor then
+			new:SetColor(new.PPMColor)
+			new.PPMColor=nil
+		end
+		if new.PPMMaterial then
+			new:SetMaterial(new.PPMMaterial)
+			new.PPMMaterial=nil
+		end
+	end
+end
+hook.Add("PlayerSwitchWeapon","pony_weapons_autohide",PlayerSwitchWeapon)
 local PlayerSetModel=function(ply)
 	timer.Simple(0.1,function()
 		if ply and ply:IsValid() then
+			PlayerSwitchWeapon(ply,NULL,ply:GetActiveWeapon()or NULL)
 			local newmodel=ply:GetModel()
 			if PPM.pony_models[newmodel] then--became a pony
 				if !ply.ponydata then
@@ -70,21 +96,6 @@ PPM.hide_weapon=CreateConVar("ppm_hide_weapon","1",FCVAR_REPLICATED,FCVAR_ARCHIV
 cvars.AddChangeCallback("ppm_hide_weapon",function(v,o,n)
 	PPM.hide_weapon=n!="0"
 end,"ppm_hide_weapon")
-hook.Add("PlayerSwitchWeapon","pony_weapons_autohide",function(ply,old,new)
-	if PPM.pony_models[ply:GetModel()] and new:IsValid() then
-		if PPM.hide_weapon then
-			new.OldColor=new.OldColor or new:GetColor()
-			new:SetColor(Color(0,0,0,0))
-			new.OldMaterial=new.OldMaterial or new:GetMaterial()
-			new:SetMaterial"Models/effects/vol_light001"
-		else
-			new:SetColor(new.OldColor or Color(255,255,255,255))
-			new.OldColor=nil
-			new:SetMaterial(new.OldMaterial or "")
-			new.OldMaterial=nil
-		end
-	end
-end)
 hook.Add("PlayerLeaveVehicle","pony_fixclothes",function(ply)
 	if PPM.pony_models[ply:GetModel()] then
 		if ply.ponydata!=nil and IsValid(ply.ponydata.clothes1) then

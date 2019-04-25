@@ -14,10 +14,6 @@ PPM.pony_models = {
 		isPonyModel = true,
 		BgroupCount = 8
 	},
-	["models/ewppm/player_default_base.mdl"] = {
-		isPonyModel = true,
-		BgroupCount = 8
-	},
 	["models/ppm/player_default_base_nj.mdl"] = {
 		isPonyModel = true,
 		BgroupCount = 8

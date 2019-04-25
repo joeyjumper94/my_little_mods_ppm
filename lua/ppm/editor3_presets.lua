@@ -229,7 +229,7 @@ function PPM_OpenCCmarkSelectorMenu(parent)
 					local r,g,b=render.ReadPixel(uppercorner_x+x,uppercorner_y+y)
 					--print(r,g,b)
 					--bytecount=bytecount+3
-					print(r,"\t\t",g,"\t\t",b)
+					--print(r,"\t\t",g,"\t\t",b)
 					localdata=localdata..PPM_rgbtoHex(r,g,b)
 				end
 

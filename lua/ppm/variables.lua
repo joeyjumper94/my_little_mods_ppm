@@ -8,6 +8,8 @@ PPM.Pony_variables.default_pony={
 	body_type={default=1,min=1,max=1},
 	
 	--body
+	_cmark={default=nil},
+	_cmark_loaded={default=false},
 	mane={default=1,min=1,max=15},
 	manel={default=1,min=1,max=12},
 	tail={default=1,min=1,max=14},
