@@ -4,6 +4,7 @@
 
 	"$model" "1"
 	"$phong" "1"
+	"$basemapalphaphongmask" "1"
 	"$phongexponent" "0.1"
 	"$phongboost" "0.1"
 	"$phongalbedotint" "1"

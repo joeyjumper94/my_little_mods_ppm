@@ -104,6 +104,18 @@ function PPM.randomizePony(ent)
 	ent.ponydata.wingcolor = Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1))
 	ent.ponydata.horncolor = Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1))
 
+	ent.ponydata.wingphongexponent=math.random(0,255)
+	ent.ponydata.wingphongboost=math.random(0,255)
+	ent.ponydata.hairphongexponent=math.random(0,255)
+	ent.ponydata.hairphongboost=math.random(0,255)
+	ent.ponydata.manephongexponent=math.random(0,255)
+	ent.ponydata.manephongboost=math.random(0,255)
+	ent.ponydata.tailphongexponent=math.random(0,255)
+	ent.ponydata.tailphongboost=math.random(0,255)--[ [
+	ent.ponydata.coatphongexponent=math.random(0,255)
+	ent.ponydata.coatphongboost=math.random(0,255)
+	ent.ponydata.hornphongexponent=math.random(0,255)
+	ent.ponydata.hornphongboost=math.random(0,255)--]]
 	for I = 1, 6 do
 		ent.ponydata["haircolor" .. I] = Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1))
 		ent.ponydata["manecolor" .. I] = Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1))
@@ -112,7 +124,9 @@ function PPM.randomizePony(ent)
 
 	for I = 1, 8 do
 		ent.ponydata["bodydetail" .. I] = math.random(1,PPM and PPM.m_bodydetails and #PPM.m_bodydetails+1 or 41)
-		ent.ponydata["bodydetail" .. I .. "_c"] = Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1))
+		ent.ponydata["bodydetail" .. I .. "_c"] = Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1))--[[
+		ent.ponydata["bodydetail" .. I .. "phongexponent"]=math.random(0,255)
+		ent.ponydata["bodydetail" .. I .. "phongboost"]=math.random(0,255)--]]
 	end
 	MARK_COUNT=PPM.m_cmarks and #PPM.m_cmarks or MARK_COUNT
 	ent.ponydata.cmark = math.random(1,MARK_COUNT)

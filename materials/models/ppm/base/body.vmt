@@ -1,11 +1,10 @@
 "VertexLitGeneric"
 {
 	"$basetexture" "models/ppm/base/body"
-
 	"$bumpmap" "models/ppm/base/render/body_n"
 	"$model" "1"
 	"$phong" "1" 
-	//"$basemapalphaphongmask" "1"
+	"$basemapalphaphongmask" "1"
 	"$phongexponent" "0.6"
 	"$phongboost" "0.5"
 	"$phongalbedotint" "1"

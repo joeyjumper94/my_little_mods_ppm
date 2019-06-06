@@ -1,5 +1,4 @@
 PPM.Editor3_presets=PPM.Editor3_presets or {}
-
 PPM.Editor3_presets["view_cmark"]={
     spawn=function(parent,variable)
 		local CONTAINER_FAKE=vgui.Create("DPanel",parent)
@@ -92,7 +91,7 @@ local function PPM_UpdateSlots()
 	end
 end
 
-function OpenItemMenu(slotid,container)
+local function OpenItemMenu(slotid,container)
 	local plymodel=LocalPlayer():GetInfo("cl_playermodel")
 	local avitems=PPM:GetAvailItems(plymodel,slotid)
 	local posx,posy=container:LocalToScreen()
@@ -230,7 +229,7 @@ function PPM_OpenCCmarkSelectorMenu(parent)
 					--print(r,g,b)
 					--bytecount=bytecount+3
 					--print(r,"\t\t",g,"\t\t",b)
-					localdata=localdata..PPM_rgbtoHex(r,g,b)
+					localdata=localdata..PPM.rgbtoHex(r,g,b)
 				end
 
 				if x >=511 then
@@ -270,7 +269,7 @@ end
 local usedcolors={}
 local last=1
 
-function PPM_rgbtoHex(r,g,b)
+function PPM.rgbtoHex(r,g,b)
 	--[[
 	local value=string.char(r)..string.char(g)..string.char(b)
 	local index=usedcolors[value]
@@ -597,7 +596,24 @@ PPM.Editor3_presets["edit_type"]={
 local INDICATOR_ONE=nil
 local INDICATOR_TWO=nil
 
-function NewPresetMenu(parent)
+function PPM.colorFlash(controll,time,color,defcolor)
+	controll:SetColor(color)
+
+	timer.Simple(time,function()
+		controll:SetColor(defcolor)
+	end)
+end
+local function LoadFileList(CTL)
+	CTL:Clear()
+	local files=file.Find("data/ppm/*.txt","GAME")
+
+	for k,v in pairs(files)do
+		if(not string.match(v,"*/_*",0))then
+			CTL:AddLine(v)
+		end
+	end
+end
+local function NewPresetMenu(parent)
 	if(curmenupanel~=nil)then
 		curmenupanel:Remove()
 		curmenupanel=nil
@@ -624,14 +640,14 @@ function NewPresetMenu(parent)
 
 	bPSave.DoClick=function(button)
 		local selected_fname=nfNInput:GetValue()
-		if(selected_fname==nil or string.Trim(selected_fname)=="")then--colorFlash(bPSave,0.1,Color(200,0,0),Color(255,255,255))
---colorFlash(PPM.button_save,0.1,Color(200,0,0),Color(255,255,255))
+		if(selected_fname==nil or string.Trim(selected_fname)=="")then--PPM.colorFlash(bPSave,0.1,Color(200,0,0),Color(255,255,255))
+--PPM.colorFlash(PPM.button_save,0.1,Color(200,0,0),Color(255,255,255))
 return end
-		if(table.HasValue(PPM.reservedPresetNames,selected_fname))then--colorFlash(bPSave,0.1,Color(200,0,0),Color(255,255,255))
---colorFlash(PPM.button_save,0.1,Color(200,0,0),Color(255,255,255))
+		if(table.HasValue(PPM.reservedPresetNames,selected_fname))then--PPM.colorFlash(bPSave,0.1,Color(200,0,0),Color(255,255,255))
+--PPM.colorFlash(PPM.button_save,0.1,Color(200,0,0),Color(255,255,255))
 return end
 		PPM.Save(selected_fname,LocalPlayer().ponydata)
-		--colorFlash(PPM.button_save,0.1,Color(0,200,0),Color(255,255,255))
+		--PPM.colorFlash(PPM.button_save,0.1,Color(0,200,0),Color(255,255,255))
 		LoadFileList(PPM.dPresetList)
 		smenupanel:Remove()
 		curmenupanel=nil
@@ -647,25 +663,6 @@ return end
 		smenupanel:Remove()
 		curmenupanel=nil
 	end
-end
-
-function LoadFileList(CTL)
-	CTL:Clear()
-	local files=file.Find("data/ppm/*.txt","GAME")
-
-	for k,v in pairs(files)do
-		if(not string.match(v,"*/_*",0))then
-			CTL:AddLine(v)
-		end
-	end
-end
-
-function colorFlash(controll,time,color,defcolor)
-	controll:SetColor(color)
-
-	timer.Simple(time,function()
-		controll:SetColor(defcolor)
-	end)
 end
 
 PPM.Editor3_presets["menu_save_load"]={
@@ -725,8 +722,8 @@ PPM.Editor3_presets["menu_save_load"]={
 			local selline=dPresetList:GetSelectedLine()
 
 			if(selline==nil)then
-				colorFlash(INDICATOR_ONE,0.1,Color(200,0,0),Color(0,0,0))
-				colorFlash(INDICATOR_TWO,0.1,Color(200,0,0),Color(0,0,0))
+				PPM.colorFlash(INDICATOR_ONE,0.1,Color(200,0,0),Color(0,0,0))
+				PPM.colorFlash(INDICATOR_TWO,0.1,Color(200,0,0),Color(0,0,0))
 				bDelPreset.goDef()
 
 				return
@@ -735,16 +732,16 @@ PPM.Editor3_presets["menu_save_load"]={
 			local selected_fname=dPresetList:GetLine(selline):GetColumnText(1)
 
 			if(selected_fname==nil)then
-				colorFlash(INDICATOR_ONE,0.1,Color(200,0,0),Color(0,0,0))
-				colorFlash(INDICATOR_TWO,0.1,Color(200,0,0),Color(0,0,0))
+				PPM.colorFlash(INDICATOR_ONE,0.1,Color(200,0,0),Color(0,0,0))
+				PPM.colorFlash(INDICATOR_TWO,0.1,Color(200,0,0),Color(0,0,0))
 				bDelPreset.goDef()
 
 				return
 			end
 
 			if(table.HasValue(PPM.reservedPresetNames,selected_fname))then
-				colorFlash(INDICATOR_ONE,0.1,Color(200,0,0),Color(255,255,255))
-				colorFlash(INDICATOR_TWO,0.1,Color(200,0,0),Color(255,255,255))
+				PPM.colorFlash(INDICATOR_ONE,0.1,Color(200,0,0),Color(255,255,255))
+				PPM.colorFlash(INDICATOR_TWO,0.1,Color(200,0,0),Color(255,255,255))
 
 				return
 			end
@@ -783,8 +780,8 @@ PPM.Editor3_presets["menu_save_load"]={
 			local selline=dPresetList:GetSelectedLine()
 
 			if(selline==nil)then
-				colorFlash(INDICATOR_ONE,0.1,Color(200,0,0),Color(255,255,255))
-				colorFlash(INDICATOR_TWO,0.1,Color(200,0,0),Color(255,255,255))
+				PPM.colorFlash(INDICATOR_ONE,0.1,Color(200,0,0),Color(255,255,255))
+				PPM.colorFlash(INDICATOR_TWO,0.1,Color(200,0,0),Color(255,255,255))
 
 				return
 			end
@@ -792,22 +789,22 @@ PPM.Editor3_presets["menu_save_load"]={
 			local selected_fname=dPresetList:GetLine(selline):GetColumnText(1)
 
 			if(selected_fname==nil)then
-				colorFlash(INDICATOR_ONE,0.1,Color(200,0,0),Color(255,255,255))
-				colorFlash(INDICATOR_TWO,0.1,Color(200,0,0),Color(255,255,255))
+				PPM.colorFlash(INDICATOR_ONE,0.1,Color(200,0,0),Color(255,255,255))
+				PPM.colorFlash(INDICATOR_TWO,0.1,Color(200,0,0),Color(255,255,255))
 
 				return
 			end
 
 			if(table.HasValue(PPM.reservedPresetNames,selected_fname))then
-				colorFlash(INDICATOR_ONE,0.1,Color(200,0,0),Color(255,255,255))
-				colorFlash(INDICATOR_TWO,0.1,Color(200,0,0),Color(255,255,255))
+				PPM.colorFlash(INDICATOR_ONE,0.1,Color(200,0,0),Color(255,255,255))
+				PPM.colorFlash(INDICATOR_TWO,0.1,Color(200,0,0),Color(255,255,255))
 
 				return
 			end
 
 			PPM.Save(selected_fname,LocalPlayer().ponydata)
-			colorFlash(INDICATOR_ONE,0.1,Color(0,200,0),Color(255,255,255))
-			colorFlash(INDICATOR_TWO,0.1,Color(0,200,0),Color(255,255,255))
+			PPM.colorFlash(INDICATOR_ONE,0.1,Color(0,200,0),Color(255,255,255))
+			PPM.colorFlash(INDICATOR_TWO,0.1,Color(0,200,0),Color(255,255,255))
 			LoadFileList(PPM.dPresetList)
 		end
 
@@ -821,8 +818,8 @@ PPM.Editor3_presets["menu_save_load"]={
 			local selline=dPresetList:GetSelectedLine()
 
 			if(selline==nil)then
-				colorFlash(INDICATOR_ONE,0.1,Color(200,0,0),Color(255,255,255))
-				colorFlash(INDICATOR_TWO,0.1,Color(200,0,0),Color(255,255,255))
+				PPM.colorFlash(INDICATOR_ONE,0.1,Color(200,0,0),Color(255,255,255))
+				PPM.colorFlash(INDICATOR_TWO,0.1,Color(200,0,0),Color(255,255,255))
 
 				return
 			end
@@ -830,8 +827,8 @@ PPM.Editor3_presets["menu_save_load"]={
 			local selected_fname=dPresetList:GetLine(selline):GetColumnText(1)
 
 			if(selected_fname==nil)then
-				colorFlash(INDICATOR_ONE,0.1,Color(200,0,0),Color(255,255,255))
-				colorFlash(INDICATOR_TWO,0.1,Color(200,0,0),Color(255,255,255))
+				PPM.colorFlash(INDICATOR_ONE,0.1,Color(200,0,0),Color(255,255,255))
+				PPM.colorFlash(INDICATOR_TWO,0.1,Color(200,0,0),Color(255,255,255))
 
 				return
 			end
@@ -842,9 +839,9 @@ PPM.Editor3_presets["menu_save_load"]={
 			PPM.cleanPony(LocalPlayer())
 			PPM.mergePonyData(LocalPlayer().ponydata,PPM.Load(selected_fname))
 			--PPM.SendCharToServer(LocalPlayer())
-			colorFlash(INDICATOR_ONE,0.1,Color(0,200,0),Color(255,255,255))
-			colorFlash(INDICATOR_TWO,0.1,Color(0,200,0),Color(255,255,255))
-			--colorFlash(PPM.selector_circle[3],0.2,Color(0,200,0),Color(255,255,255))
+			PPM.colorFlash(INDICATOR_ONE,0.1,Color(0,200,0),Color(255,255,255))
+			PPM.colorFlash(INDICATOR_TWO,0.1,Color(0,200,0),Color(255,255,255))
+			--PPM.colorFlash(PPM.selector_circle[3],0.2,Color(0,200,0),Color(255,255,255))
 			local sig=PPM.Save_settings()
 			PPM.UpdateSignature(sig)
 		end
@@ -860,8 +857,8 @@ PPM.Editor3_presets["menu_save_load"]={
 
 		button_reset.DoClick=function(button)
 			PPM.cleanPony(LocalPlayer())
-			colorFlash(INDICATOR_ONE,0.1,Color(0,200,0),Color(255,255,255))
-			colorFlash(INDICATOR_TWO,0.1,Color(0,200,0),Color(255,255,255))
+			PPM.colorFlash(INDICATOR_ONE,0.1,Color(0,200,0),Color(255,255,255))
+			PPM.colorFlash(INDICATOR_TWO,0.1,Color(0,200,0),Color(255,255,255))
 		end
 
 		local button_rnd=vgui.Create("DButton",CONTAINER)
@@ -871,8 +868,8 @@ PPM.Editor3_presets["menu_save_load"]={
 
 		button_rnd.DoClick=function(button)
 			PPM.randomizePony(LocalPlayer())
-			colorFlash(INDICATOR_ONE,0.1,Color(0,200,0),Color(255,255,255))
-			colorFlash(INDICATOR_TWO,0.1,Color(0,200,0),Color(255,255,255))
+			PPM.colorFlash(INDICATOR_ONE,0.1,Color(0,200,0),Color(255,255,255))
+			PPM.colorFlash(INDICATOR_TWO,0.1,Color(0,200,0),Color(255,255,255))
 		end
 
 		LoadFileList(dPresetList)

@@ -117,10 +117,6 @@ PPM.Editor3_nodes.pony_normal_face = {
 		name = "Left Eye",
 		pos = Vector(15,5,40),
 		controlls = {
-/*			{
-				name = "View",
-				type = "view_eye" 
-			},*/
 			{
 				name = "Back color",
 				type = "edit_color",
@@ -259,7 +255,21 @@ PPM.Editor3_nodes.pony_normal_body = {
 				name = "horn color",
 				type = "edit_color",
 				param = "horncolor"
-			}
+			},
+			{
+				name = "phongexponent",
+				type = "edit_number",
+				param = "hornphongexponent",
+				min = 0,
+				max = 255,
+			},
+			{
+				name = "phongboost",
+				type = "edit_number",
+				param = "hornphongboost",
+				min = 0,
+				max = 255,
+			},
 		}
 	},
 	wings = {
@@ -270,7 +280,21 @@ PPM.Editor3_nodes.pony_normal_body = {
 				name = "wing color",
 				type = "edit_color",
 				param = "wingcolor"
-			}
+			},
+			{
+				name = "phongexponent",
+				type = "edit_number",
+				param = "wingphongexponent",
+				min = 0,
+				max = 255,
+			},
+			{
+				name = "phongboost",
+				type = "edit_number",
+				param = "wingphongboost",
+				min = 0,
+				max = 255,
+			},
 		}
 	},
 	body = {
@@ -288,7 +312,21 @@ PPM.Editor3_nodes.pony_normal_body = {
 				name = "Coat color",
 				type = "edit_color",
 				param = "coatcolor"
-			}
+			},
+			{
+				name = "phongexponent",
+				type = "edit_number",
+				param = "coatphongexponent",
+				min = 0,
+				max = 255,
+			},
+			{
+				name = "phongboost",
+				type = "edit_number",
+				param = "coatphongboost",
+				min = 0,
+				max = 255,
+			},
 		}
 	},
 	ponymark = {
@@ -362,6 +400,20 @@ PPM.Editor3_nodes.pony_normal_body = {
 				max = 1.1
 			},
 			{
+				name = "phongexponent",
+				type = "edit_number",
+				param = "tailphongexponent",
+				min = 0,
+				max = 255,
+			},
+			{
+				name = "phongboost",
+				type = "edit_number",
+				param = "tailphongboost",
+				min = 0,
+				max = 255,
+			},
+			{
 				name = "Color 1",
 				type = "edit_color",
 				param = "tailcolor1"
@@ -408,6 +460,20 @@ PPM.Editor3_nodes.pony_normal_body = {
 				}
 			},
 			{
+				name = "phongexponent",
+				type = "edit_number",
+				param = "hairphongexponent",
+				min = 0,
+				max = 255,
+			},
+			{
+				name = "phongboost",
+				type = "edit_number",
+				param = "hairphongboost",
+				min = 0,
+				max = 255,
+			},
+			{
 				name = "Color 1",
 				type = "edit_color",
 				param = "haircolor1"
@@ -452,6 +518,20 @@ PPM.Editor3_nodes.pony_normal_body = {
 					"BOLD","STUMPY","HIPPIE","SPEEDSTER","BOOKWORM",
 					"BUMPKIN","CURLY","NONE"
 				}
+			},
+			{
+				name = "phongexponent",
+				type = "edit_number",
+				param = "manephongexponent",
+				min = 0,
+				max = 255,
+			},
+			{
+				name = "phongboost",
+				type = "edit_number",
+				param = "manephongboost",
+				min = 0,
+				max = 255,
 			},
 			{
 				name = "Color 1",
@@ -511,7 +591,21 @@ local FN=function()
 					name="Color",
 					type="edit_color",
 					param="bodydetail"..i.."_c",
-				}
+				},--[[
+				{
+					name = "phongexponent",
+					type = "edit_number",
+					param = "bodydetail"..i.."phongexponent",
+					min = 0,
+					max = 255,
+				},
+				{
+					name = "phongboost",
+					type = "edit_number",
+					param = "bodydetail"..i.."phongboost",
+					min = 0,
+					max = 255,
+				},--]]
 			}
 		}
 	end

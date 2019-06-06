@@ -73,6 +73,20 @@ if CLIENT then
 		PPM:RescaleRIGPART(ent,{39,40},Vector(svts,svts,svts))
 		--}
 		if PPM.m_hair1==nil then return end
+		PPM.m_tail1:SetFloat("$phongexponent",pony.tailphongexponent)
+		PPM.m_tail1:SetFloat("$phongboost",pony.tailphongboost)
+		PPM.m_body:SetFloat("$phongexponent",pony.coatphongexponent)
+		PPM.m_body:SetFloat("$phongboost",pony.coatphongboost)--]]
+
+		PPM.m_tail1:SetFloat("$phongexponent",pony.tailphongexponent)
+		PPM.m_tail1:SetFloat("$phongboost",pony.tailphongboost)
+		PPM.m_hair1:SetFloat("$phongexponent",pony.tailphongexponent)
+		PPM.m_hair1:SetFloat("$phongboost",pony.tailphongboost)
+		PPM.m_hair2:SetFloat("$phongexponent",pony.manephongexponent)
+		PPM.m_hair2:SetFloat("$phongboost",pony.manephongboost)
+		PPM.m_wings:SetFloat("$phongexponent",pony.wingphongexponent)
+		PPM.m_wings:SetFloat("$phongboost",pony.wingphongboost)
+
 		PPM.m_hair1:SetVector("$color2",pony.haircolor1)
 		PPM.m_hair2:SetVector("$color2",pony.manecolor1 or pony.haircolor1)
 		PPM.m_wings:SetVector("$color2",pony.wingcolor or pony.coatcolor)

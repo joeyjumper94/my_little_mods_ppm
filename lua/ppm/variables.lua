@@ -25,6 +25,20 @@ PPM.Pony_variables.default_pony={
 	horncolor={default=Vector(1,1,1),min=Vector(0,0,0),max=Vector(1,1,1)},
 	wingcolor={default=Vector(1,1,1),min=Vector(0,0,0),max=Vector(1,1,1)},
 
+	--shinyness
+	wingphongexponent={default=6,min=0,max=255},
+	wingphongboost={default=.05,min=0,max=255},
+	hairphongexponent={default=6,min=0,max=255},
+	hairphongboost={default=1,min=0,max=255},
+	manephongexponent={default=6,min=0,max=255},
+	manephongboost={default=1,min=0,max=255},
+	tailphongexponent={default=6,min=0,max=255},
+	tailphongboost={default=.5,min=0,max=255},
+	coatphongexponent={default=.5,min=0,max=255},
+	coatphongboost={default=.6,min=0,max=255},
+	hornphongexponent={default=.1,min=0,max=255},
+	hornphongboost={default=.1,min=0,max=255},
+
 	--upper mane
 	haircolor1={default=Vector(1,1,1),min=Vector(0,0,0),max=Vector(1,1,1)},
 	haircolor2={default=Vector(1,1,1),min=Vector(0,0,0),max=Vector(1,1,1)},
@@ -67,7 +81,24 @@ PPM.Pony_variables.default_pony={
 	bodydetail6_c={default=Vector(1,1,1)},
 	bodydetail7_c={default=Vector(1,1,1)},
 	bodydetail8_c={default=Vector(1,1,1)},
-	
+--[[
+	bodydetail1phongexponent={default=1,min=0,max=255},
+	bodydetail2phongexponent={default=1,min=0,max=255},
+	bodydetail3phongexponent={default=1,min=0,max=255},
+	bodydetail4phongexponent={default=1,min=0,max=255},
+	bodydetail5phongexponent={default=1,min=0,max=255},
+	bodydetail6phongexponent={default=1,min=0,max=255},
+	bodydetail7phongexponent={default=1,min=0,max=255},
+	bodydetail8phongexponent={default=1,min=0,max=255},
+
+	bodydetail1phongboost={default=1,min=0,max=255},
+	bodydetail2phongboost={default=1,min=0,max=255},
+	bodydetail3phongboost={default=1,min=0,max=255},
+	bodydetail4phongboost={default=1,min=0,max=255},
+	bodydetail5phongboost={default=1,min=0,max=255},
+	bodydetail6phongboost={default=1,min=0,max=255},
+	bodydetail7phongboost={default=1,min=0,max=255},
+	bodydetail8phongboost={default=1,min=0,max=255},--]]
 	--left eye
 	eyehaslines={default=1},	
 	eyelash={default=1,min=1,max=5},

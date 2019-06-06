@@ -1,6 +1,81 @@
 if SERVER then
 	return
 end
+--[[
+lua_run_cl for k,v in SortedPairs(PPM)do if type(v)=="IMaterial" and v.SetFloat then v:SetFloat("$phongexponent",255)v:SetFloat("$phongboost",10)end end
+lua_run for k,v in ipairs(PPM.m_bodydetails)do v[1]:SetFloat("$phongexponent",255)v[1]:SetFloat("$phongboost",10)end
+lua_run_cl for k,v in SortedPairs(PPM)do if type(v)=="IMaterial" and v.SetFloat then v:SetFloat("$$alpha",.1)end end
+$alpha
+lua_run_cl for k,v in SortedPairs(PPM.m_wings:GetKeyValues())do if type(v)=="number"then print(k.."="..v)elseif type(v)=="Vector"then print(k.."=Vector("..v.x..","..v.y..","..v.z..")")end end
+
+$alpha=1
+$alphatestreference=0
+$ambientonly=0
+$basemapalphaphongmask=1
+$blendtintbybasealpha=0
+$blendtintcoloroverbase=0
+$bumpframe=0
+$cloakcolortint=Vector(1,1,1)
+$cloakfactor=0
+$cloakpassenabled=0
+$depthblend=0
+$depthblendscale=0
+$detailblendfactor=1
+$detailblendmode=0
+$detailframe=0
+$detailscale=4
+$detailtint=Vector(1,1,1)
+$emissiveblendenabled=0
+$emissiveblendscrollvector=Vector(0,0,0)
+$emissiveblendstrength=0
+$emissiveblendtint=Vector(1,1,1)
+$envmapcontrast=0
+$envmapframe=0
+$envmapfresnel=0
+$envmapmaskframe=0
+$envmapsaturation=0
+$envmaptint=Vector(1,1,1)
+$flags=2048
+$flags2=262210
+$flags_defined=2048
+$flags_defined2=0
+$flashlightnolambert=0
+$flashlighttextureframe=0
+$fleshbordernoisescale=0
+$fleshbordersoftness=0
+$fleshbordertint=Vector(1,1,1)
+$fleshborderwidth=0
+$fleshdebugforcefleshon=0
+$flesheffectcenterradius1=Vector(0,0,0)
+$flesheffectcenterradius2=Vector(0,0,0)
+$flesheffectcenterradius3=Vector(0,0,0)
+$flesheffectcenterradius4=Vector(0,0,0)
+$fleshglobalopacity=0
+$fleshglossbrightness=0
+$fleshinteriorenabled=0
+$fleshscrollspeed=0
+$fleshsubsurfacetint=Vector(1,1,1)
+$frame=0
+$invertphongmask=0
+$linearwrite=0
+$phong=1
+$phongalbedotint=1
+$phongfresnelranges=Vector(0.21951973438263,1,1)
+$phongtint=Vector(1,1,1)
+$refractamount=0
+$rimlight=1
+$rimlightboost=1
+$rimlightexponent=2
+$rimmask=0
+$selfillum_envmapmask_alpha=0
+$selfillumfresnel=0
+$selfillumfresnelminmaxexp=Vector(0,1,1)
+$selfillumtint=Vector(1,1,1)
+$separatedetailuvs=0
+$srgbtint=Vector(1,1,1)
+$time=0
+--]]
+
 if CreateConVar("ppm_limit_to_vanilla", "0", {FCVAR_ARCHIVE}, "if the client sets it to 1, socks and other custom textures will not be drawn by said client"):GetBool() then
 	PPM_Render_Cap = 13
 else
@@ -17,13 +92,13 @@ function PPM.TextureIsOutdated(ent, name, newhash)
 	if not PPM.isValidPony(ent) then return true end
 	if ent.ponydata_tex==nil then return true end
 	if ent.ponydata_tex[name]==nil then return true end
-	if ent.ponydata_tex[name .. "_hash"]==nil then return true end
-	if ent.ponydata_tex[name .. "_hash"] ~=newhash then return true end
+	if ent.ponydata_tex[name.."_hash"]==nil then return true end
+	if ent.ponydata_tex[name.."_hash"] ~=newhash then return true end
 
 	return false
 end
 function PPM.GetBodyHash(ponydata)
-	return tostring(ponydata.bodyt0) .. tostring(ponydata.bodyt1) .. tostring(ponydata.coatcolor) .. tostring(ponydata.bodyt1_color)
+	return tostring(ponydata.bodyt0)..tostring(ponydata.bodyt1)..tostring(ponydata.coatcolor)..tostring(ponydata.bodyt1_color)
 end
 function FixVertexLitMaterial(Mat)
 	local strImage=Mat:GetName()
@@ -36,7 +111,7 @@ function FixVertexLitMaterial(Mat)
 			params["$basetexture"]=t
 			params["$vertexcolor"]=1
 			params["$vertexalpha"]=1
-			Mat=CreateMaterial(strImage .. "_DImage", "UnlitGeneric", params)
+			Mat=CreateMaterial(strImage.."_DImage", "UnlitGeneric", params)
 		end
 	end
 
@@ -93,7 +168,7 @@ function PPM.CreateBodyTexture(ent, pony)
 	if (ent.ponydata_tex.bodytex ~=nil) then
 		rttex=ent.ponydata_tex.bodytex
 	else
-		rttex=GetRenderTarget(string.Replace(tostring(ent),".","//point//") .. "body", tW(512), tH(512), false)
+		rttex=GetRenderTarget(string.Replace(tostring(ent),".","//point//").."body", tW(512), tH(512), false)
 	end
 
 	local OldRT=render.GetRenderTarget()
@@ -189,9 +264,9 @@ hook.Add("HUDPaint","pony_render_textures",function()
 							PPM.currt_ent=ent
 							PPM.currt_ponydata=pony
 							PPM.currt_success=false
-							ent.ponydata_tex[k]=PPM.CreateTexture(string.Replace(tostring(ent),".","//point//") .. k, v)
-							ent.ponydata_tex[k .. "_hash"]=v.hash(pony)
-							ent.ponydata_tex[k .. "_draw"]=PPM.currt_success
+							ent.ponydata_tex[k]=PPM.CreateTexture(string.Replace(tostring(ent),".","//point//")..k, v)
+							ent.ponydata_tex[k.."_hash"]=v.hash(pony)
+							ent.ponydata_tex[k.."_draw"]=PPM.currt_success
 							texturespreframe=texturespreframe - 1
 						end
 					end
@@ -212,9 +287,9 @@ hook.Add("HUDPaint","pony_render_textures",function()
 					PPM.currt_ent=ent
 					PPM.currt_ponydata=pony
 					PPM.currt_success=false
-					ent.ponydata_tex[k]=PPM.CreateTexture(string.Replace(tostring(ent),".","//point//") .. k, v)
-					ent.ponydata_tex[k .. "_hash"]=v.hash(pony)
-					ent.ponydata_tex[k .. "_draw"]=PPM.currt_success
+					ent.ponydata_tex[k]=PPM.CreateTexture(string.Replace(tostring(ent),".","//point//")..k, v)
+					ent.ponydata_tex[k.."_hash"]=v.hash(pony)
+					ent.ponydata_tex[k.."_draw"]=PPM.currt_success
 				end
 			end
 		end
@@ -231,8 +306,9 @@ PPM.loadrt=function()
 			PPM.m_body:SetTexture("$basetexture", ENT.ponydata_tex.bodytex)
 		end,
 		renderFalse=function(ENT, PONY)
-			PPM.m_body:SetVector("$color2", PONY.coatcolor)
-
+			PPM.m_body:SetVector("$color2", PONY.coatcolor)--[ [
+			PPM.m_body:SetFloat("$phongexponent",PONY.coatphongexponent)
+			PPM.m_body:SetFloat("$phongboost",PONY.coatphongboost)--]]
 			if (PONY.gender==1) then
 				PPM.m_body:SetTexture("$basetexture", PPM.m_bodyf:GetTexture("$basetexture"))
 			else
@@ -256,12 +332,17 @@ PPM.loadrt=function()
 			--rotate 90 degrees
 			--MsgN("render.body.prep")
 			for C=1, 8 do
-				local detailvalue=pony["bodydetail" .. C] or 1
-				local detailcolor=pony["bodydetail" .. C .. "_c"] or Vector(0, 0, 0)
+				local detailvalue=pony["bodydetail"..C] or 1
+				local detailcolor=pony["bodydetail"..C.."_c"] or Vector(0, 0, 0)
 
 				if (detailvalue<PPM_Render_Cap) and (detailvalue>1) and (PPM.m_bodydetails[detailvalue-1]) then
 					--MsgN("rendering tex id: ",detailvalue," col: ",detailcolor)
-					render.SetMaterial(PPM.m_bodydetails[detailvalue - 1][1]) --Material("models/ppm/base/render/clothes_sbs_full")) 
+					local mat=PPM.m_bodydetails[detailvalue - 1][1]
+					--PPM.m_body:SetFloat("$phong",1)
+					--PPM.m_body:SetFloat("$basemapalphaphongmask",1)
+					PPM.m_body:SetFloat("$phongexponent",pony["bodydetail"..C.."phongexponent"] or 1)
+					PPM.m_body:SetFloat("$phongboost",pony["bodydetail"..C.."phongboost"] or 1)
+					render.SetMaterial(mat) --Material("models/ppm/base/render/clothes_sbs_full")) 
 					--surface.SetTexture(surface.GetTextureID("models/ppm/base/render/horn"))
 					render.SetBlend(1)
 					render.DrawQuadEasy(Vector(256, 256, 0), Vector(0, 0, -1), 512, 512, Color(detailcolor.x * 255, detailcolor.y * 255, detailcolor.z * 255, 255), -90) --position of the rect
@@ -292,12 +373,12 @@ PPM.loadrt=function()
 			PPM.currt_success=true
 		end,
 		hash=function(ponydata)
-			local hash=tostring(ponydata.bodyt0) .. tostring(ponydata.coatcolor) .. tostring(ponydata.gender)
+			local hash=ponydata.coatphongexponent..ponydata.coatphongboost..tostring(ponydata.bodyt0)..tostring(ponydata.coatcolor)..tostring(ponydata.gender)
 
 			for C=1, 8 do
-				local detailvalue=ponydata["bodydetail" .. C] or 1
-				local detailcolor=ponydata["bodydetail" .. C .. "_c"] or Vector(0, 0, 0)
-				hash=hash .. tostring(detailvalue) .. tostring(detailcolor)
+				local detailvalue=ponydata["bodydetail"..C] or 1
+				local detailcolor=ponydata["bodydetail"..C.."_c"] or Vector(0, 0, 0)
+				hash=hash..tostring(detailvalue)..tostring(detailcolor)
 			end
 
 			return hash
@@ -311,7 +392,9 @@ PPM.loadrt=function()
 		end,
 		renderFalse=function(ENT, PONY)
 			PPM.m_hair1:SetVector("$color2", PONY.haircolor1)
-			--PPM.m_hair2:SetVector("$color2", PONY.haircolor2) 
+			PPM.m_hair1:SetFloat("$phongexponent",PONY.hairphongexponent)
+			PPM.m_hair1:SetFloat("$phongboost",PONY.hairphongboost)
+ 			--PPM.m_hair2:SetVector("$color2", PONY.haircolor2) 
 			PPM.m_hair1:SetTexture("$basetexture", Material("models/ppm/partrender/clean.png"):GetTexture("$basetexture"))
 		end,
 		--PPM.m_hair2:SetTexture("$basetexture",Material("models/ppm/partrender/clean.png"):GetTexture("$basetexture")) 
@@ -320,7 +403,7 @@ PPM.loadrt=function()
 			render.Clear(pony.haircolor1.x * 255, pony.haircolor1.y * 255, pony.haircolor1.z * 255, 255, true)
 			PPM.tex_drawhairfunc(pony, "up", false)
 		end,
-		hash=function(ponydata) return tostring(ponydata.haircolor1) .. tostring(ponydata.haircolor2) .. tostring(ponydata.haircolor3) .. tostring(ponydata.haircolor4) .. tostring(ponydata.haircolor5) .. tostring(ponydata.haircolor6) .. tostring(ponydata.mane) .. tostring(ponydata.manel) end
+		hash=function(ponydata)return ponydata.hairphongexponent..ponydata.hairphongboost..tostring(ponydata.haircolor1)..tostring(ponydata.haircolor2)..tostring(ponydata.haircolor3)..tostring(ponydata.haircolor4)..tostring(ponydata.haircolor5)..tostring(ponydata.haircolor6)..tostring(ponydata.mane)..tostring(ponydata.manel)end
 	}
 	PPM.rendertargettasks["hairtex2"]={--lower mane
 		renderTrue=function(ENT, PONY)
@@ -331,6 +414,8 @@ PPM.loadrt=function()
 		renderFalse=function(ENT, PONY)
 			--PPM.m_hair1:SetVector("$color2", PONY.haircolor1) 
 			PPM.m_hair2:SetVector("$color2", PONY.haircolor2)
+			PPM.m_hair2:SetFloat("$phongexponent",PONY.manephongexponent)
+			PPM.m_hair2:SetFloat("$phongboost",PONY.manephongboost)
 			--PPM.m_hair1:SetTexture("$basetexture",Material("models/ppm/partrender/clean.png"):GetTexture("$basetexture")) 
 			PPM.m_hair2:SetTexture("$basetexture", Material("models/ppm/partrender/clean.png"):GetTexture("$basetexture"))
 		end,
@@ -338,7 +423,7 @@ PPM.loadrt=function()
 			local pony=PPM.currt_ponydata
 			PPM.tex_drawhairfunc(pony, "dn", false)
 		end,
-		hash=function(ponydata) return tostring(ponydata.haircolor1) .. tostring(ponydata.haircolor2) .. tostring(ponydata.haircolor3) .. tostring(ponydata.haircolor4) .. tostring(ponydata.haircolor5) .. tostring(ponydata.haircolor6) .. tostring(ponydata.mane) .. tostring(ponydata.manel) end
+		hash=function(ponydata) return ponydata.manephongexponent..ponydata.manephongboost..tostring(ponydata.haircolor1)..tostring(ponydata.haircolor2)..tostring(ponydata.haircolor3)..tostring(ponydata.haircolor4)..tostring(ponydata.haircolor5)..tostring(ponydata.haircolor6)..tostring(ponydata.mane)..tostring(ponydata.manel) end
 	}
 	PPM.rendertargettasks["tailtex"]={--the tail
 		renderTrue=function(ENT, PONY)
@@ -349,6 +434,8 @@ PPM.loadrt=function()
 		renderFalse=function(ENT, PONY)
 			PPM.m_tail1:SetVector("$color2", PONY.tailcolor1)
 			PPM.m_tail2:SetVector("$color2", PONY.tailcolor2)
+			PPM.m_tail1:SetFloat("$phongexponent",PONY.tailphongexponent)
+			PPM.m_tail1:SetFloat("$phongboost",PONY.tailphongboost)
 			PPM.m_tail1:SetTexture("$basetexture", Material("models/ppm/partrender/clean.png"):GetTexture("$basetexture"))
 			PPM.m_tail2:SetTexture("$basetexture", Material("models/ppm/partrender/clean.png"):GetTexture("$basetexture"))
 		end,
@@ -356,7 +443,7 @@ PPM.loadrt=function()
 			local pony=PPM.currt_ponydata
 			PPM.tex_drawhairfunc(pony, "up", true)
 		end,
-		hash=function(ponydata) return tostring(ponydata.tailcolor1) .. tostring(ponydata.tailcolor2) .. tostring(ponydata.tailcolor3) .. tostring(ponydata.tailcolor4) .. tostring(ponydata.tailcolor5) .. tostring(ponydata.tailcolor6) .. tostring(ponydata.tail) end
+		hash=function(ponydata) return ponydata.tailphongexponent..ponydata.tailphongboost..tostring(ponydata.tailcolor1)..tostring(ponydata.tailcolor2)..tostring(ponydata.tailcolor3)..tostring(ponydata.tailcolor4)..tostring(ponydata.tailcolor5)..tostring(ponydata.tailcolor6)..tostring(ponydata.tail) end
 	}
 	PPM.rendertargettasks["eyeltex"]={--left eye
 		renderTrue=function(ENT, PONY)
@@ -369,7 +456,7 @@ PPM.loadrt=function()
 			local pony=PPM.currt_ponydata
 			PPM.tex_draweyefunc(pony, false)
 		end,
-		hash=function(ponydata) return tostring(ponydata.eyecolor_bg) .. tostring(ponydata.eyecolor_iris) .. tostring(ponydata.eyecolor_grad) .. tostring(ponydata.eyecolor_line1) .. tostring(ponydata.eyecolor_line2) .. tostring(ponydata.eyecolor_hole) .. tostring(ponydata.eyeirissize) .. tostring(ponydata.eyeholesize) .. tostring(ponydata.eyejholerssize) .. tostring(ponydata.eyehaslines) end
+		hash=function(ponydata) return tostring(ponydata.eyecolor_bg)..tostring(ponydata.eyecolor_iris)..tostring(ponydata.eyecolor_grad)..tostring(ponydata.eyecolor_line1)..tostring(ponydata.eyecolor_line2)..tostring(ponydata.eyecolor_hole)..tostring(ponydata.eyeirissize)..tostring(ponydata.eyeholesize)..tostring(ponydata.eyejholerssize)..tostring(ponydata.eyehaslines) end
 	}
 	PPM.rendertargettasks["eyertex"]={--right eye
 		renderTrue=function(ENT, PONY)
@@ -382,7 +469,7 @@ PPM.loadrt=function()
 			local pony=PPM.currt_ponydata
 			PPM.tex_draweyefunc(pony, true)
 		end,
-		hash=function(ponydata) return tostring(ponydata.eyecolor_bg_r) .. tostring(ponydata.eyecolor_iris_r) .. tostring(ponydata.eyecolor_grad_r) .. tostring(ponydata.eyecolor_line1_r) .. tostring(ponydata.eyecolor_line2_r) .. tostring(ponydata.eyecolor_hole_r) .. tostring(ponydata.eyeirissize_r) .. tostring(ponydata.eyeholesize_r) .. tostring(ponydata.eyejholerssize_r) .. tostring(ponydata.eyehaslines_r) end
+		hash=function(ponydata) return tostring(ponydata.eyecolor_bg_r)..tostring(ponydata.eyecolor_iris_r)..tostring(ponydata.eyecolor_grad_r)..tostring(ponydata.eyecolor_line1_r)..tostring(ponydata.eyecolor_line2_r)..tostring(ponydata.eyecolor_hole_r)..tostring(ponydata.eyeirissize_r)..tostring(ponydata.eyeholesize_r)..tostring(ponydata.eyejholerssize_r)..tostring(ponydata.eyehaslines_r) end
 	}
 	PPM.tex_drawhairfunc=function(pony, UPDN, TAIL)
 		local hairnum=pony.mane
@@ -397,10 +484,10 @@ PPM.loadrt=function()
 		end
 
 		PPM.hairrenderOp(UPDN, TAIL, hairnum)
-		local colorcount=PPM.manerender[UPDN .. hairnum]
+		local colorcount=PPM.manerender[UPDN..hairnum]
 
 		if TAIL then
-			colorcount=PPM.manerender["tl" .. hairnum]
+			colorcount=PPM.manerender["tl"..hairnum]
 		end
 
 		if colorcount ~=nil then
@@ -410,19 +497,19 @@ PPM.loadrt=function()
 				coloroffcet=0
 			end
 
-			local prephrase=UPDN .. "mane_"
+			local prephrase=UPDN.."mane_"
 
 			if TAIL then--drawing the tail
 				prephrase="tail_"
 			end
 
 			colorcount=colorcount[2]
-			local backcolor=pony[PREFIX.."color" .. (coloroffcet + 1)] or PPM.defaultHairColors[coloroffcet + 1]
+			local backcolor=pony[PREFIX.."color"..(coloroffcet + 1)] or PPM.defaultHairColors[coloroffcet + 1]
 			render.Clear(backcolor.x * 255, backcolor.y * 255, backcolor.z * 255, 255, true)
 
 			for I=0, colorcount - 1 do
-				local color=pony[PREFIX.."color" .. (I + 2 + coloroffcet)] or PPM.defaultHairColors[I + 2 + coloroffcet] or Vector(1, 1, 1)
-				local material=Material("models/ppm/partrender/" .. prephrase .. hairnum .. "_mask" .. I .. ".png")
+				local color=pony[PREFIX.."color"..(I + 2 + coloroffcet)] or PPM.defaultHairColors[I + 2 + coloroffcet] or Vector(1, 1, 1)
+				local material=Material("models/ppm/partrender/"..prephrase..hairnum.."_mask"..I..".png")
 				render.SetMaterial(material)
 				render.DrawQuadEasy(Vector(256, 256, 0), Vector(0, 0, -1), 512, 512, Color(color.x * 255, color.y * 255, color.z * 255, 255), -90) --position of the rect
 				--direction to face in
@@ -480,14 +567,14 @@ PPM.loadrt=function()
 		--rotate 90 degrees
 		if drawlines then
 			--eye_line_l1
-			local material=Material("models/ppm/partrender/eye_line_" .. prefix .. "2.png")
+			local material=Material("models/ppm/partrender/eye_line_"..prefix.."2.png")
 			render.SetMaterial(material)
 			render.DrawQuadEasy(Vector(256, 256, 0), Vector(0, 0, -1), 512 * irissize, 512 * irissize, Color(colorl2.x * 255, colorl2.y * 255, colorl2.z * 255, 255), -90) --position of the rect
 			--direction to face in
 			--size of the rect
 			--color
 			--rotate 90 degrees
-			local material=Material("models/ppm/partrender/eye_line_" .. prefix .. "1.png")
+			local material=Material("models/ppm/partrender/eye_line_"..prefix.."1.png")
 			render.SetMaterial(material)
 			render.DrawQuadEasy(Vector(256, 256, 0), Vector(0, 0, -1), 512 * irissize, 512 * irissize, Color(colorl1.x * 255, colorl1.y * 255, colorl1.z * 255, 255), -90) --position of the rect
 			--direction to face in
@@ -522,11 +609,11 @@ PPM.loadrt=function()
 	end
 	PPM.hairrenderOp=function(UPDN, TAIL, hairnum)
 		if TAIL then
-			if PPM.manerender["tl" .. hairnum] ~=nil then
+			if PPM.manerender["tl"..hairnum] ~=nil then
 				PPM.currt_success=true
 			end
 		else
-			if PPM.manerender[UPDN .. hairnum] ~=nil then
+			if PPM.manerender[UPDN..hairnum] ~=nil then
 				PPM.currt_success=true
 			end
 		end
