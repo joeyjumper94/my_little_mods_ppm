@@ -16,7 +16,7 @@ PPM.Pony_variables.default_pony={
 	tailsize={default=1,min=0.8,max=1},
 
 	cmark_enabled={default=2},
-	cmark={default=1,min=1,max=48},
+	cmark={default=1,min=1},
 	custom_mark={default=nil},
 	bodyweight={default=1,min=0.8,max=1.2},
 
