@@ -73,11 +73,8 @@ if CLIENT then
 		PPM:RescaleRIGPART(ent,{39,40},Vector(svts,svts,svts))
 		--}
 		if PPM.m_hair1==nil then return end
-		PPM.m_tail1:SetFloat("$phongexponent",pony.tailphongexponent)
-		PPM.m_tail1:SetFloat("$phongboost",pony.tailphongboost)
 		PPM.m_body:SetFloat("$phongexponent",pony.coatphongexponent)
-		PPM.m_body:SetFloat("$phongboost",pony.coatphongboost)--]]
-
+		PPM.m_body:SetFloat("$phongboost",pony.coatphongboost)
 		PPM.m_tail1:SetFloat("$phongexponent",pony.tailphongexponent)
 		PPM.m_tail1:SetFloat("$phongboost",pony.tailphongboost)
 		PPM.m_hair1:SetFloat("$phongexponent",pony.tailphongexponent)

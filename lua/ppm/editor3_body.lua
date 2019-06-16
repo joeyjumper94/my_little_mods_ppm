@@ -1,3 +1,4 @@
+
 PPM.Editor3_ponies = PPM.Editor3_ponies or {}
 PPM.Editor3_ponies = {
 	pony = {
@@ -103,7 +104,7 @@ PPM.Editor3_nodes.pony_equipment = {
 PPM.Editor3_nodes.pony_normal_face = {
 	eyelashes = {
 		name = "Eyelashes",
-		pos = Vector(15,8,45),
+		pos = Vector(15,0,45),
 		controlls = {
 			{
 				name = "Type",
@@ -113,10 +114,19 @@ PPM.Editor3_nodes.pony_normal_face = {
 			}
 		}
 	},
-	eyes = {
-		name = "Left Eye",
-		pos = Vector(15,5,40),
+	left_eye = {
+		name = "Left Eye part 1",
+		pos = Vector(15,5,42),
 		controlls = {
+			{
+				name="Eye type",
+				type="edit_type",
+				param="eye_type",
+				choises={
+					"normal",
+					"aperture",
+				},
+			},
 			{
 				name = "Back color",
 				type = "edit_color",
@@ -174,17 +184,63 @@ PPM.Editor3_nodes.pony_normal_face = {
 				name = "Pupil color",
 				type = "edit_color",
 				param = "eyecolor_hole"
-			}
+			},
+		}
+	},
+	left_eye2 = {
+		name = "Left Eye part 2",
+		pos = Vector(15,5,38),
+		controlls = {
+			{
+				name="Reflect type",
+				type="edit_type",
+				param="eye_reflect_type",
+				choises={
+					"normal",
+					"crystal",
+					"foal",
+					"male",
+				},
+			},
+			{
+				name = "Reflect color",
+				type = "edit_color",
+				param = "eye_reflect_color"
+			},
+			{
+				name = "Reflect alpha",
+				type = "edit_number",
+				param = "eye_reflect_alpha",
+				min = 0,
+				max = 1,
+			},
+			{
+				name = "Effect color",
+				type = "edit_color",
+				param = "eye_effect_color"
+			},
+			{
+				name = "Effect alpha",
+				type = "edit_number",
+				param = "eye_effect_alpha",
+				min = 0,
+				max = 1,
+			},
 		}
 	},
 	right_eye = {
-		name = "Right Eye",
-		pos = Vector(15,-5,40),
+		name = "Right Eye part 1",
+		pos = Vector(15,-5,42),
 		controlls = {
-/*			{
-				name = "View",
-				type = "view_eye_r" 
-			},*/
+			{
+				name="Eye type",
+				type="edit_type",
+				param="eye_type_r",
+				choises={
+					"normal",
+					"aperture",
+				},
+			},
 			{
 				name = "Back color",
 				type = "edit_color",
@@ -242,14 +298,55 @@ PPM.Editor3_nodes.pony_normal_face = {
 				name = "Pupil color",
 				type = "edit_color",
 				param = "eyecolor_hole_r"
-			}
+			},
+		}
+	},
+	right_eye2 = {
+		name = "Right Eye part 2",
+		pos = Vector(15,-5,38),
+		controlls = {
+			{
+				name="Reflect type",
+				type="edit_type",
+				param="eye_reflect_type_r",
+				choises={
+					"normal",
+					"crystal",
+					"foal",
+					"male",
+				},
+			},
+			{
+				name = "Reflect color",
+				type = "edit_color",
+				param = "eye_reflect_color_r"
+			},
+			{
+				name = "Reflect alpha",
+				type = "edit_number",
+				param = "eye_reflect_alpha_r",
+				min = 0,
+				max = 1,
+			},
+			{
+				name = "Effect color",
+				type = "edit_color",
+				param = "eye_effect_color_r"
+			},
+			{
+				name = "Effect alpha",
+				type = "edit_number",
+				param = "eye_effect_alpha_r",
+				min = 0,
+				max = 1,
+			},
 		}
 	},
 }
 PPM.Editor3_nodes.pony_normal_body = {
 	horn = {
 		name = "Horn",
-		pos = Vector(22,0,60),
+		pos = Vector(23,0,62),
 		controlls = {
 			{
 				name = "horn color",
@@ -327,6 +424,13 @@ PPM.Editor3_nodes.pony_normal_body = {
 				min = 0,
 				max = 255,
 			},
+			{
+				name="Fullbright",
+				type="edit_bool",
+				param="coatfullbright",
+				onvalue = 1,
+				offvalue = 0
+			},
 		}
 	},
 	ponymark = {
@@ -383,7 +487,7 @@ PPM.Editor3_nodes.pony_normal_body = {
 		controlls =
 		{
 			{
-				name = "Tail",
+				name = "Tail Type",
 				type = "edit_type",
 				param = "tail",
 				choises = {
@@ -445,12 +549,12 @@ PPM.Editor3_nodes.pony_normal_body = {
 			}
 		}
 	},
-	uppermane = {
-		name = "Uppermane",
+	hair = {
+		name = "Hair",
 		pos = Vector(18,0,55),
 		controlls = {
 			{
-				name = "Mane Upper",
+				name = "Mane Type",
 				type = "edit_type",
 				param = "mane",
 				choises = {
@@ -505,12 +609,12 @@ PPM.Editor3_nodes.pony_normal_body = {
 			}
 		}
 	},
-	lowermane =	{
-		name = "Lowermane",
+	mane =	{
+		name = "Mane",
 		pos = Vector(5,0,40),
 		controlls = {
 			{
-				name = "Lower mane",
+				name = "Mane Type",
 				type = "edit_type",
 				param = "manel",
 				choises = {
@@ -591,21 +695,7 @@ local FN=function()
 					name="Color",
 					type="edit_color",
 					param="bodydetail"..i.."_c",
-				},--[[
-				{
-					name = "phongexponent",
-					type = "edit_number",
-					param = "bodydetail"..i.."phongexponent",
-					min = 0,
-					max = 255,
 				},
-				{
-					name = "phongboost",
-					type = "edit_number",
-					param = "bodydetail"..i.."phongboost",
-					min = 0,
-					max = 255,
-				},--]]
 			}
 		}
 	end

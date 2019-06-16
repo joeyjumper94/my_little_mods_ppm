@@ -135,22 +135,34 @@ function PPM.randomizePony(ent)
 	ent.ponydata.bodyt1_color = Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1))
 
 	ent.ponydata.eyecolor_bg = Vector(1, 1, 1)
-	ent.ponydata.eyeirissize = 0.7 + math.Rand(-0.1, 0.1)
-	ent.ponydata.eyecolor_iris = Vector(math.Rand(0, 2), math.Rand(0, 2), math.Rand(0, 2))
+	ent.ponydata.eyeirissize = math.Rand(.2,1)
+	ent.ponydata.eyecolor_iris = Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1))
 	ent.ponydata.eyecolor_grad = Vector(math.Rand(0, 2), math.Rand(0, 2), math.Rand(0, 2)) / 3
-	ent.ponydata.eyecolor_line1 = Vector(math.Rand(0, 2), math.Rand(0, 2), math.Rand(0, 2)) * 0.9
-	ent.ponydata.eyecolor_line2 = Vector(math.Rand(0, 2), math.Rand(0, 2), math.Rand(0, 2)) * 0.8
-	ent.ponydata.eyeholesize = 0.7 + math.Rand(-0.1, 0.1)
+	ent.ponydata.eyecolor_line1 = Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1))
+	ent.ponydata.eyecolor_line2 = Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1))
+	ent.ponydata.eyeholesize = math.Rand(.3,1)
 	ent.ponydata.eyecolor_hole = Vector(0, 0, 0)
+	ent.ponydata.eye_type=math.random(1,PPM.Pony_variables.default_pony.eye_type.max)
+	ent.ponydata.eye_reflect_type=math.random(1,PPM.Pony_variables.default_pony.eye_reflect_type.max)
+	ent.ponydata.eye_reflect_color=Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1))
+	ent.ponydata.eye_reflect_alpha=math.Rand(0,1)
+	ent.ponydata.eye_effect_color=Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1))
+	ent.ponydata.eye_effect_alpha=math.Rand(0,1)
 
 	ent.ponydata.eyecolor_bg_r = Vector(1, 1, 1)
-	ent.ponydata.eyeirissize_r = 0.7 + math.Rand(-0.1, 0.1)
-	ent.ponydata.eyecolor_iris_r = Vector(math.Rand(0, 2), math.Rand(0, 2), math.Rand(0, 2))
+	ent.ponydata.eyeirissize_r = math.Rand(.2,1)
+	ent.ponydata.eyecolor_iris_r = Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1))
 	ent.ponydata.eyecolor_grad_r = Vector(math.Rand(0, 2), math.Rand(0, 2), math.Rand(0, 2)) / 3
-	ent.ponydata.eyecolor_line1_r = Vector(math.Rand(0, 2), math.Rand(0, 2), math.Rand(0, 2)) * 0.9
-	ent.ponydata.eyecolor_line2_r = Vector(math.Rand(0, 2), math.Rand(0, 2), math.Rand(0, 2)) * 0.8
-	ent.ponydata.eyeholesize_r = 0.7 + math.Rand(-0.1, 0.1)
+	ent.ponydata.eyecolor_line1_r = Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1))
+	ent.ponydata.eyecolor_line2_r = Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1))
+	ent.ponydata.eyeholesize_r = math.Rand(.3,1)
 	ent.ponydata.eyecolor_hole_r = Vector(0, 0, 0)
+	ent.ponydata.eye_type_r=math.random(1,PPM.Pony_variables.default_pony.eye_type.max)
+	ent.ponydata.eye_reflect_type_r=math.random(1,PPM.Pony_variables.default_pony.eye_reflect_type.max)
+	ent.ponydata.eye_reflect_color_r=Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1))
+	ent.ponydata.eye_reflect_alpha_r=math.Rand(0,1)
+	ent.ponydata.eye_effect_color_r=Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1))
+	ent.ponydata.eye_effect_alpha_r=math.Rand(0,1)
 end
 
 function PPM.copyLocalPonyTo(from, to)

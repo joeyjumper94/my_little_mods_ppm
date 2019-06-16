@@ -40,7 +40,7 @@ local PPM_readme_table={'',
 'if set to 0, the antispam timer is disabled',
 '',
 'if set to anything more than 0, a timer will be created after spawning pony ragdoll/NPC',
-'this timer will stop further pony NPC/ragdoll spawns untill the timer runs out',
+'this timer will stop further pony NPC/ragdoll spawns by that player untill the timer runs out',
 '',
 '_________________________________________________________________________________________',
 '',
@@ -85,23 +85,7 @@ local PPM_readme_table={'',
 '',
 'https://github.com/joeyjumper94/Equestrian-Wastelanders-PPM is the githb version'}
 concommand.Add('ppm_readme',function(ply,cmd,args)
-	for k,v in pairs(PPM_readme_table) do
+	for k,v in ipairs(PPM_readme_table) do
 		print(v)
 	end
 end)
-
-
---[['_________________________________________________________________________________________',
-'',
-'ppm_render_always',
-'default is 1',
-'',
-'if set to 1, all ponies will be rendered',
-'if set to 0, rendering will happen if you are close enough and there\'s nothing in the way',
-'_________________________________________________________________________________________',
-'',
-'ppm_render_distances',
-'default is 1000',
-'',
-'if ppm_render_always is set to 1, then this setting won\'t matter',
-'decide how close ponies must be to render',]]

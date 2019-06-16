@@ -2,12 +2,16 @@ if SERVER then
 	return
 end
 local _L={}
+local Icon_Name="gui/pped_icon.png"
+if !file.Exists("materials/"..Icon_Name,"GAME") then
+	Icon_Name="gui/pped_icon.png"
+end
 list.Set(
 	"DesktopWindows",
 	"PPMitor3",
 	{
 		title		="EWPPM Editor",
-		icon		="gui/pped_icon.png",
+		icon		=Icon_Name,
 		width		=960,
 		height		=700,
 		onewindow	=true,
@@ -319,7 +323,7 @@ function PPM.Editor3Open()
 						surface.DrawTexturedRectRotated(x+tt/2*3,y-tt/2,tt,tt,0)
 
 
-						surface.SetFont("TAHDS")
+						surface.SetFont(PPM.EDM_FONT)
 						surface.SetTextPos(x+tt/2,y-tt/2) 
 						surface.SetTextColor(100,100,100,255)
 						surface.DrawText(k)
@@ -347,7 +351,7 @@ function PPM.Editor3Open()
 						surface.SetMaterial(Material("gui/editor/lid_end.png"))
 						surface.DrawTexturedRectRotated(40,20,tt,tt,180)
 						local CK=string.upper(v.name)
-						surface.SetFont("TAHDS")
+						surface.SetFont(PPM.EDM_FONT)
 						surface.SetTextPos(60-tt/2,20)
 						surface.SetTextColor(100,100,100,255)
 						surface.DrawText(CK)
@@ -364,7 +368,7 @@ function PPM.Editor3Open()
 
 
 				else
-					surface.SetFont("TAHDS")
+					surface.SetFont(PPM.EDM_FONT)
 					surface.SetTextPos(x-tt/2*2+15,y-tt/2)
 					surface.SetTextColor(100,100,100,255/dist)
 					surface.DrawText(v.name)

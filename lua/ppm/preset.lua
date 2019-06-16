@@ -50,6 +50,11 @@ local eye={
 function PPM.StringToPonyData( str )
 	local lines = string.Split( str, "\n" )
 	local ponydata = {}
+	for key,tbl in pairs(PPM.Pony_variables.default_pony) do
+		if type(tbl.default)!="table" then
+			ponydata[key]=tbl.default
+		end
+	end
 	for k,v in pairs( lines ) do
 		local args = string.Split( string.Trim(v), " " ) 
 		local name = string.Replace( args[1], "pny_", "" ) 
@@ -76,6 +81,39 @@ function PPM.StringToPonyData( str )
 			end
 		end
 	end
+	for k,v in pairs(ponydata)do--make sure all expected data types are correct
+		local default=PPM.Pony_variables.default_pony[k] and PPM.Pony_variables.default_pony[k].default
+		local expected,got=type(default),type(v)
+		if default and expected!="table" and got!=expected then
+			print("invalid ponydata detected: type "..k.." should be "..expected.." expected, got "..got)
+			ponydata[k]=default
+		end
+		local max=PPM.Pony_variables.default_pony[k] and PPM.Pony_variables.default_pony[k].max
+		local min=PPM.Pony_variables.default_pony[k] and PPM.Pony_variables.default_pony[k].min
+		if expected=="number" or expected=="string" then
+			if min and v<min then--under the min
+				print("invalid ponydata detected: value of "..k.." was "..v..", min is "..min)
+				ponydata[k]=min
+			end
+			if max and v>max then--above the max
+				print("invalid ponydata detected: value of "..k.." was "..v..", max is "..max)
+				ponydata[k]=max
+			end
+		elseif expected=="Vector" then
+			local cur=ponydata[k]
+			for key,val in SortedPairs{x=cur.x,y=cur.y,z=cur.z}do
+				local min,max=min and min[key],max and max[key]
+				if min and val<min then--under the min
+					ponydata[k][key]=min
+					print("invalid ponydata detected: value of "..key.." of Vector "..k.." was "..val..", min is "..min)
+				end
+				if max and val>max then--above the max
+					print("invalid ponydata detected: value of "..key.." of Vector "..k.." was "..val..", max is "..max)
+					ponydata[k][key]=max
+				end
+			end
+		end
+	end
 	
 	-- Perform simple data validation (May add more here later if players start finding ways to mess up their pony files)
 	if ponydata.custom_mark ~= nil and type( ponydata.custom_mark ) ~= "string" then
@@ -95,7 +133,7 @@ if CLIENT then
 		if !file.Exists( "ppm", "DATA" ) then
 			file.CreateDir( "ppm" )
 		end
-		MsgN( "saving .... " .. "ppm/" .. filename )
+		MsgN( "saving .... ppm/" .. filename )
 		file.Write( "ppm/" .. filename, saveframe )
 		return PPM.SaveToCache( PPM.CacheGroups.OC_DATA, LocalPlayer(), filename, saveframe )
 	end
