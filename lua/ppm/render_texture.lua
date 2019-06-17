@@ -591,7 +591,7 @@ PPM.loadrt=function()
 			drawlines=pony.eyehaslines_r==1
 		end
 		if !isR and pony.eye_type==1 then
-			drawlines=pony.eyehaslines_r==1
+			drawlines=pony.eyehaslines==1
 		end
 		local holewidth=pony.eyejholerssize or 1
 		local irissize=pony["eyeirissize"..SUFFIX] or 0.6
