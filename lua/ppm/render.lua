@@ -14,7 +14,7 @@ if CLIENT then
 
 	function PPM:RescaleOFFCETRIGPART(ent,part,scale)
 		for k,v in pairs(part) do
-			--ent:ManipulateBoneScale(v,scale ) 
+			--ent:ManipulateBoneScale(v,scale )
 			local thispos=PPM.skeletons.pony_default[v+1].localpos
 			ent:ManipulateBonePosition(v,thispos*(scale-Vector(1,1,1)))
 		end
@@ -71,7 +71,32 @@ if CLIENT then
 		PPM:RescaleRIGPART(ent,{38},Vector(svts,svts,svts))
 		PPM:RescaleOFFCETRIGPART(ent,{39,40},Vector(SCALEVAL_tail,SCALEVAL_tail,SCALEVAL_tail))
 		PPM:RescaleRIGPART(ent,{39,40},Vector(svts,svts,svts))
-		--}
+		-----------------------------------------manescale
+		--30,base
+		--31,base to mid
+		--32,mid to tip
+		--37,tip
+		local SCALEVAL_tail=pony.manesize or 1
+		local svts=(SCALEVAL_tail-1)*2+1
+		local svtc=(SCALEVAL_tail-1)/2+1
+		PPM:RescaleOFFCETRIGPART(ent,{30},Vector(svtc,svtc,svtc))
+		PPM:RescaleRIGPART(ent,{30},Vector(svts,svts,svts))
+		PPM:RescaleOFFCETRIGPART(ent,{32,37},Vector(SCALEVAL_tail,SCALEVAL_tail,SCALEVAL_tail))
+		PPM:RescaleOFFCETRIGPART(ent,{31},Vector(SCALEVAL_tail*.1+.9,SCALEVAL_tail*.1+.9,SCALEVAL_tail*.1+.9))
+		PPM:RescaleRIGPART(ent,{31,32,37,},Vector(svts,svts,svts))
+		-----------------------------------------hairscale
+		--33,
+		--34,
+		--35,
+		--36,
+		local SCALEVAL_tail=pony.hairsize or 1
+		local svts=(SCALEVAL_tail-1)*2+1
+		local svtc=(SCALEVAL_tail-1)/2+1
+		PPM:RescaleOFFCETRIGPART(ent,{35},Vector(svtc,svtc,svtc))
+		PPM:RescaleOFFCETRIGPART(ent,{36},Vector(2-svts*2,1,1))
+		PPM:RescaleRIGPART(ent,{33,34,35,36,},Vector(svts,svts,svts))
+		-----------------------------------------
+		--}wd
 		if PPM.m_hair1==nil then return end
 		PPM.m_body:SetFloat("$phongexponent",pony.coatphongexponent)
 		PPM.m_body:SetFloat("$phongboost",pony.coatphongboost)

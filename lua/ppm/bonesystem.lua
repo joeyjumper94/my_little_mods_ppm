@@ -10,9 +10,9 @@ if CLIENT then
 		local lines = string.Split(str,"\n")
 		
 		//MsgN("scel decomp")
-		for i=1,table.Count( lines) do
+		for i=1,#lines do
 			local arms = string.Split(lines[i]," ") 
-			if table.Count( arms)==15 then
+			if #arms==15 then
 				local bone = {}
 				bone.name = string.Replace(arms[2],"\"","") 
 				bone.id = i
@@ -78,7 +78,7 @@ if CLIENT then
 			
 			local parent =PPM.bones_getParent(v) 
 			if parent!=nil then
-				drawline(parent.absolutepos*5 or Vector(0,0,0),v.absolutepos*5)
+				PPM.drawline(parent.absolutepos*5 or Vector(0,0,0),v.absolutepos*5)
 			end
 		end
 		 
@@ -91,7 +91,7 @@ if CLIENT then
 		//local pos, ang = 
 	end
 
-	function drawline(start_pos,end_pos)   
+	function PPM.drawline(start_pos,end_pos)   
 			  
 		render.SetMaterial(  Material( "trails/laser" ) );
 		  

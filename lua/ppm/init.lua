@@ -26,8 +26,8 @@ if CLIENT then
 	include("editor3_presets.lua")
 	include("presets_base.lua")
 	include("gui_toolpanel.lua")
-	CreateConVar("ppm_hide_weapon","0",FCVAR_REPLICATED,FCVAR_REPLICATED,"hide weapons held by ponies")
-	CreateConVar("ppm_enable_camerashift","1",FCVAR_REPLICATED,FCVAR_REPLICATED,"Enables ViewOffset Setup")
+	CreateConVar("ppm_hide_weapon","0",FCVAR_REPLICATED,"hide weapons held by ponies")
+	CreateConVar("ppm_enable_camerashift","1",FCVAR_REPLICATED,"Enables ViewOffset Setup")
 else
 	include("serverside.lua")
 end

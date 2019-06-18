@@ -423,14 +423,14 @@ PPM.Editor3_nodes.pony_normal_body = {
 				param = "coatphongboost",
 				min = 0,
 				max = 255,
-			},
+			},--[[
 			{
 				name="Fullbright",
 				type="edit_bool",
 				param="coatfullbright",
 				onvalue = 1,
 				offvalue = 0
-			},
+			},--]]
 		}
 	},
 	ponymark = {
@@ -500,8 +500,8 @@ PPM.Editor3_nodes.pony_normal_body = {
 				name = "Tail size",
 				type = "edit_number",
 				param = "tailsize",
-				min = 0.8,
-				max = 1.1
+				min = .65,
+				max = 1.5,
 			},
 			{
 				name = "phongexponent",
@@ -554,7 +554,7 @@ PPM.Editor3_nodes.pony_normal_body = {
 		pos = Vector(18,0,55),
 		controlls = {
 			{
-				name = "Mane Type",
+				name = "Hair Type",
 				type = "edit_type",
 				param = "mane",
 				choises = {
@@ -562,6 +562,13 @@ PPM.Editor3_nodes.pony_normal_body = {
 					"BOLD","STUMPY","SPEEDSTER","RADICAL","SPIKED",
 					"BOOKWORM","BUMPKIN","POOFEH","CURLY","INSTRUCTOR","NONE"
 				}
+			},
+			{
+				name = "Hair size",
+				type = "edit_number",
+				param = "hairsize",
+				min = .65,
+				max = 1.5,
 			},
 			{
 				name = "phongexponent",
@@ -622,6 +629,13 @@ PPM.Editor3_nodes.pony_normal_body = {
 					"BOLD","STUMPY","HIPPIE","SPEEDSTER","BOOKWORM",
 					"BUMPKIN","CURLY","NONE"
 				}
+			},
+			{
+				name = "Mane size",
+				type = "edit_number",
+				param = "manesize",
+				min = .65,
+				max = 1.5
 			},
 			{
 				name = "phongexponent",

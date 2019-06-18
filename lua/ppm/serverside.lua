@@ -69,7 +69,7 @@ local PlayerSetModel=function(ply)
 						--ply.ponydata.clothes1:SetNoDraw(true)	
 						ply:SetNWEntity("pny_clothing",ply.ponydata.clothes1)
 						for i=0,14 do
-							ply.ponydata.clothes1:SetBodygroup(i,ply.ponydata.bdata[i])
+							ply.ponydata.clothes1:SetBodygroup(i,ply.ponydata.bdata[i] or 0)
 						end
 					end
 				end)
@@ -124,7 +124,7 @@ hook.Add("PreCleanupMap","ppm_clothes_map_clean",function()
 				end
 			end
 			timer.Simple(k*0.1,function()
-				if ply:IsValid() then
+				if ply:IsValid() and ply.ponydata.bdata then
 					ply.ponydata.clothes1=ply.ponydata.clothes1:IsValid() and ply.ponydata.clothes1 or ents.Create("prop_dynamic")
 					ply.ponydata.clothes1:SetModel("models/ppm/player_default_clothes1.mdl")
 					ply.ponydata.clothes1:SetParent(ply)
@@ -132,7 +132,7 @@ hook.Add("PreCleanupMap","ppm_clothes_map_clean",function()
 					ply.ponydata.clothes1:SetRenderMode(RENDERMODE_TRANSALPHA)
 					ply:SetNWEntity("pny_clothing",ply.ponydata.clothes1)
 					for i=0,14 do
-						ply.ponydata.clothes1:SetBodygroup(i,ply.ponydata.bdata[i])
+						ply.ponydata.clothes1:SetBodygroup(i,ply.ponydata.bdata[i] or 0)
 					end
 				end
 			end)

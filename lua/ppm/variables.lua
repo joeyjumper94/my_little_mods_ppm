@@ -10,15 +10,19 @@ PPM.Pony_variables.default_pony={
 	--body
 	_cmark={default=nil},
 	_cmark_loaded={default=false},
-	mane={default=1,min=1,max=15},
-	manel={default=1,min=1,max=12},
-	tail={default=1,min=1,max=14},
-	tailsize={default=1,min=0.8,max=1},
+	mane={default=1,min=1,max=16},
+	manel={default=1,min=1,max=13},
+	tail={default=1,min=1,max=15},
+	tailsize={default=1,min=.65,max=1.5},
+	manesize={default=1,min=.65,max=1.5},
+	hairsize={default=1,min=.65,max=1.5},
 
-	cmark_enabled={default=2},
-	cmark={default=1,min=1},
+	cmark_enabled={default=2,min=1,max=2},
+	cmark={default=1,min=1,max=nil},
 	custom_mark={default=nil},
 	bodyweight={default=1,min=0.8,max=1.2},
+	
+	clothes={default="1_3_5_59_61_63_65_7"},--clothes data here
 
 	--coat and horn
 	coatcolor={default=Vector(1,1,1),min=Vector(0,0,0),max=Vector(1,1,1)},
@@ -83,7 +87,7 @@ PPM.Pony_variables.default_pony={
 	eyelash={default=1,min=1,max=6},--eyelash bodygroup
 	--left eye
 	eyehaslines={default=1},
-	eyeirissize={default=0.7,min=0.2,max=1},
+	eyeirissize={default=0.7,min=0.2,max=2},
 	eyeholesize={default=0.7,min=0.3,max=1},
 	eyejholerssize={default=1,min=0.2,max=1},
 	eyecolor_bg={default=Vector(1,1,1),min=Vector(0,0,0),max=Vector(1,1,1)},
@@ -102,7 +106,7 @@ PPM.Pony_variables.default_pony={
 
 	--right eye
 	eyehaslines_r={default=1},
-	eyeirissize_r={default=0.7,min=0.2,max=1},
+	eyeirissize_r={default=0.7,min=0.2,max=2},
 	eyeholesize_r={default=0.7,min=0.3,max=1},
 	eyejholerssize_r={default=1,min=0.2,max=1},
 	eyecolor_bg_r={default=Vector(1,1,1),min=Vector(0,0,0),max=Vector(1,1,1)},

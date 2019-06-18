@@ -3,6 +3,37 @@ PPM.bannedVars = {
 	m_bodyt0=true,
 	_cmark=true,
 	_cmark_loaded=true,
+	bodydetail1_b=true,
+	bodydetail7=true,
+	bodydetail7_c=true,
+	bodydetail8=true,
+	bodydetail8_c=true,
+	bodydetail9=true,
+	bodydetail9_c=true,
+	bodydetail10=true,
+	bodydetail10_c=true,
+	bodydetail12=true,
+	bodyt0=true,
+	bodyt1=true,
+	haircolor7=true,
+	haircolor8=true,
+	haircolor9=true,
+	haircolor10=true,
+	tailcolor7=true,
+	tailcolor8=true,
+	tailcolor9=true,
+	tailcolor10=true,
+	manecolor7=true,
+	manecolor8=true,
+	manecolor9=true,
+	manecolor10=true,
+
+	wingscolor=true,
+	eyelash_r=true,
+	eyelholerssize=true,
+	eyelholerssize_r=true,
+	bodyt1_color=true,
+	cmarkscale=true,
 }
 
 -- NOTABLE LIMITATION: WILL REMOVE SPACES FROM STRINGS TYPE ITEMS BEFORE SAVING AND WILL REFUSE TO LOAD THEM PROPERLY
@@ -15,7 +46,7 @@ function PPM.PonyDataToString( ponydata )
 			if type(v) == "number" then
 				table.insert( saveframe, "\n " .. k .. " " .. tostring(v) )
 			elseif type(v) == "Vector" then
-				table.insert( saveframe, "\n " .. k .. " " .. tostring(v) )
+				table.insert( saveframe, "\n " .. k .. " " .. tostring(v.x).. " " .. tostring(v.y).. " " .. tostring(v.z) )
 			elseif type(v) == "boolean" then
 				table.insert( saveframe, "\n " .. k .. " b " .. tostring(v) )
 			elseif type(v) == "string" then
@@ -50,18 +81,13 @@ local eye={
 function PPM.StringToPonyData( str )
 	local lines = string.Split( str, "\n" )
 	local ponydata = {}
-	for key,tbl in pairs(PPM.Pony_variables.default_pony) do
-		if type(tbl.default)!="table" then
-			ponydata[key]=tbl.default
-		end
-	end
 	for k,v in pairs( lines ) do
 		local args = string.Split( string.Trim(v), " " ) 
 		local name = string.Replace( args[1], "pny_", "" ) 
 		if not PPM.bannedVars[name] then
-			if( table.Count(args) == 2 ) then
+			if #args == 2  then
 				ponydata[name] =tonumber( args[2] )
-			elseif( table.Count(args) == 4 ) then
+			elseif #args == 4 then
 				ponydata[name] = Vector( tonumber( args[2] ),tonumber(args[3] ),tonumber(args[4]))
 				if hair[name] then
 					ponydata["tailcolor"..hair[name]]=ponydata["tailcolor"..hair[name]]or ponydata[name]
@@ -72,7 +98,7 @@ function PPM.StringToPonyData( str )
 					ponydata.horncolor=ponydata.horncolor or ponydata.coatcolor
 					ponydata.wingcolor=ponydata.wingcolor or ponydata.coatcolor
 				end
-			elseif( table.Count(args) == 3 ) then
+			elseif #args == 3 then
 				if args[2] == "b" then
 					ponydata[name] = tobool( args[3] )
 				elseif args[2] == "s" then
@@ -81,11 +107,16 @@ function PPM.StringToPonyData( str )
 			end
 		end
 	end
+	for key,tbl in pairs(PPM.Pony_variables.default_pony) do
+		if type(tbl.default)!="table" then
+			ponydata[key]=ponydata[key] or tbl.default
+		end
+	end
 	for k,v in pairs(ponydata)do--make sure all expected data types are correct
 		local default=PPM.Pony_variables.default_pony[k] and PPM.Pony_variables.default_pony[k].default
 		local expected,got=type(default),type(v)
 		if default and expected!="table" and got!=expected then
-			print("invalid ponydata detected: type "..k.." should be "..expected.." expected, got "..got)
+			print("invalid ponydata detected: type of "..k.." was "..got..", expected "..expected)
 			ponydata[k]=default
 		end
 		local max=PPM.Pony_variables.default_pony[k] and PPM.Pony_variables.default_pony[k].max
@@ -125,6 +156,15 @@ end
 
 if CLIENT then
 	function PPM.Save(filename, ponydata)
+		ponydata.clothes=""
+		local clothes=PPM:GetEquippedItems(LocalPlayer(),"pony")
+		for k,v in pairs(clothes) do
+			ponydata.clothes=ponydata.clothes..v.id
+			if clothes[k+1]then
+				ponydata.clothes=ponydata.clothes.."_"
+			end
+		end
+
 		local saveframe = PPM.PonyDataToString( ponydata )
 		
 		if !string.EndsWith( filename,".txt" ) then
@@ -140,7 +180,21 @@ if CLIENT then
 
 	function PPM.Load(filename)
 		local data = file.Read("data/ppm/"..filename,"GAME")
-		return PPM.StringToPonyData( data )
+		local ponydata=PPM.StringToPonyData( data )
+		if ponydata.clothes then
+			local clothes=ponydata.clothes:Split("_")
+			for time,id in ipairs(clothes)do
+				local itemid=tonumber(id)
+				if itemid then
+					timer.Simple(.1*time,function()
+						net.Start"player_equip_item"
+						net.WriteFloat(itemid)
+						net.SendToServer()
+						PPM:pi_SetupItem(PPM:pi_GetItemById(itemid),LocalPlayer())
+					end)
+				end
+			end
+		end
+		return ponydata
 	end
-
 end

@@ -724,13 +724,40 @@ PPM.loadrt=function()
 		end,
 		renderFalse=function(ENT,PONY)
 			--PPM.m_cmark:SetTexture("$basetexture",Material("models/mlp/partrender/clean.png"):GetTexture("$basetexture")) 
-			if (PONY==nil) then print("1") return end
-			if (PONY.cmark==nil) then  print("2") return end
-			if (PPM.m_cmarks[PONY.cmark]==nil) then print("3") return end
-			if (PPM.m_cmarks[PONY.cmark][2]==nil) then print("4") return end
-			if (PPM.m_cmarks[PONY.cmark][2]:GetTexture("$basetexture")==nil) then print("5") return end
-			if (PPM.m_cmarks[PONY.cmark][2]:GetTexture("$basetexture")==NULL) then print("6") return end
-			PPM.m_cmark:SetTexture("$basetexture",PPM.m_cmarks[PONY.cmark][2]:GetTexture("$basetexture"))
+			if (PONY==nil) then
+				if !ENT.PPM_cmark_error_code then
+					print(tostring(ENT)..": CMark error code 1")
+					ENT.PPM_cmark_error_code=true
+				end
+			elseif (PONY.cmark==nil) then
+				if !ENT.PPM_cmark_error_code then
+					print(tostring(ENT)..": CMark error code 2")
+					ENT.PPM_cmark_error_code=true
+				end
+			elseif (PPM.m_cmarks[PONY.cmark]==nil) then
+				if !ENT.PPM_cmark_error_code then
+					print(tostring(ENT)..": CMark error code 3")
+					ENT.PPM_cmark_error_code=true
+				end
+			elseif (PPM.m_cmarks[PONY.cmark][2]==nil) then
+				if !ENT.PPM_cmark_error_code then
+					print(tostring(ENT)..": CMark error code 4")
+					ENT.PPM_cmark_error_code=true
+				end
+			elseif (PPM.m_cmarks[PONY.cmark][2]:GetTexture("$basetexture")==nil) then
+				if !ENT.PPM_cmark_error_code then
+					print(tostring(ENT)..": CMark error code 5")
+					ENT.PPM_cmark_error_code=true
+				end
+			elseif (PPM.m_cmarks[PONY.cmark][2]:GetTexture("$basetexture")==NULL) then
+				if !ENT.PPM_cmark_error_code then
+					print(tostring(ENT)..": CMark error code 6")
+					ENT.PPM_cmark_error_code=true
+				end
+			else 
+				PPM.m_cmark:SetTexture("$basetexture",PPM.m_cmarks[PONY.cmark][2]:GetTexture("$basetexture"))
+				ENT.PPM_cmark_error_code=nil
+			end
 		end,
 		drawfunc=function()
 			local pony=PPM.currt_ponydata
