@@ -28,7 +28,7 @@ PPM.bannedVars = {
 	manecolor9=true,
 	manecolor10=true,
 
-	wingscolor=true,
+--	wingscolor=true,
 	eyelash_r=true,
 	eyelholerssize=true,
 	eyelholerssize_r=true,
@@ -157,10 +157,12 @@ end
 if CLIENT then
 	function PPM.Save(filename, ponydata)
 		ponydata.clothes=""
-		local clothes=PPM:GetEquippedItems(LocalPlayer(),"pony")
+		local clothes=LocalPlayer().pi_wear or PPM:GetEquippedItems(LocalPlayer(),"pony")
+		local i=table.Count(clothes)
 		for k,v in pairs(clothes) do
 			ponydata.clothes=ponydata.clothes..v.id
-			if clothes[k+1]then
+			i=i-1
+			if i!=0 then
 				ponydata.clothes=ponydata.clothes.."_"
 			end
 		end

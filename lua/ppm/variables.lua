@@ -22,7 +22,7 @@ PPM.Pony_variables.default_pony={
 	custom_mark={default=nil},
 	bodyweight={default=1,min=0.8,max=1.2},
 	
-	clothes={default="1_3_5_59_61_63_65_7"},--clothes data here
+	clothes={default="1_3_5_59_61_7_63_65_47"},--clothes data here
 
 	--coat and horn
 	coatcolor={default=Vector(1,1,1),min=Vector(0,0,0),max=Vector(1,1,1)},
