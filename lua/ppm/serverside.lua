@@ -10,11 +10,20 @@ net.Receive("player_equip_item",function(len,ply)
 	if item then
 		PPM.setupPony(ply,false)
 		PPM:pi_SetupItem(item,ply)
-		if ply.ponydata.clothes1:IsValid() then
+		if ply.ponydata.clothes1 and ply.ponydata.clothes1:IsValid() then
 			ply.ponydata.bdata = ply.ponydata.bdata or {0,0,0,0,0,0,0,0,0,0,0,0,0,0,}
 			for i,v in pairs(ply.ponydata.bdata) do
 				ply.ponydata.bdata[i]=ply.ponydata.clothes1:GetBodygroup(i)
 			end
+		else
+			timer.Simple(10,function()
+				if ply and ply.ponydata and ply.ponydata.clothes1 and ply.ponydata.clothes1:IsValid() then
+					ply.ponydata.bdata = ply.ponydata.bdata or {0,0,0,0,0,0,0,0,0,0,0,0,0,0,}
+					for i,v in pairs(ply.ponydata.bdata) do
+						ply.ponydata.bdata[i]=ply.ponydata.clothes1:GetBodygroup(i)
+					end
+				end				
+			end)
 		end
 	end
 end)

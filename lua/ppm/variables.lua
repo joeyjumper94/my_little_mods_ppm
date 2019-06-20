@@ -123,7 +123,7 @@ PPM.Pony_variables.default_pony={
 	eye_effect_color_r={default=Vector(1,1,1),min=Vector(0,0,0),max=Vector(1,1,1)},
 	eye_effect_alpha_r={default=1,min=0,max=1},
 	--body clothing
-	bodyt0={default=1},
+	bodyt0={default=1,min=1},
 	--bodyt1={default=1},
 	--bodyt2={default=1},
 }
