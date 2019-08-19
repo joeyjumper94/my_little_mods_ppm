@@ -140,6 +140,7 @@ local function OpenItemMenu(slotid,container)
 end
 
 function PPM_OpenCCmarkSelectorMenu(parent)
+	local R,G,B=255,0,255
 	local allw=512+256
 	local uppercorner_x=ScrW()/ 2-allw / 2
 	local uppercorner_y=ScrH()/ 2-256
@@ -152,8 +153,13 @@ function PPM_OpenCCmarkSelectorMenu(parent)
 
 	--BACKGROUND:SetColor(255,0,255,255)
 	BACKGROUND.Paint=function()
+		local coatcolor=PPM.modelview and PPM.modelview.Entity and PPM.modelview.Entity.ponydata and PPM.modelview.Entity.ponydata.coatcolor
+		if coatcolor then
+			local col=coatcolor*255
+			R,G,B=col.x,col.y,col.z
+		end
 		render.SetMaterial(Material("color"))
-		render.DrawQuadEasy(Vector(uppercorner_x+256,uppercorner_y+256,0),Vector(0,0,-1),512,512,Color(255,0,255,255),-90)--position of the rect
+		render.DrawQuadEasy(Vector(uppercorner_x+256,uppercorner_y+256,0),Vector(0,0,-1),512,512,Color(R,G,B,255),-90)--position of the rect
 	end
 
 	--direction to face in
@@ -196,7 +202,7 @@ function PPM_OpenCCmarkSelectorMenu(parent)
 	local scan_process_activated=false
 	local caching=false
 	--local x=0
-	--local data=""
+	local data=""
 	BUTTON.DoClick=function()
 		if !scan_process_activated then
 			timer.Remove("ppm_create_texture")
@@ -229,7 +235,8 @@ function PPM_OpenCCmarkSelectorMenu(parent)
 					--print(r,g,b)
 					--bytecount=bytecount+3
 					--print(r,"\t\t",g,"\t\t",b)
-					localdata=localdata..PPM.rgbtoHex(r,g,b)
+					
+					localdata=localdata..string.char(r)..string.char(g)..string.char(b)
 				end
 
 				if x >=511 then
@@ -240,7 +247,7 @@ function PPM_OpenCCmarkSelectorMenu(parent)
 					BUTTON:SetText("Scan Image")
 					CLOSEBUTTON:SetText("Close")
 					x=0
-					if true then return end
+					return
 				end
 
 				x=x+2
@@ -258,7 +265,7 @@ function PPM_OpenCCmarkSelectorMenu(parent)
 				end
 				x=x+1
 				]]
-			BUTTON:SetText("SCANNING("..math.Round(x / 512 * 100).."%)")
+			BUTTON:SetText("SCANNING("..math.Round(x*.1953125).."%)")
 			data=data..localdata
 			--x=x+1
 		end

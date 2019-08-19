@@ -175,8 +175,23 @@ end
 function PPM.copyLocalTextureDataTo(from, to)
 	to.ponydata_tex = table.Copy(from.ponydata_tex)
 end
-
+if SERVER then
+	util.AddNetworkString"PPM.copyPonyTo"
+else
+	net.Receive("PPM.copyPonyTo",function(len,ply)
+		local from,to=net.ReadEntity(),net.ReadEntity()
+		if from:IsValid() and to:IsValid() then
+			PPM.copyPonyTo(from,to)
+		end
+	end)
+end
 function PPM.copyPonyTo(from, to)
+	if SERVER then
+		net.Start"PPM.copyPonyTo"
+		net.WriteEntity(from)
+		net.WriteEntity(to)
+		net.Broadcast()
+	end
 	to.ponydata = to.ponydata or {} -- Make sure ponydata is initialized
 	local clothes = to.ponydata.clothes1 -- Get the clothing data if possible
 	to.ponydata = table.Copy(PPM.getPonyValues(from))
@@ -197,15 +212,19 @@ function PPM.hasPonyModel(model)
 end
 
 function PPM.isValidPonyLight(ent)
-	if not IsValid(ent) then return false end
-	if not PPM.hasPonyModel(ent:GetModel()) then return false end
+	if not ent:IsValid()
+	or not PPM.hasPonyModel(ent:GetModel()) then
+		return false
+	end
 	return true
 end
 
 function PPM.isValidPony(ent)
-	if not IsValid(ent) then return false end
-	if ent.ponydata == nil then return false end
-	if not PPM.hasPonyModel(ent:GetModel()) then return false end
+	if not ent:IsValid()
+	or ent.ponydata == nil
+	or not PPM.hasPonyModel(ent:GetModel()) then
+		return false
+	end
 	return true
 end
 
@@ -405,6 +424,8 @@ if CLIENT then
 		end
 	end)
 	concommand.Add("ppm_reload",function()
+		net.Start"ppm_reload"
+		net.SendToServer()
 		PPM.isLoaded = false
 	end)
 
@@ -463,4 +484,5 @@ if SERVER then
 			end
 		end)
 	end)
+	
 end

@@ -46,7 +46,10 @@ concommand.Add("ppm_editor",function()
 	if PPM.Editor3 and PPM.Editor3:IsValid() then return end
 	PPM.Editor3Open()
 end)
-PPM.Editor3=nil
+if PPM.Editor3 and PPM.Editor3.Close then
+	PPM.Editor3.Close()
+	PPM.Editor3Open()
+end
 PPM.Editor3_ponies=PPM.Editor3_ponies or {}
 PPM.Editor3_nodes=PPM.Editor3_nodes or {}
 PPM.Editor3_presets=PPM.Editor3_presets or {}

@@ -233,22 +233,11 @@ function PPM.CreateBodyTexture(ent, pony)
 
 	return rttex
 end
-PPM.VALIDPONY_CLASSES={
-	"player",
-	"prop_ragdoll",
-	"prop_physics",
-	"cpm_pony_npc",
-	player=true,
-	prop_physics=true,
-	prop_ragdoll=true,
-	cpm_pony_npc=true,
-	["class C_HL2MPRagdoll"]=true,
-}
 hook.Add("HUDPaint","pony_render_textures",function()
 	for index, ent in pairs(PPM.Ents) do
 		if !ent:IsValid() then continue end
 		if PPM.VALIDPONY_CLASSES[ent:GetClass()] then
-			if (PPM.isValidPonyLight(ent)) then
+			if PPM.isValidPonyLight(ent) then
 				local pony=PPM.getPonyValues(ent, false)
 
 				if (not PPM.isValidPony(ent)) then
@@ -271,7 +260,7 @@ hook.Add("HUDPaint","pony_render_textures",function()
 				end
 			end
 			--MsgN("Outdated texture at "..string.Replace(tostring(ent),".","//point//")..tostring(ent:GetClass()))
-		elseif ent.isEditorPony then
+		elseif ent.isEditorPony or PPM.VALIDPONY_CLASSES[ent:GetClass()]==false or ent.ISPONYNEXTBOT then
 			local pony=PPM.getPonyValues(ent, true)
 
 			if !pony then
@@ -280,7 +269,7 @@ hook.Add("HUDPaint","pony_render_textures",function()
 			end
 
 			for k, v in pairs(PPM.rendertargettasks) do
-				if (PPM.TextureIsOutdated(ent, k, v.hash(pony))) then
+				if PPM.TextureIsOutdated(ent, k, v.hash(pony)) then
 					ent.ponydata_tex=ent.ponydata_tex or {}
 					PPM.currt_ent=ent
 					PPM.currt_ponydata=pony
@@ -293,6 +282,12 @@ hook.Add("HUDPaint","pony_render_textures",function()
 		end
 	end
 end)
+local INRANGE=function(check,of)
+	if of-5<check and check<of+5 then
+		return true
+	end
+	return false
+end
 PPM.loadrt=function()
 	PPM.currt_success=false
 	PPM.currt_ent=nil
@@ -761,7 +756,11 @@ PPM.loadrt=function()
 		end,
 		drawfunc=function()
 			local pony=PPM.currt_ponydata
-
+			local R,G,B=0,0,0
+			if pony.coatcolor then
+				local col=pony.coatcolor*255
+				R,G,B=col.x or 0,col.y or 0,col.z or 0
+			end
 			--print("LOAD STATUS CHANGED!")
 			if (pony._cmark_loaded and pony._cmark~=nil) then
 				render.Clear(255,255,255,255)
@@ -777,12 +776,13 @@ PPM.loadrt=function()
 					for y=0,256 do
 						local postition=(x * 257 + y) * 3
 						--local ysub=string.sub(xsub,y*3,y*3+3)
-						local r=string.byte(string.sub(pony._cmark,postition,postition)) or 1
-						local g=string.byte(string.sub(pony._cmark,postition+1,postition+1)) or 1
-						local b=string.byte(string.sub(pony._cmark,postition+2,postition+2)) or 0
+						local r=pony._cmark:sub(postition,postition):byte() or 1
+						local g=pony._cmark:sub(postition+1,postition+1):byte() or 1
+						local b=pony._cmark:sub(postition+2,postition+2):byte() or 0
 
 						--print(r)
-						if (r > 250 and g==0 and b > 250) or (x < 45 or x > 250) or (y < 5 or y > 250) then
+						if x<45 or x>250 or y<5 or y>250--out of bounds
+						or INRANGE(r,R)and INRANGE(g,G)and INRANGE(b,B)then--close to coat color
 							--[[
 						render.DrawQuadEasy(Vector(x*2+1,y*2+1,0),	--position of the rect
 							Vector(0,0,-1),		--direction to face in

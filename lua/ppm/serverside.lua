@@ -13,14 +13,14 @@ net.Receive("player_equip_item",function(len,ply)
 		if ply.ponydata.clothes1 and ply.ponydata.clothes1:IsValid() then
 			ply.ponydata.bdata = ply.ponydata.bdata or {0,0,0,0,0,0,0,0,0,0,0,0,0,0,}
 			for i,v in pairs(ply.ponydata.bdata) do
-				ply.ponydata.bdata[i]=ply.ponydata.clothes1:GetBodygroup(i)
+				ply.ponydata.bdata[i]=ply.ponydata.clothes1:GetBodygroup(i) or ply.ponydata.bdata[i]
 			end
 		else
 			timer.Simple(10,function()
 				if ply and ply.ponydata and ply.ponydata.clothes1 and ply.ponydata.clothes1:IsValid() then
 					ply.ponydata.bdata = ply.ponydata.bdata or {0,0,0,0,0,0,0,0,0,0,0,0,0,0,}
 					for i,v in pairs(ply.ponydata.bdata) do
-						ply.ponydata.bdata[i]=ply.ponydata.clothes1:GetBodygroup(i)
+						ply.ponydata.bdata[i]=ply.ponydata.clothes1:GetBodygroup(i) or ply.ponydata.bdata[i]
 					end
 				end				
 			end)
@@ -89,7 +89,7 @@ local PlayerSetModel=function(ply)
 				if clothes1:IsValid() then
 					ply.ponydata.bdata = ply.ponydata.bdata or {0,0,0,0,0,0,0,0,0,0,0,0,0,0,}
 					for i=0,14 do
-						ply.ponydata.bdata[i]=ply.ponydata.clothes1:GetBodygroup(i)
+						ply.ponydata.bdata[i]=ply.ponydata.clothes1:GetBodygroup(i) or ply.ponydata.bdata[i]
 					end
 					clothes1:Remove()
 				end
@@ -107,15 +107,18 @@ cvars.AddChangeCallback("ppm_hide_weapon",function(v,o,n)
 end,"ppm_hide_weapon")
 hook.Add("PlayerLeaveVehicle","pony_fixclothes",function(ply)
 	if PPM.pony_models[ply:GetModel()] then
-		if ply.ponydata!=nil and IsValid(ply.ponydata.clothes1) then
+		local clothes1=ply.ponydata.clothes1
+		if ply.ponydata!=nil and IsValid(clothes1) then
 			ply.ponydata.bdata = ply.ponydata.bdata or {0,0,0,0,0,0,0,0,0,0,0,0,0,0,}
 			for i=0,14 do
-				ply.ponydata.bdata[i]=ply.ponydata.clothes1:GetBodygroup(i)
-				ply.ponydata.clothes1:SetBodygroup(i,0)
+				ply.ponydata.bdata[i]=clothes1:GetBodygroup(i) or ply.ponydata.bdata[i]
+				clothes1:SetBodygroup(i,0)
 			end
 			timer.Simple(0.2,function()
-				for i=0,14 do
-					ply.ponydata.clothes1:SetBodygroup(i,ply.ponydata.bdata[i])
+				if clothes1:IsValid() then
+					for i=0,14 do
+						clothes1:SetBodygroup(i,ply.ponydata.bdata[i])
+					end
 				end
 			end)
 		end
@@ -129,7 +132,7 @@ hook.Add("PreCleanupMap","ppm_clothes_map_clean",function()
 			ply.ponydata.bdata = ply.ponydata.bdata or {0,0,0,0,0,0,0,0,0,0,0,0,0,0,}
 			if ply.ponydata.clothes1:IsValid() then
 				for i=0,14 do
-					ply.ponydata.bdata[i]=ply.ponydata.clothes1:GetBodygroup(i)
+					ply.ponydata.bdata[i]=ply.ponydata.clothes1:GetBodygroup(i) or ply.ponydata.bdata[i]
 				end
 			end
 			timer.Simple(k*0.1,function()

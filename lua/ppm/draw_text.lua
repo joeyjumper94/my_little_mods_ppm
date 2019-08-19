@@ -51,8 +51,10 @@ local visibly_not_armed={
 	weapon_zm_carry=true,--magneto stick
 }
 hook.Add("HUDPaint","ppm_draw_text",function()
+	local ViewEntity=GetViewEntity()
 	for k,ply in pairs(player.GetAll()) do
-		if ply==LocalPlayer() then continue end--no need to draw text on the client
+		if ply==ViewEntity then continue end--no need to draw text on the client
+		if !ply:Alive() then continue end--no need to draw stuff for dead players
 		if ppm_draw_in_editor and ply:GetNWBool("ppm_editor_status",false) and !nodraw[ply:Team()] then
 			local pos_3d = ply:EyePos() + Vector(0,0,0)
 			local pos_2d = (pos_3d):ToScreen()
@@ -63,9 +65,9 @@ hook.Add("HUDPaint","ppm_draw_text",function()
 		and ply:GetActiveWeapon():IsValid() 
 		and !visibly_not_armed[ply:GetActiveWeapon():GetClass()] --do they have a dangerous weapon?
 		and !util.TraceLine({
-			start=GetViewEntity():GetPos(),--start a trace from where their camera is
+			start=ViewEntity:GetPos(),--start a trace from where their camera is
 			endpos=ply:GetShootPos(),--end the trace where the target is
-			filter={ply,GetViewEntity()}--don't need to hit the target or what the client is looking through
+			filter={ply,ViewEntity}--don't need to hit the target or what the client is looking through
 		}).Hit then
 			local pos_3d = ply:EyePos()
 			local pos_2d = (pos_3d):ToScreen()

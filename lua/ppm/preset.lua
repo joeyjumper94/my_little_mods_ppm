@@ -176,10 +176,17 @@ if CLIENT then
 			file.CreateDir( "ppm" )
 		end
 		MsgN( "saving .... ppm/" .. filename )
-		file.Write( "ppm/" .. filename, saveframe )
+		file.Write( "ppm/" .. filename, saveframe )--[[
+		if !file.Exists( "ppm_cmark_cache", "DATA" ) then
+			file.CreateDir( "ppm_cmark_cache" )
+		end
+		if ponydata._cmark and ponydata._cmark_loaded then
+			file.Write( "ppm_cmark_cache/"..filename,tostring(ponydata._cmark))
+		end--]]
 		return PPM.SaveToCache( PPM.CacheGroups.OC_DATA, LocalPlayer(), filename, saveframe )
 	end
 
+	local bool_sending=false
 	function PPM.Load(filename)
 		local data = file.Read("data/ppm/"..filename,"GAME")
 		local ponydata=PPM.StringToPonyData( data )
@@ -196,7 +203,26 @@ if CLIENT then
 					end)
 				end
 			end
-		end
+		end--[[
+		local _cmark=file.Read("data/ppm_cmark_cache/"..filename,"GAME")
+		if _cmark and !bool_sending then
+			bool_sending=true
+			local packcount=math.ceil(_cmark:len() / 32768)
+			for i=1,packcount do
+				timer.Simple(0.22*i,function()
+					PPM.cmarksys_send(_cmark,i-1,packcount)
+				end)
+				if i==packcount then
+					bool_sending=false
+				end
+			end
+			ponydata._cmark=_cmark
+			ponydata._cmark_loaded=true
+		elseif !_cmark then
+			PPM.cmarksys_clearcmark()
+		end--]]
 		return ponydata
 	end
 end
+
+
