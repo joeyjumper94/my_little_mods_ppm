@@ -234,7 +234,7 @@ function PPM.CreateBodyTexture(ent, pony)
 	return rttex
 end
 hook.Add("HUDPaint","pony_render_textures",function()
-	for index, ent in pairs(PPM.Ents) do
+	for index, ent in ipairs(PPM.Ents) do
 		if !ent:IsValid() then continue end
 		if PPM.VALIDPONY_CLASSES[ent:GetClass()] then
 			if PPM.isValidPonyLight(ent) then

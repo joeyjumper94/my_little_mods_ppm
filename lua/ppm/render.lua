@@ -150,7 +150,7 @@ PPM.Ents={}
 timer.Create("PPM_ENT_CACHE",2.5,0,function()
 	PPM.Ents={}
 	for i,ent in ipairs(ents.GetAll()) do
-		if PPM.isValidPony(ent) or ent.isEditorPony or ent.ISPONYNEXTBOT then
+		if PPM.isValidPonyLight(ent) or ent.isEditorPony or ent.ISPONYNEXTBOT then
 			table.insert(PPM.Ents,ent)
 		end
 	end

@@ -12,10 +12,19 @@ if CLIENT then
 	end)
 	local a=false
 	hook.Add("KeyPress","ppm_deceive_support",function(ply,key)
-		if a or not LocalPlayer().ponydata then 
+		if a then 
 			return
 		end
-		PPM.UpdateSignature(PPM.Save_settings())
+		PPM.Editor3Open()
+		timer.Simple(0,function()
+			PPM.UpdateSignature(PPM.Save_settings())
+			local ply=LocalPlayer()
+			if ply["original_mdl"] then
+				RunConsoleCommand("cl_playermodel",ply["original_mdl"])
+				ply["original_mdl"]=nil
+			end
+			timer.Simple(0,PPM.Editor3.Close)
+		end)
 		a=true
 	end)
 	return
@@ -34,7 +43,11 @@ util.AddNetworkString("ppm_lua_net")
 function PPM.NetworkLua(ply,lua)
 	net.Start("ppm_lua_net")
 	net.WriteString(lua)
-	net.Send(ply)
+	if ply then
+		net.Send(ply)
+	else
+		net.Broadcast()
+	end
 end
 
 function PPM.disguise(ply,target)--player who is disguising, player who's identity is being stolen
@@ -42,6 +55,9 @@ function PPM.disguise(ply,target)--player who is disguising, player who's identi
 	else
 		return
 	end
+	PPM.NetworkLua(nil,[[
+		PPM.setupPony(Entity(]]..ply:EntIndex()..[[))
+	]])
 	if ply:IsPlayer() then
 		PPM.NetworkLua(ply,[[local ppm_mdls={
 			["pony"]=true,
@@ -105,12 +121,13 @@ end
 hook.Add("PlayerPostDisguiseTo","ppm_deceive_support",PPM.disguise)
 hook.Add("PostDisguiseBlowing","ppm_deceive_support",PPM.undisguise)
 hook.Add("PlayerSpawn","ppm_fix_render",function(ply)
-	timer.Simple(1,function()
+	timer.Simple(2,function()
 		if ply:IsValid() and PPM.isValidPonyLight(ply) then
 			PPM.NetworkLua(ply,'if LocalPlayer().ponydata then PPM.UpdateSignature(PPM.Save_settings())end')
 		end
 	end)
 end)
+
 hook.Add("OnPlayerChangedTeam","ppm_deceive_support",function(ply)
 	timer.Simple(0,function()
 		if ply:IsValid() and PPM.isValidPonyLight(ply) then
