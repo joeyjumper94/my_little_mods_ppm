@@ -103,10 +103,10 @@ end
 function FixVertexLitMaterial(Mat)
 	local strImage=Mat:GetName()
 
-	if (string.find(Mat:GetShader(), "VertexLitGeneric") or string.find(Mat:GetShader(), "Cable")) then
+	if Mat:GetShader():find"VertexLitGeneric" or Mat:GetShader():find"Cable" then
 		local t=Mat:GetString("$basetexture")
 
-		if (t) then
+		if t then
 			local params={}
 			params["$basetexture"]=t
 			params["$vertexcolor"]=1
@@ -123,7 +123,7 @@ function PPM.CreateTexture(tname, data)
 	local size=data.size or 512
 	rttex=GetRenderTarget(tname, size, size, false)
 
-	if data.predrawfunc ~=nil then
+	if data.predrawfunc then
 		data.predrawfunc()
 	end
 
@@ -137,7 +137,7 @@ function PPM.CreateTexture(tname, data)
 	cam.Start2D()
 	render.SetColorModulation(1, 1, 1)
 
-	if data.drawfunc ~=nil then
+	if data.drawfunc then
 		data.drawfunc()
 	end
 
@@ -147,6 +147,7 @@ function PPM.CreateTexture(tname, data)
 	render.SetColorModulation(1, 1, 1)
 	render.SetBlend(1)
 	render.SuppressEngineLighting(false)
+	cam.IgnoreZ(false)
 
 	return rttex
 end
@@ -165,10 +166,10 @@ function PPM.CreateBodyTexture(ent, pony)
 	local rttex=nil
 	ent.ponydata_tex=ent.ponydata_tex or {}
 
-	if (ent.ponydata_tex.bodytex ~=nil) then
+	if ent.ponydata_tex.bodytex then
 		rttex=ent.ponydata_tex.bodytex
 	else
-		rttex=GetRenderTarget(string.Replace(tostring(ent),".","//point//").."body", tW(512), tH(512), false)
+		rttex=GetRenderTarget(tostring(ent):Replace(".","//point//").."body", tW(512), tH(512), false)
 	end
 
 	local OldRT=render.GetRenderTarget()
@@ -224,7 +225,7 @@ function PPM.CreateBodyTexture(ent, pony)
 	render.SetColorModulation(1, 1, 1)
 	render.SetBlend(1)
 	render.SuppressEngineLighting(false)
-	--	cam.IgnoreZ(false)
+	cam.IgnoreZ(false)
 	ent.ponydata_tex.bodytex=rttex
 	--MsgN("HASHOLD: "..tostring(ent.ponydata_tex.bodytex_hash)) 
 	ent.ponydata_tex.bodytex_hash=PPM.GetBodyHash(pony)
@@ -252,14 +253,14 @@ hook.Add("HUDPaint","pony_render_textures",function()
 						PPM.currt_ent=ent
 						PPM.currt_ponydata=pony
 						PPM.currt_success=false
-						ent.ponydata_tex[k]=PPM.CreateTexture(string.Replace(tostring(ent),".","//point//")..k, v)
+						ent.ponydata_tex[k]=PPM.CreateTexture(tostring(ent):Replace(".","//point//")..k, v)
 						ent.ponydata_tex[k.."_hash"]=v.hash(pony)
 						ent.ponydata_tex[k.."_draw"]=PPM.currt_success
 						texturespreframe=texturespreframe - 1
 					end
 				end
 			end
-			--MsgN("Outdated texture at "..string.Replace(tostring(ent),".","//point//")..tostring(ent:GetClass()))
+			--MsgN("Outdated texture at "..tostring(ent):Replace(".","//point//")..tostring(ent:GetClass()))
 		elseif ent.isEditorPony or PPM.VALIDPONY_CLASSES[ent:GetClass()]==false or ent.ISPONYNEXTBOT then
 			local pony=PPM.getPonyValues(ent, true)
 
@@ -274,7 +275,7 @@ hook.Add("HUDPaint","pony_render_textures",function()
 					PPM.currt_ent=ent
 					PPM.currt_ponydata=pony
 					PPM.currt_success=false
-					ent.ponydata_tex[k]=PPM.CreateTexture(string.Replace(tostring(ent),".","//point//")..k, v)
+					ent.ponydata_tex[k]=PPM.CreateTexture(tostring(ent):Replace(".","//point//")..k, v)
 					ent.ponydata_tex[k.."_hash"]=v.hash(pony)
 					ent.ponydata_tex[k.."_draw"]=PPM.currt_success
 				end

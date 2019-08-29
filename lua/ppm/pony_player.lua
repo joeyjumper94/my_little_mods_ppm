@@ -74,6 +74,7 @@ function PPM.doRespawn(ply)
 end
 
 function PPM.getPonyEnts()
+	return PPM.Ents
 end
 
 function PPM.reValidatePonies()

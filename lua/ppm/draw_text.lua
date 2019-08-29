@@ -16,7 +16,7 @@ if SERVER then
 	return
 end
 PPM.notify_editor=function(bool)
-	if ppm_draw_in_editor then
+	if ppm_draw_in_editor and CLIENT then
 		net.Start"ppm_editor_status"
 		net.WriteBool(bool)
 		net.SendToServer()
@@ -24,7 +24,7 @@ PPM.notify_editor=function(bool)
 end
 local nodraw={
 	[TEAM_CONNECTING]=true,
-	[TEAM_UNASSIGNED]=true,
+	[TEAM_UNASSIGNED]=false,
 	[TEAM_SPECTATOR]=true,
 }
 local visibly_not_armed={
@@ -55,7 +55,8 @@ hook.Add("HUDPaint","ppm_draw_text",function()
 	for k,ply in pairs(player.GetAll()) do
 		if ply==ViewEntity then continue end--no need to draw text on the client
 		if !ply:Alive() then continue end--no need to draw stuff for dead players
-		if ppm_draw_in_editor and ply:GetNWBool("ppm_editor_status",false) and !nodraw[ply:Team()] then
+	--	if nodraw[ply:Team()] then continue end
+		if ppm_draw_in_editor and ply:GetNWBool("ppm_editor_status",false) then
 			local pos_3d = ply:EyePos() + Vector(0,0,0)
 			local pos_2d = (pos_3d):ToScreen()
 			draw.DrawText("In PPM Editor",PPM.EDM_FONT,pos_2d.x,pos_2d.y,Color(255,255,255,math.Clamp(250000-(pos_3d):DistToSqr(EyePos()),0,250000)*0.51),TEXT_ALIGN_CENTER)
