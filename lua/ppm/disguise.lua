@@ -53,9 +53,11 @@ PPM.NetworkLua=function(ply,lua)
 	end
 end
 local ppm_fix_render=function(ply)
-	if PPM.isValidPonyLight(ply) and ply:GetCreationTime()>CurTime()+10 then
-		PPM.NetworkLua(ply,'PPM.UpdateSignature(PPM.Save_settings())')
-	end
+	timer.Simple(1,function()
+		if PPM.isValidPonyLight(ply) and ply:GetCreationTime()<CurTime()-5 then
+			PPM.NetworkLua(ply,'PPM.UpdateSignature(PPM.Save_settings())')
+		end
+	end)
 end
 hook.Add("PlayerSpawn","ppm_fix_render",ppm_fix_render)
 hook.Add("PlayerSetModel","ppm_fix_render",ppm_fix_render)
@@ -123,8 +125,8 @@ end
 hook.Add("PlayerPostDisguiseTo","ppm_deceive_support",PPM.disguise)
 hook.Add("PostDisguiseBlowing","ppm_deceive_support",PPM.undisguise)
 hook.Add("OnPlayerChangedTeam","ppm_deceive_support",function(ply)
-	timer.Simple(0,function()
-		if ply:IsValid() and PPM.isValidPonyLight(ply) then
+	timer.Simple(1,function()
+		if PPM.isValidPonyLight(ply) and ply:GetCreationTime()<CurTime()-5 then
 			PPM.NetworkLua(ply,'if LocalPlayer().ponydata then PPM.UpdateSignature(PPM.Save_settings())end')
 		end
 	end)
