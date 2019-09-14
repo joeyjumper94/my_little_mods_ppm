@@ -56,19 +56,17 @@ function PPM.LoadFromCache(group, ply, sig)
 	-- Determine the player's id, accounting for single player
 	local id
 
-	if not game.SinglePlayer() then
-		if type(ply) == "string" then
-			id = ply
+	if type(ply) == "string" then
+		id = ply
+	elseif not game.SinglePlayer() or CLIENT then
+		if not IsValid(ply) then
+			id = "0" ErrorNoHalt("PPM.LoadFromCache was called with an invalid entity")
+		elseif not ply:IsPlayer() then
+			id = "0" ErrorNoHalt("PPM.LoadFromCache was called with a non-player entity")
+		elseif not ply.SteamID64 then
+			error("PPM.LoadFromCache was called during startup")
 		else
-			if not IsValid(ply) then
-				id = "0" ErrorNoHalt("PPM.LoadFromCache was called with an invalid entity")
-			elseif not ply:IsPlayer() then
-				id = "0" ErrorNoHalt("PPM.LoadFromCache was called with a non-player entity")
-			elseif not ply.SteamID64 then
-				error("PPM.LoadFromCache was called during startup")
-			else
-				id = ply:SteamID64()
-			end
+			id = ply:SteamID64()
 		end
 	end
 
@@ -270,10 +268,13 @@ if SERVER then
 
 	function PPM.HandleNetMessage(len, ply)
 		local msgType = net.ReadUInt(2)
-
 		if msgType == 0 then
 			local sig = net.ReadString()
-			local data = PPM.LoadFromCache(PPM.CacheGroups.OC_DATA, ply, sig)
+			local sid64 = nil
+			if game.SinglePlayer() then
+				sid64=net.ReadString()
+			end
+			local data = PPM.LoadFromCache(PPM.CacheGroups.OC_DATA, sid64 or ply, sig)
 
 			if data then
 				data = PPM.StringToPonyData(data)
@@ -282,18 +283,18 @@ if SERVER then
 				--PPM.UpdateSignature( ply, sig )
 				--PPM.setBodygroups( ply )
 				if data.custom_mark then
-					data = PPM.LoadFromCache(PPM.CacheGroups.PONY_MARK, ply, data.custom_mark)
+					data = PPM.LoadFromCache(PPM.CacheGroups.PONY_MARK, sid64 or ply, data.custom_mark)
 
 					if data then
 						--PPM.MarkData[ply] = { PPM.PonyData[ply][2].custom_mark, data }
-						PPM.UpdateSignature(ply, sig)
+						PPM.UpdateSignature(ply,sig,nil,sid64)
 						PPM.setBodygroups(ply)
 					else
 						PPM.MarkData[ply] = nil
-						PPM.RequestItem(true, ply)
+						PPM.RequestItem(true,ply)
 					end
 				else
-					PPM.UpdateSignature(ply, sig)
+					PPM.UpdateSignature(ply,sig,nil,sid64)
 					PPM.setBodygroups(ply)
 				end
 			else
@@ -360,13 +361,16 @@ if SERVER then
 	end
 
 	-- Only send this if the server has cached it, will always indicate an OC since marks sigs are embedded in OCs
-	function PPM.UpdateSignature(ent, sig, cacheTarget)
+	function PPM.UpdateSignature(ent, sig, cacheTarget,sid64)
 		if not IsValid(ent) then return end
 		if PPM.PonyData[ent] and PPM.PonyData[ent][1] == sig then return end -- prevent duplicate updates (aka spamming the Apply button)
 		local id = ent
 
 		if ent:IsPlayer() then
 			id = ent
+			if game.SinglePlayer() then
+				id=sid64
+			end
 		else
 			id = cacheTarget or ent.ponyCacheTarget
 		end
@@ -766,6 +770,9 @@ else
 		net.Start("ppm_message")
 		net.WriteUInt(0, 2)
 		net.WriteString(sig)
+		if game.SinglePlayer() then
+			net.WriteString(LocalPlayer():SteamID64())
+		end
 		net.SendToServer()
 	end
 
