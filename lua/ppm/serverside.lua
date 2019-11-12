@@ -3,7 +3,6 @@ if CLIENT then
 end
 util.AddNetworkString("player_equip_item")
 util.AddNetworkString("player_pony_cm_send")
-
 net.Receive("player_equip_item",function(len,ply)
 	local id=net.ReadFloat()
 	local item=PPM:pi_GetItemById(id)
@@ -27,7 +26,6 @@ net.Receive("player_equip_item",function(len,ply)
 		end
 	end
 end)
-
 local PlayerSwitchWeapon=function(ply,old,new)
 	if PPM.pony_models[ply:GetModel()] and new:IsValid() then
 		if PPM.hide_weapon then
@@ -41,7 +39,7 @@ local PlayerSwitchWeapon=function(ply,old,new)
 			new:SetMaterial(new.PPMMaterial or "")
 			new.PPMMaterial=nil
 		end
-	else
+	elseif new:IsValid() then
 		if new.PPMColor then
 			new:SetColor(new.PPMColor)
 			new.PPMColor=nil
@@ -101,7 +99,7 @@ end
 hook.Add("PlayerSetModel","items_Flush",PlayerSetModel)
 hook.Add("playerSpawn","items_Flush",PlayerSetModel)
 hook.Add("OnPlayerChangedTeam","items_Flush",PlayerSetModel)
-PPM.hide_weapon=CreateConVar("ppm_hide_weapon","1",FCVAR_REPLICATED,FCVAR_ARCHIVE,"hide weapons held by ponies"):GetBool()
+PPM.hide_weapon=CreateConVar("ppm_hide_weapon","1",bit.bor(FCVAR_REPLICATED,FCVAR_ARCHIVE),"hide weapons held by ponies"):GetBool()
 cvars.AddChangeCallback("ppm_hide_weapon",function(v,o,n)
 	PPM.hide_weapon=n!="0"
 end,"ppm_hide_weapon")
@@ -124,7 +122,7 @@ hook.Add("PlayerLeaveVehicle","pony_fixclothes",function(ply)
 		end
 	end
 end)
-PPM.camoffcetenabled=CreateConVar("ppm_enable_camerashift","1",FCVAR_REPLICATED,FCVAR_ARCHIVE,"Enables ViewOffset Setup"):GetBool()
+PPM.camoffcetenabled=CreateConVar("ppm_enable_camerashift","1",bit.bor(FCVAR_REPLICATED,FCVAR_ARCHIVE),"Enables ViewOffset Setup"):GetBool()
 cvars.AddChangeCallback("ppm_enable_camerashift",function(v,o,n)PPM.camoffcetenabled=n!="0"end,"ppm_enable_camerashift")
 hook.Add("PreCleanupMap","ppm_clothes_map_clean",function()
 	for k,ply in ipairs(player.GetAll())do

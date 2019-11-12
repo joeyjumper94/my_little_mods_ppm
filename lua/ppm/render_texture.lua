@@ -378,6 +378,7 @@ PPM.loadrt=function()
 	}
 	PPM.rendertargettasks["hairtex1"]={--upper mane
 		renderTrue=function(ENT, PONY)
+--			print"Hairtex1.renderTrue"
 			PPM.m_hair1:SetVector("$color2", Vector(1, 1, 1))
 			--PPM.m_hair2:SetVector("$color2", Vector(1,1,1)) 
 			PPM.m_hair1:SetTexture("$basetexture", ENT.ponydata_tex.hairtex1)
@@ -404,8 +405,9 @@ PPM.loadrt=function()
 			PPM.m_hair2:SetTexture("$basetexture", ENT.ponydata_tex.hairtex2)
 		end,
 		renderFalse=function(ENT, PONY)
+--			print"Hairtex2.renderFalse"
 			--PPM.m_hair1:SetVector("$color2", PONY.haircolor1) 
-			PPM.m_hair2:SetVector("$color2", PONY.haircolor2)
+			PPM.m_hair2:SetVector("$color2", PONY.manecolor1)
 			PPM.m_hair2:SetFloat("$phongexponent",PONY.manephongexponent)
 			PPM.m_hair2:SetFloat("$phongboost",PONY.manephongboost)
 			--PPM.m_hair1:SetTexture("$basetexture",Material("models/ppm/partrender/clean.png"):GetTexture("$basetexture")) 

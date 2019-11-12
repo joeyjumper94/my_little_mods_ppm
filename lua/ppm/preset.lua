@@ -50,7 +50,7 @@ function PPM.PonyDataToString( ponydata )
 			elseif type(v) == "boolean" then
 				table.insert( saveframe, "\n " .. k .. " b " .. tostring(v) )
 			elseif type(v) == "string" then
-				table.insert( saveframe, "\n " .. k .. " s " .. string.Replace( v, " " ,"\\SPACE\\" ) )
+				table.insert( saveframe, "\n " .. k .. " s " .. v:Replace( " " ,"\\SPACE\\" ) )
 			end
 		end
 	end
@@ -194,14 +194,23 @@ if CLIENT then
 			local clothes=ponydata.clothes:Split("_")
 			for time,id in ipairs(clothes)do
 				local itemid=tonumber(id)
-				if itemid then
-					timer.Simple(.1*time,function()
+				timer.Simple(.1*time,function()
+					if itemid and PPM:pi_GetItemById(itemid)then
 						net.Start"player_equip_item"
 						net.WriteFloat(itemid)
 						net.SendToServer()
 						PPM:pi_SetupItem(PPM:pi_GetItemById(itemid),LocalPlayer())
-					end)
-				end
+					else
+						timer.Simple(30,function()
+							if itemid and PPM:pi_GetItemById(itemid)then
+								net.Start"player_equip_item"
+								net.WriteFloat(itemid)
+								net.SendToServer()
+								PPM:pi_SetupItem(PPM:pi_GetItemById(itemid),LocalPlayer())
+							end
+						end)
+					end
+				end)
 			end
 		end--[[
 		local _cmark=file.Read("data/ppm_cmark_cache/"..filename,"GAME")

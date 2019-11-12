@@ -16,10 +16,10 @@ function PPM.SaveToCache(group, ply, name, data, skipNameResolve)
 	-- Determine the player's id, accounting for single player
 	local id
 
-	if not game.SinglePlayer() then
-		if type(ply) == "string" then
-			id = ply
-		elseif not IsValid(ply) then
+	if type(ply) == "string" then
+		id = ply
+	elseif not game.SinglePlayer() or CLIENT then
+		if not IsValid(ply) then
 			error("PPM.SaveToCache was called with an invalid entity")
 		elseif not ply:IsPlayer() then
 			error("PPM.SaveToCache was called with a non-player entity")
@@ -275,7 +275,6 @@ if SERVER then
 				sid64=net.ReadString()
 			end
 			local data = PPM.LoadFromCache(PPM.CacheGroups.OC_DATA, sid64 or ply, sig)
-
 			if data then
 				data = PPM.StringToPonyData(data)
 
@@ -284,7 +283,7 @@ if SERVER then
 				--PPM.setBodygroups( ply )
 				if data.custom_mark then
 					data = PPM.LoadFromCache(PPM.CacheGroups.PONY_MARK, sid64 or ply, data.custom_mark)
-
+					
 					if data then
 						--PPM.MarkData[ply] = { PPM.PonyData[ply][2].custom_mark, data }
 						PPM.UpdateSignature(ply,sig,nil,sid64)
@@ -374,7 +373,6 @@ if SERVER then
 		else
 			id = cacheTarget or ent.ponyCacheTarget
 		end
-
 		local data = PPM.LoadFromCache(PPM.CacheGroups.OC_DATA, id, sig)
 		if not data then return end
 		PPM.PonyData[ent] = {sig, PPM.StringToPonyData(data)}
@@ -400,7 +398,7 @@ if SERVER then
 		net.Broadcast()
 		hook.Call("OnPonyChanged", nil, ent, PPM.PonyData[ent][2]) --Called here because a pony counts as changed when it is resent to EVERYONE
 
-		if SERVER and cvars.Bool("ppm_logcache") then
+		if cvars.Bool("ppm_logcache") then
 			ServerLog("Signature update sent for " .. tostring(ent) .. "\n")
 		end
 	end
@@ -1128,9 +1126,28 @@ PPM.SteamID64=function(ply)
 	end
 	return ply:GetNWString("SteamID64","00000000")
 end
-hook.Add("PlayerSpawn","NWSID64",function(ply)
-	ply:SetNWString("SteamID64",ply:SteamID64())
-end)
+if game.SinglePlayer() then
+	if SERVER then
+		util.AddNetworkString"NWSID64"
+		hook.Add("PlayerSpawn","NWSID64",function(ply)
+			net.Start("NWSID64")
+			net.Send(ply)
+		end)
+		net.Receive("NWSID64",function(len,ply)
+			ply:SetNWString("SteamID64",net.ReadString())
+		end)
+	else
+		net.Receive("NWSID64",function()
+			net.Start"NWSID64"
+			net.WriteString(LocalPlayer():SteamID64())
+			net.SendToServer()
+		end)
+	end
+else
+	hook.Add("PlayerSpawn","NWSID64",function(ply)
+		ply:SetNWString("SteamID64",ply:SteamID64())
+	end)
+end
 net.Receive("ppm_message", PPM.HandleNetMessage)
 hook.Add("EntityRemoved", "pony_entityremoved", PPM.HOOK_EntityRemoved)
 hook.Add("PlayerDisconnected", "pony_playerdisconnected", PPM.HOOK_EntityRemoved)

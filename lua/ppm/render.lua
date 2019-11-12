@@ -122,7 +122,7 @@ function PPM.PrePonyDraw(ent,localvals)
 	--MATE:SetFloat("$additive",0) 
 	if ent.ponydata_tex!=nil then
 		for k,v in pairs(PPM.rendertargettasks) do
-			if ent.ponydata_tex[k]!=nil and ent.ponydata_tex[k]!=NULL and ent.ponydata_tex[k .. "_draw"] and type(ent.ponydata_tex[k])=="ITexture" and not ent.ponydata_tex[k]:IsError() then
+			if ent.ponydata_tex[k] and ent.ponydata_tex[k]!=NULL and ent.ponydata_tex[k.."_draw"] and type(ent.ponydata_tex[k])=="ITexture" and not ent.ponydata_tex[k]:IsError() then
 				v.renderTrue(ent,pony)
 			else
 				v.renderFalse(ent,pony)
