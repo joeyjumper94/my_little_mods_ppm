@@ -2,7 +2,7 @@ if SERVER then
 	return
 end
 local _L={}
-local Icon_Name="gui/pped_icon.png"
+local Icon_Name="gui/mlmppme_icon.png"
 if !file.Exists("materials/"..Icon_Name,"GAME") then
 	Icon_Name="gui/pped_icon.png"
 end
@@ -10,7 +10,7 @@ list.Set(
 	"DesktopWindows",
 	"PPMitor3",
 	{
-		title		="EWPPM Editor",
+		title		="MLMPPM Editor",
 		icon		=Icon_Name,
 		width		=960,
 		height		=700,

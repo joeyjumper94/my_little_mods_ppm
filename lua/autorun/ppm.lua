@@ -1,5 +1,5 @@
 AddCSLuaFile()
-print("Loading Equestrian Wastelanders PPM")
+print("Loading My Little Mods PPM")
 player_manager.AddValidModel("pony","models/ppm/player_default_base.mdl")
 player_manager.AddValidModel("ponynj","models/ppm/player_default_base_nj.mdl")   
 if SERVER then

@@ -1,4 +1,4 @@
-TOOL.Category		="CPPM"
+TOOL.Category		="MLMPPM"
 TOOL.Name			="User Panel"
 TOOL.Command		=nil
 TOOL.ConfigName		=""

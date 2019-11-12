@@ -1,11 +1,12 @@
-if ConVarExists("ulx_rslots") then
-	local ppm_admin_mod="ulx"
-elseif ConVarExists("FAdmin_logging") then
-	local ppm_admin_mod="FAdmin"
+local ppm_admin_mod=nil
+if ulx and ULib then
+	ppm_admin_mod="ulx"
+elseif  then
+	ppm_admin_mod="FAdmin"
 else
-	local ppm_admin_mod=nil
+	ppm_admin_mod=nil
 end
-if ppm_admin_mod==nil then
+if !ppm_admin_mod then
 	if SERVER then
 		concommand.Add("ppm_restrict_npc_0",function(ply)
 			if !ply:IsValid() then
@@ -73,7 +74,7 @@ if ppm_admin_mod==nil then
 				ply:PrintMessage(HUD_PRINTTALK, "Only Superadmins and ranks derived from superadmin can change this")
 			end
 		end)
-		concommand.Add("ppm_restrict_npc_2",function(ply)
+		concommand.Add("ppm_restrict_ragdoll_2",function(ply)
 			if !ply:IsValid() then
 				RunConsoleCommand("ppm_restrict_ragdoll","2")
 				print("The spawning of pony ragdolls is now restricted to superadmins only")
@@ -84,7 +85,7 @@ if ppm_admin_mod==nil then
 				ply:PrintMessage(HUD_PRINTTALK, "Only Superadmins and ranks derived from superadmin can change this")
 			end
 		end)
-		concommand.Add("ppm_restrict_npc_3",function(ply)
+		concommand.Add("ppm_restrict_ragdoll_3",function(ply)
 			if !ply:IsValid() then
 				RunConsoleCommand("ppm_restrict_ragdoll","3")
 				print("The spawning of pony ragdolls is now disabled")
@@ -96,7 +97,7 @@ if ppm_admin_mod==nil then
 			end
 		end)
 	end
-else
+elseif CLIENT then
 	concommand.Add("ppm_restrict_npc_0",function()
 		RunConsoleCommand(ppm_admin_mod,"rcon","ppm_restrict_npc","0")
 	end)

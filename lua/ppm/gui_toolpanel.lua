@@ -1,7 +1,7 @@
 hook.Add("PopulateToolMenu", "ppm_menu", function()
 	spawnmenu.AddToolMenuOption(
 		"Options", 
-		"CPPM",  
+		"MLMPPM",  
 		"PonyPlayer", 
 		"Admin Settings",
 		"",

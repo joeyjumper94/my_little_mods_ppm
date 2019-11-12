@@ -83,7 +83,7 @@ local PPM_readme_table={'',
 '',
 'http://steamcommunity.com/sharedfiles/filedetails/?id=945735699 is the workshop version',
 '',
-'https://github.com/joeyjumper94/Equestrian-Wastelanders-PPM is the githb version'}
+'https://github.com/joeyjumper94/my_little_mods_ppm is the githb version'}
 concommand.Add('ppm_readme',function(ply,cmd,args)
 	for k,v in ipairs(PPM_readme_table) do
 		print(v)
