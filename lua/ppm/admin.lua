@@ -1,7 +1,7 @@
 local ppm_admin_mod=nil
 if ulx and ULib then
 	ppm_admin_mod="ulx"
-elseif  then
+elseif ConVarExists("FAdmin_logging") then
 	ppm_admin_mod="FAdmin"
 else
 	ppm_admin_mod=nil
