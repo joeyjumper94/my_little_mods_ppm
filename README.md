@@ -1,6 +1,6 @@
 http://steamcommunity.com/sharedfiles/filedetails/?id=945735699 workshop version
 
-# Equestrian-Wastelanders-PPM
+# My-little-mods-PPM
 
 there are a few convars you should know
 
