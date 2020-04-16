@@ -136,35 +136,3 @@ function TOOL.BuildCPanel(panel)
 		"ppm_dont_draw_socks"
 	)
 end
-if CLIENT then
-	concommand.Add("ppm_setpmodel",function(ply)
-		if !ply:IsValid() then print("this only works on the clientside") return end
-		RunConsoleCommand("cl_playermodel","pony")
-		RunConsoleCommand("kill")
-	end)
-	concommand.Add("ppm_setpmodel_nojigglebones",function(ply)
-		if !ply:IsValid() then print("this only works on the clientside") return end
-		RunConsoleCommand("cl_playermodel","ponynojiggle")
-		RunConsoleCommand("kill")
-	end)
-	concommand.Add("ppm_fix_render",function(ply)
-		if !ply:IsValid() then print("this only works on the clientside") return end
-		RunConsoleCommand("ppm_reload")
-		RunConsoleCommand("ppm_update")
-	end)
-	concommand.Add("ppm_fix_giraffe",function(ply)
-		if !ply:IsValid() then print("this only works on the clientside") return end
-		RunConsoleCommand("ppm_update")
-		timer.Simple(0,function() RunConsoleCommand("kill") end)
-	end)
-	concommand.Add("ppm_dont_draw_socks",function(ply)
-		if !ply:IsValid() then print("this only works on the clientside") return end
-		ply:PrintMessage(HUD_PRINTTALK, "your client will not try to draw socks and such next time you join the server.")
-		RunConsoleCommand("ppm_limit_to_vanilla", "1")
-	end)
-	concommand.Add("ppm_do_draw_socks",function(ply)
-		if !ply:IsValid() then print("this only works on the clientside") return end
-		ply:PrintMessage(HUD_PRINTTALK, "your client will try to draw socks and such next time you join the server.")
-		RunConsoleCommand("ppm_limit_to_vanilla", "0")
-	end)
-end

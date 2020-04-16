@@ -43,3 +43,31 @@ hook.Add("PopulateToolMenu", "ppm_menu", function()
 		{}
 	)
 end)
+if CLIENT then
+	concommand.Add("ppm_setpmodel",function(ply)
+		RunConsoleCommand("cl_playermodel","pony")
+		RunConsoleCommand"kill"
+	end)
+	concommand.Add("ppm_setpmodel_nojigglebones",function(ply)
+		RunConsoleCommand("cl_playermodel","ponynojiggle")
+		RunConsoleCommand"kill"
+	end)
+	concommand.Add("ppm_fix_render",function(ply)
+		RunConsoleCommand"ppm_reload"
+		RunConsoleCommand"ppm_update"
+	end)
+	concommand.Add("ppm_fix_giraffe",function(ply)
+		RunConsoleCommand"ppm_update"
+		timer.Simple(0,function()
+			RunConsoleCommand"kill"
+		end)
+	end)
+	concommand.Add("ppm_dont_draw_socks",function(ply)
+		ply:PrintMessage(HUD_PRINTTALK,"your client will not try to draw socks and such next time you join the server.")
+		RunConsoleCommand("ppm_limit_to_vanilla","1")
+	end)
+	concommand.Add("ppm_do_draw_socks",function(ply)
+		ply:PrintMessage(HUD_PRINTTALK,"your client will try to draw socks and such next time you join the server.")
+		RunConsoleCommand("ppm_limit_to_vanilla","0")
+	end)
+end

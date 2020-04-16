@@ -243,8 +243,8 @@ hook.Add("PostDrawOpaqueRenderables","test_Redraw",function()
 end)
 hook.Add("PrePlayerDraw","pony_draw",function(PLY)
 	PPM.PrePonyDraw(PLY,false)
-	if not PLY:Alive()then
-		return false
+	if PLY.Alive and!PLY:Alive()then
+		return true
 	end
 end)
 
