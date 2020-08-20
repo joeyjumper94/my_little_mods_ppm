@@ -6,11 +6,9 @@ there are a few convars you should know
 
 ----------------------------------------------------------------------------------------------------------
 
-ppm_use_ulx
+ppm_height_min default -1 the minimum for neck and leg scaling, can go as low as -4
 
-if set to 1, ULX+ULib must be installed and the player needs to have access to ULX Rcon
-
-if set to 0, The player MUST be a superadmin or have a rank derived from superadmin
+ppm_height_max default 3 the maximum for neck and leg scaling, can go as high as 7
 
 ----------------------------------------------------------------------------------------------------------
 
