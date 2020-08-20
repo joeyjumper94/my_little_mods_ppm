@@ -1,7 +1,7 @@
 PPM=PPM or {}
 PPM.serverPonydata=PPM.serverPonydata or {}
 PPM.isLoaded=false
-
+include("cvars.lua")
 include("cache.lua")
 include("items.lua")
 include("variables.lua")
@@ -30,6 +30,14 @@ if CLIENT then
 	CreateConVar("ppm_enable_camerashift","1",FCVAR_REPLICATED,"Enables ViewOffset Setup")
 else
 	include("serverside.lua")
+end
+local I,O=file.Find("ppm/custom_scripts/*.lua","LUA")
+for k,v in ipairs(I)do
+	if v:StartWith"cl_"and CLIENT--clientside only
+	or v:StartWith"sv_"and SERVER--serverside only
+	or v:StartWith"sh_"then--shared
+		include("ppm/custom_scripts/"..v)
+	end
 end
 if file.Exists("ppm/pony_hoofstep_sounds.lua","LUA") then
 	include("ppm/pony_hoofstep_sounds.lua")

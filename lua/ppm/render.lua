@@ -50,7 +50,7 @@ function PPM.PrePonyDraw(ent,localvals)
 --		end
 
 	--{--rigscalething
-	local SCALEVAL0=pony.bodyweight or 1--(1+math.sin(time)/4)  
+	local SCALEVAL0=pony.bodyweight or 1--(1+math.sin(time)*.25)  
 	local SCALEVAL1=pony.gender-1
 	--local SCALEVAL2=PPM.test_buffness;
 	PPM:RescaleRIGPART(ent,PPM.rig.leg_FL,Vector(1,1,1)*SCALEVAL0)
@@ -61,12 +61,22 @@ function PPM.PrePonyDraw(ent,localvals)
 
 	PPM:RescaleRIGPART(ent,PPM.rig.neck,Vector(1,1,1)*SCALEVAL0)
 	PPM:RescaleRIGPART(ent,{3},Vector(1,1,0)*((SCALEVAL0-1)+SCALEVAL1*0.1+0.9)+Vector(0,0,1))
-	PPM:RescaleMRIGPART(ent,{18},Vector(0,0,SCALEVAL1/2))
-	PPM:RescaleMRIGPART(ent,{24},Vector(0,0,-SCALEVAL1/2))
+	PPM:RescaleMRIGPART(ent,{18},Vector(0,0,SCALEVAL1*.5))
+	PPM:RescaleMRIGPART(ent,{24},Vector(0,0,-SCALEVAL1*.5))
+	--leg length
+	local leg_length=math.Clamp(pony.bodyheight,PPM.height_min,PPM.height_max)
+	PPM:RescaleMRIGPART(ent,PPM.rig.leg_FL,Vector(1,0,0)*leg_length)
+	PPM:RescaleMRIGPART(ent,PPM.rig.leg_FR,Vector(1,0,0)*leg_length)
+	PPM:RescaleMRIGPART(ent,PPM.rig.leg_BL,Vector(1,0,0)*leg_length)
+	PPM:RescaleMRIGPART(ent,PPM.rig.leg_BR,Vector(1,0,0)*leg_length)
+	PPM:RescaleMRIGPART(ent,PPM.rig.rear,Vector(0,0,4)*leg_length)
+	--neck length
+	local neck_length=math.Clamp(pony.neckheight,PPM.height_min,PPM.height_max)
+	PPM:RescaleMRIGPART(ent,PPM.rig.neck,Vector(1,-.5,0)*neck_length)
 	--tailscale
 	local SCALEVAL_tail=pony.tailsize or 1
 	local svts=(SCALEVAL_tail-1)*2+1
-	local svtc=(SCALEVAL_tail-1)/2+1
+	local svtc=(SCALEVAL_tail-1)*.5+1
 	PPM:RescaleOFFCETRIGPART(ent,{38},Vector(svtc,svtc,svtc))
 	PPM:RescaleRIGPART(ent,{38},Vector(svts,svts,svts))
 	PPM:RescaleOFFCETRIGPART(ent,{39,40},Vector(SCALEVAL_tail,SCALEVAL_tail,SCALEVAL_tail))
@@ -78,7 +88,7 @@ function PPM.PrePonyDraw(ent,localvals)
 	--37,tip
 	local SCALEVAL_tail=pony.manesize or 1
 	local svts=(SCALEVAL_tail-1)*2+1
-	local svtc=(SCALEVAL_tail-1)/2+1
+	local svtc=(SCALEVAL_tail-1)*.5+1
 	PPM:RescaleOFFCETRIGPART(ent,{30},Vector(svtc,svtc,svtc))
 	PPM:RescaleRIGPART(ent,{30},Vector(svts,svts,svts))
 	PPM:RescaleOFFCETRIGPART(ent,{32,37},Vector(SCALEVAL_tail,SCALEVAL_tail,SCALEVAL_tail))
@@ -91,7 +101,7 @@ function PPM.PrePonyDraw(ent,localvals)
 	--36,
 	local SCALEVAL_tail=pony.hairsize or 1
 	local svts=(SCALEVAL_tail-1)*2+1
-	local svtc=(SCALEVAL_tail-1)/2+1
+	local svtc=(SCALEVAL_tail-1)*.5+1
 	PPM:RescaleOFFCETRIGPART(ent,{35},Vector(svtc,svtc,svtc))
 	PPM:RescaleOFFCETRIGPART(ent,{36},Vector(2-svts*2,1,1))
 	PPM:RescaleRIGPART(ent,{33,34,35,36,},Vector(svts,svts,svts))

@@ -21,6 +21,8 @@ PPM.Pony_variables.default_pony={
 	cmark={default=1,min=1,max=nil},
 	custom_mark={default=nil},
 	bodyweight={default=1,min=0.8,max=1.2},
+	bodyheight={default=1,min=-4,max=7},
+	neckheight={default=1,min=-4,max=7},
 	
 	clothes={default="1_3_5_59_61_7_63_65_47"},--clothes data here
 

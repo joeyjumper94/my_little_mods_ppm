@@ -77,15 +77,15 @@ $time=0
 --]]
 
 if CreateConVar("ppm_limit_to_vanilla", "0", {FCVAR_ARCHIVE}, "if the client sets it to 1, socks and other custom textures will not be drawn by said client"):GetBool() then
-	PPM_Render_Cap = 13
+	PPM_Render_Cap=13
 else
-	PPM_Render_Cap = 1000000000000000
+	PPM_Render_Cap=math.huge
 end
 cvars.AddChangeCallback("ppm_limit_to_vanilla",function(var,old,new)
 	if new!="0" then
 		PPM_Render_Cap=13
 	else
-		PPM_Render_Cap=10000000000000000000
+		PPM_Render_Cap=math.huge
 	end
 end,"ppm_limit_to_vanilla")
 function PPM.TextureIsOutdated(ent, name, newhash)
@@ -98,7 +98,8 @@ function PPM.TextureIsOutdated(ent, name, newhash)
 	return false
 end
 function PPM.GetBodyHash(ponydata)
-	return tostring(ponydata.bodyt0)..tostring(ponydata.bodyt1)..tostring(ponydata.coatcolor)..tostring(ponydata.bodyt1_color)
+	local hash=tostring(ponydata.bodyt0)..tostring(ponydata.bodyt1)..ponydata.coatcolor.x..ponydata.coatcolor.y..ponydata.coatcolor.z..tostring(ponydata.bodyt1_color)
+	return hash
 end
 function FixVertexLitMaterial(Mat)
 	local strImage=Mat:GetName()
@@ -365,14 +366,12 @@ PPM.loadrt=function()
 			PPM.currt_success=true
 		end,
 		hash=function(ponydata)
-			local hash=ponydata.coatphongexponent..ponydata.coatphongboost..tostring(ponydata.bodyt0)..tostring(ponydata.coatcolor)..tostring(ponydata.gender)
-
-			for C=1, 8 do
-				local detailvalue=ponydata["bodydetail"..C] or 1
-				local detailcolor=ponydata["bodydetail"..C.."_c"] or Vector(0, 0, 0)
-				hash=hash..tostring(detailvalue)..tostring(detailcolor)
+			local hash=ponydata.coatphongexponent..ponydata.coatphongboost..tostring(ponydata.bodyt0)..ponydata.coatcolor.x..ponydata.coatcolor.y..ponydata.coatcolor.z..ponydata.gender
+			for C=1,8 do
+				local detailvalue=ponydata["bodydetail"..C]or 1
+				local detailcolor=ponydata["bodydetail"..C.."_c"]or Vector(0, 0, 0)
+				hash=hash..detailvalue..detailcolor.x..detailcolor.y..detailcolor.z
 			end
-
 			return hash
 		end
 	}
@@ -396,7 +395,29 @@ PPM.loadrt=function()
 			render.Clear(pony.haircolor1.x * 255, pony.haircolor1.y * 255, pony.haircolor1.z * 255, 255, true)
 			PPM.tex_drawhairfunc(pony, "up", false)
 		end,
-		hash=function(ponydata)return ponydata.hairphongexponent..ponydata.hairphongboost..tostring(ponydata.haircolor1)..tostring(ponydata.haircolor2)..tostring(ponydata.haircolor3)..tostring(ponydata.haircolor4)..tostring(ponydata.haircolor5)..tostring(ponydata.haircolor6)..tostring(ponydata.mane)end
+		hash=function(ponydata)
+			local hash=ponydata.hairphongexponent..ponydata.hairphongboost
+			..ponydata.haircolor1.x..ponydata.haircolor1.y..ponydata.haircolor1.z
+			..ponydata.haircolor2.x..ponydata.haircolor2.y..ponydata.haircolor2.z
+			..ponydata.haircolor3.x..ponydata.haircolor3.y..ponydata.haircolor3.z
+			..ponydata.haircolor4.x..ponydata.haircolor4.y..ponydata.haircolor4.z
+			..ponydata.haircolor5.x..ponydata.haircolor5.y..ponydata.haircolor5.z
+			..ponydata.haircolor6.x..ponydata.haircolor6.y..ponydata.haircolor6.z
+			..ponydata.manecolor1.x..ponydata.manecolor1.y..ponydata.manecolor1.z
+			..ponydata.manecolor2.x..ponydata.manecolor2.y..ponydata.manecolor2.z
+			..ponydata.manecolor3.x..ponydata.manecolor3.y..ponydata.manecolor3.z
+			..ponydata.manecolor4.x..ponydata.manecolor4.y..ponydata.manecolor4.z
+			..ponydata.manecolor5.x..ponydata.manecolor5.y..ponydata.manecolor5.z
+			..ponydata.manecolor6.x..ponydata.manecolor6.y..ponydata.manecolor6.z
+			..ponydata.tailcolor1.x..ponydata.tailcolor1.y..ponydata.tailcolor1.z
+			..ponydata.tailcolor2.x..ponydata.tailcolor2.y..ponydata.tailcolor2.z
+			..ponydata.tailcolor3.x..ponydata.tailcolor3.y..ponydata.tailcolor3.z
+			..ponydata.tailcolor4.x..ponydata.tailcolor4.y..ponydata.tailcolor4.z
+			..ponydata.tailcolor5.x..ponydata.tailcolor5.y..ponydata.tailcolor5.z
+			..ponydata.tailcolor6.x..ponydata.tailcolor6.y..ponydata.tailcolor6.z
+			..ponydata.mane
+			return hash
+		end
 	}
 	PPM.rendertargettasks["hairtex2"]={--lower mane
 		renderTrue=function(ENT, PONY)
@@ -417,7 +438,29 @@ PPM.loadrt=function()
 			local pony=PPM.currt_ponydata
 			PPM.tex_drawhairfunc(pony, "dn", false)
 		end,
-		hash=function(ponydata) return ponydata.manephongexponent..ponydata.manephongboost..tostring(ponydata.manecolor1)..tostring(ponydata.manecolor2)..tostring(ponydata.manecolor3)..tostring(ponydata.manecolor4)..tostring(ponydata.manecolor5)..tostring(ponydata.manecolor6)..tostring(ponydata.manel) end
+		hash=function(ponydata)
+			local hash=ponydata.manephongexponent..ponydata.manephongboost
+			..ponydata.haircolor1.x..ponydata.haircolor1.y..ponydata.haircolor1.z
+			..ponydata.haircolor2.x..ponydata.haircolor2.y..ponydata.haircolor2.z
+			..ponydata.haircolor3.x..ponydata.haircolor3.y..ponydata.haircolor3.z
+			..ponydata.haircolor4.x..ponydata.haircolor4.y..ponydata.haircolor4.z
+			..ponydata.haircolor5.x..ponydata.haircolor5.y..ponydata.haircolor5.z
+			..ponydata.haircolor6.x..ponydata.haircolor6.y..ponydata.haircolor6.z
+			..ponydata.manecolor1.x..ponydata.manecolor1.y..ponydata.manecolor1.z
+			..ponydata.manecolor2.x..ponydata.manecolor2.y..ponydata.manecolor2.z
+			..ponydata.manecolor3.x..ponydata.manecolor3.y..ponydata.manecolor3.z
+			..ponydata.manecolor4.x..ponydata.manecolor4.y..ponydata.manecolor4.z
+			..ponydata.manecolor5.x..ponydata.manecolor5.y..ponydata.manecolor5.z
+			..ponydata.manecolor6.x..ponydata.manecolor6.y..ponydata.manecolor6.z
+			..ponydata.tailcolor1.x..ponydata.tailcolor1.y..ponydata.tailcolor1.z
+			..ponydata.tailcolor2.x..ponydata.tailcolor2.y..ponydata.tailcolor2.z
+			..ponydata.tailcolor3.x..ponydata.tailcolor3.y..ponydata.tailcolor3.z
+			..ponydata.tailcolor4.x..ponydata.tailcolor4.y..ponydata.tailcolor4.z
+			..ponydata.tailcolor5.x..ponydata.tailcolor5.y..ponydata.tailcolor5.z
+			..ponydata.tailcolor6.x..ponydata.tailcolor6.y..ponydata.tailcolor6.z
+			..ponydata.manel
+			return hash
+		end
 	}
 	PPM.rendertargettasks["tailtex"]={--the tail
 		renderTrue=function(ENT, PONY)
@@ -437,7 +480,29 @@ PPM.loadrt=function()
 			local pony=PPM.currt_ponydata
 			PPM.tex_drawhairfunc(pony, "up", true)
 		end,
-		hash=function(ponydata) return ponydata.tailphongexponent..ponydata.tailphongboost..tostring(ponydata.tailcolor1)..tostring(ponydata.tailcolor2)..tostring(ponydata.tailcolor3)..tostring(ponydata.tailcolor4)..tostring(ponydata.tailcolor5)..tostring(ponydata.tailcolor6)..tostring(ponydata.tail) end
+		hash=function(ponydata)
+			local hash=ponydata.tailphongexponent..ponydata.tailphongboost
+			..ponydata.haircolor1.x..ponydata.haircolor1.y..ponydata.haircolor1.z
+			..ponydata.haircolor2.x..ponydata.haircolor2.y..ponydata.haircolor2.z
+			..ponydata.haircolor3.x..ponydata.haircolor3.y..ponydata.haircolor3.z
+			..ponydata.haircolor4.x..ponydata.haircolor4.y..ponydata.haircolor4.z
+			..ponydata.haircolor5.x..ponydata.haircolor5.y..ponydata.haircolor5.z
+			..ponydata.haircolor6.x..ponydata.haircolor6.y..ponydata.haircolor6.z
+			..ponydata.manecolor1.x..ponydata.manecolor1.y..ponydata.manecolor1.z
+			..ponydata.manecolor2.x..ponydata.manecolor2.y..ponydata.manecolor2.z
+			..ponydata.manecolor3.x..ponydata.manecolor3.y..ponydata.manecolor3.z
+			..ponydata.manecolor4.x..ponydata.manecolor4.y..ponydata.manecolor4.z
+			..ponydata.manecolor5.x..ponydata.manecolor5.y..ponydata.manecolor5.z
+			..ponydata.manecolor6.x..ponydata.manecolor6.y..ponydata.manecolor6.z
+			..ponydata.tailcolor1.x..ponydata.tailcolor1.y..ponydata.tailcolor1.z
+			..ponydata.tailcolor2.x..ponydata.tailcolor2.y..ponydata.tailcolor2.z
+			..ponydata.tailcolor3.x..ponydata.tailcolor3.y..ponydata.tailcolor3.z
+			..ponydata.tailcolor4.x..ponydata.tailcolor4.y..ponydata.tailcolor4.z
+			..ponydata.tailcolor5.x..ponydata.tailcolor5.y..ponydata.tailcolor5.z
+			..ponydata.tailcolor6.x..ponydata.tailcolor6.y..ponydata.tailcolor6.z
+			..ponydata.tail
+			return hash
+		end
 	}
 	PPM.rendertargettasks["eyeltex"]={--left eye
 		renderTrue=function(ENT, PONY)
@@ -451,8 +516,7 @@ PPM.loadrt=function()
 			PPM.tex_draweyefunc(pony, false)
 		end,
 		hash=function(ponydata) 
-			local ret=""
-			..tostring(ponydata.eye_effect_alpha)
+			local hash=tostring(ponydata.eye_effect_alpha)
 			..tostring(ponydata.eye_effect_color)
 			..tostring(ponydata.eye_reflect_alpha)
 			..tostring(ponydata.eye_reflect_color)
@@ -468,7 +532,7 @@ PPM.loadrt=function()
 			..tostring(ponydata.eyeholesize)
 			..tostring(ponydata.eyeirissize)
 			..tostring(ponydata.eyejholerssize)
-			return ret
+			return hash
 		end
 	}
 	PPM.rendertargettasks["eyertex"]={--right eye
@@ -483,8 +547,7 @@ PPM.loadrt=function()
 			PPM.tex_draweyefunc(pony, true)
 		end,
 		hash=function(ponydata) 
-			local ret=""
-			..tostring(ponydata.eye_effect_alpha_r)
+			local hash=tostring(ponydata.eye_effect_alpha_r)
 			..tostring(ponydata.eye_effect_color_r)
 			..tostring(ponydata.eye_reflect_alpha_r)
 			..tostring(ponydata.eye_reflect_color_r)
@@ -500,7 +563,7 @@ PPM.loadrt=function()
 			..tostring(ponydata.eyeholesize_r)
 			..tostring(ponydata.eyeirissize_r)
 			..tostring(ponydata.eyejholerssize_r)
-			return ret
+			return hash
 		end
 	}
 	PPM.tex_drawhairfunc=function(pony, UPDN, TAIL)

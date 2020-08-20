@@ -27,18 +27,11 @@ net.Receive("player_equip_item",function(len,ply)
 	end
 end)
 local PlayerSwitchWeapon=function(ply,old,new)
-	if PPM.pony_models[ply:GetModel()] and new:IsValid() then
-		if PPM.hide_weapon then
-			new.PPMColor=new.PPMColor or new:GetColor()
-			new:SetColor(Color(0,0,0,0))
-			new.PPMMaterial=new.PPMMaterial or new:GetMaterial()
-			new:SetMaterial"Models/effects/vol_light001"
-		else
-			new:SetColor(new.PPMColor or Color(255,255,255,255))
-			new.PPMColor=nil
-			new:SetMaterial(new.PPMMaterial or "")
-			new.PPMMaterial=nil
-		end
+	if new:IsValid()and PPM.pony_models[ply:GetModel()]and PPM.hide_weapon then
+		new.PPMColor=new.PPMColor or new:GetColor()
+		new:SetColor(Color(0,0,0,0))
+		new.PPMMaterial=new.PPMMaterial or new:GetMaterial()
+		new:SetMaterial"Models/effects/vol_light001"
 	elseif new:IsValid() then
 		if new.PPMColor then
 			new:SetColor(new.PPMColor)
@@ -52,8 +45,8 @@ local PlayerSwitchWeapon=function(ply,old,new)
 end
 hook.Add("PlayerSwitchWeapon","pony_weapons_autohide",PlayerSwitchWeapon)
 local PlayerSetModel=function(ply)
-	timer.Simple(0.1,function()
-		if ply and ply:IsValid() then
+	timer.Simple(0,function()
+		if ply:IsValid()then
 			PlayerSwitchWeapon(ply,NULL,ply:GetActiveWeapon()or NULL)
 			local newmodel=ply:GetModel()
 			if PPM.pony_models[newmodel] then--became a pony
@@ -62,10 +55,20 @@ local PlayerSetModel=function(ply)
 				end
 				PPM.setPonyValues(ply)
 				PPM.setBodygroups(ply)
-				if PPM.camoffcetenabled then 
-					ply:SetViewOffset(Vector(0,0,42))
-					ply:SetViewOffsetDucked(Vector(0,0,35))
-				end
+				ply:SetViewOffset(Vector(0,0,64))
+				ply:SetViewOffsetDucked(Vector(0,0,28))
+				timer.Simple(.1,function()
+					if PPM.camoffcetenabled and ply:IsValid()then
+						ply:SetViewOffset(Vector(0,0,42))
+						ply:SetViewOffsetDucked(Vector(0,0,35))
+					end
+					timer.Simple(1,function()
+						if PPM.camoffcetenabled and ply:IsValid()then
+							ply:SetViewOffset(Vector(0,0,42))
+							ply:SetViewOffsetDucked(Vector(0,0,35))
+						end
+					end)
+				end)
 				timer.Simple(0.1,function()
 					if ply:IsValid() and ply.ponydata.bdata then
 						ply.ponydata.clothes1=ply.ponydata.clothes1:IsValid() and ply.ponydata.clothes1 or ents.Create("prop_dynamic")
@@ -102,6 +105,9 @@ hook.Add("OnPlayerChangedTeam","items_Flush",PlayerSetModel)
 PPM.hide_weapon=CreateConVar("ppm_hide_weapon","1",bit.bor(FCVAR_REPLICATED,FCVAR_ARCHIVE),"hide weapons held by ponies"):GetBool()
 cvars.AddChangeCallback("ppm_hide_weapon",function(v,o,n)
 	PPM.hide_weapon=n!="0"
+	for k,ply in pairs(player.GetAll())do
+		PlayerSwitchWeapon(ply,NULL,ply:GetActiveWeapon()or NULL)
+	end
 end,"ppm_hide_weapon")
 hook.Add("PlayerLeaveVehicle","pony_fixclothes",function(ply)
 	if PPM.pony_models[ply:GetModel()] then
@@ -123,7 +129,21 @@ hook.Add("PlayerLeaveVehicle","pony_fixclothes",function(ply)
 	end
 end)
 PPM.camoffcetenabled=CreateConVar("ppm_enable_camerashift","1",bit.bor(FCVAR_REPLICATED,FCVAR_ARCHIVE),"Enables ViewOffset Setup"):GetBool()
-cvars.AddChangeCallback("ppm_enable_camerashift",function(v,o,n)PPM.camoffcetenabled=n!="0"end,"ppm_enable_camerashift")
+cvars.AddChangeCallback("ppm_enable_camerashift",function(v,o,n)
+	PPM.camoffcetenabled=n!="0"
+	for k,ply in pairs(player.GetAll())do
+		PlayerSetModel(ply)
+	end
+end,"ppm_enable_camerashift")
+local done={}
+local FUNCTION=function(ply)
+	if!done[ply] then
+		done[ply]=true
+		PlayerSetModel(ply)
+	end
+end
+hook.Add("KeyPress","items_Flush",FUNCTION)
+hook.Add("PlayerButtonDown","items_Flush",FUNCTION)
 hook.Add("PreCleanupMap","ppm_clothes_map_clean",function()
 	for k,ply in ipairs(player.GetAll())do
 		if ply.ponydata and ply.ponydata.clothes1 and PPM.pony_models[ply:GetModel()] then
