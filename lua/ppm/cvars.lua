@@ -2,12 +2,12 @@ local FCVAR_ARCHIVE_REPLICATED=FCVAR_REPLICATED
 if SERVER then
 	FCVAR_ARCHIVE_REPLICATED=bit.bor(FCVAR_REPLICATED,FCVAR_ARCHIVE)
 end
-PPM.height_min=CreateConVar("ppm_height_min","0",FCVAR_ARCHIVE_REPLICATED,"minimum for leg and neck scaling",-4,.99):GetFloat()or 0
+PPM.height_min=CreateConVar("ppm_height_min","-2",FCVAR_ARCHIVE_REPLICATED,"minimum for leg and neck scaling",-4,.99):GetFloat()or -2
 PPM.height_max=CreateConVar("ppm_height_max","3",FCVAR_ARCHIVE_REPLICATED,"maximum for leg and neck scaling",1.01,7):GetFloat()or 3
 if SERVER then
 	util.AddNetworkString"ppm_height"
 	cvars.AddChangeCallback("ppm_height_min",function(v,o,n)
-		n=tonumber(n)or 0
+		n=tonumber(n)or -2
 		PPM.height_min=n
 		net.Start"ppm_height"
 		net.WriteFloat(n)
@@ -36,12 +36,12 @@ else
 		end
 	end)
 end
-PPM.scale_min=CreateConVar("ppm_scale_min",".5",FCVAR_ARCHIVE_REPLICATED,"minimum for model scaling",.01,.99):GetFloat()or .5
-PPM.scale_max=CreateConVar("ppm_scale_max","1.5",FCVAR_ARCHIVE_REPLICATED,"maximum for model scaling",1.01,4):GetFloat()or 1.5
+PPM.scale_min=CreateConVar("ppm_scale_min",".4",FCVAR_ARCHIVE_REPLICATED,"minimum for model scaling",.01,.99):GetFloat()or .5
+PPM.scale_max=CreateConVar("ppm_scale_max","2.4",FCVAR_ARCHIVE_REPLICATED,"maximum for model scaling",1.01,4):GetFloat()or 4
 if SERVER then
 	util.AddNetworkString"ppm_scale"
 	cvars.AddChangeCallback("ppm_scale_min",function(v,o,n)
-		n=tonumber(n)or .5
+		n=tonumber(n)or .4
 		PPM.scale_min=n
 		net.Start"ppm_scale"
 		net.WriteFloat(n)
@@ -54,7 +54,7 @@ if SERVER then
 		end
 	end,"ppm_scale")
 	cvars.AddChangeCallback("ppm_scale_max",function(v,o,n)
-		n=tonumber(n)or 2
+		n=tonumber(n)or 2.4
 		PPM.scale_max=n
 		net.Start"ppm_scale"
 		net.WriteFloat(n)
