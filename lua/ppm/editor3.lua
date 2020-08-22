@@ -201,6 +201,7 @@ function PPM.Editor3Open()
 		time=time+0.02
 
 		PPM.setBodygroups(PPM.editor3_pony,true)
+		PPM.SetModelScale(PPM.editor3_pony,true)
 
 	end
 	mdl.t=0

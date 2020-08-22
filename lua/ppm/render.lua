@@ -64,46 +64,60 @@ function PPM.PrePonyDraw(ent,localvals)
 	PPM:RescaleMRIGPART(ent,{18},Vector(0,0,SCALEVAL1*.5))
 	PPM:RescaleMRIGPART(ent,{24},Vector(0,0,-SCALEVAL1*.5))
 	--leg length
-	local leg_length=math.Clamp(pony.bodyheight,PPM.height_min,PPM.height_max)
+	local leg_length=math.Clamp(pony.bodyheight,PPM.height_min,PPM.height_max)-1
 	PPM:RescaleMRIGPART(ent,PPM.rig.leg_FL,Vector(1,0,0)*leg_length)
 	PPM:RescaleMRIGPART(ent,PPM.rig.leg_FR,Vector(1,0,0)*leg_length)
 	PPM:RescaleMRIGPART(ent,PPM.rig.leg_BL,Vector(1,0,0)*leg_length)
 	PPM:RescaleMRIGPART(ent,PPM.rig.leg_BR,Vector(1,0,0)*leg_length)
 	PPM:RescaleMRIGPART(ent,PPM.rig.rear,Vector(0,0,4)*leg_length)
 	--neck length
-	local neck_length=math.Clamp(pony.neckheight,PPM.height_min,PPM.height_max)
+	local neck_length=math.Clamp(pony.neckheight,PPM.height_min,PPM.height_max)-1
 	PPM:RescaleMRIGPART(ent,PPM.rig.neck,Vector(1,-.5,0)*neck_length)
 	--tailscale
-	local SCALEVAL_tail=pony.tailsize or 1
+	local modelscale=pony.modelscale
+	if ent!=PPM.editor3_pony then--only the model in the editor needs its hair, mane, and tail scaled
+		modelscale=1--models of players and NPCs do not need their hair, mane, and tail scaled
+	end
+	local SCALEVAL_tail=pony.tailsize+modelscale*.5-.5
 	local svts=(SCALEVAL_tail-1)*2+1
 	local svtc=(SCALEVAL_tail-1)*.5+1
 	PPM:RescaleOFFCETRIGPART(ent,{38},Vector(svtc,svtc,svtc))
 	PPM:RescaleRIGPART(ent,{38},Vector(svts,svts,svts))
 	PPM:RescaleOFFCETRIGPART(ent,{39,40},Vector(SCALEVAL_tail,SCALEVAL_tail,SCALEVAL_tail))
 	PPM:RescaleRIGPART(ent,{39,40},Vector(svts,svts,svts))
+	PPM:RescaleMRIGPART(ent,{39},Vector(svts*10.8-10.8,0,0))
+	PPM:RescaleMRIGPART(ent,{40},Vector(svts*16.8-16.8,0,0))
 	-----------------------------------------manescale
 	--30,base
 	--31,base to mid
 	--32,mid to tip
 	--37,tip
-	local SCALEVAL_tail=pony.manesize or 1
+	local SCALEVAL_tail=pony.manesize+modelscale*.5-.5
 	local svts=(SCALEVAL_tail-1)*2+1
 	local svtc=(SCALEVAL_tail-1)*.5+1
+	local svtp=SCALEVAL_tail*.1+.9
 	PPM:RescaleOFFCETRIGPART(ent,{30},Vector(svtc,svtc,svtc))
 	PPM:RescaleRIGPART(ent,{30},Vector(svts,svts,svts))
 	PPM:RescaleOFFCETRIGPART(ent,{32,37},Vector(SCALEVAL_tail,SCALEVAL_tail,SCALEVAL_tail))
-	PPM:RescaleOFFCETRIGPART(ent,{31},Vector(SCALEVAL_tail*.1+.9,SCALEVAL_tail*.1+.9,SCALEVAL_tail*.1+.9))
+	PPM:RescaleOFFCETRIGPART(ent,{31},Vector(svtp,svtp,svtp))
 	PPM:RescaleRIGPART(ent,{31,32,37,},Vector(svts,svts,svts))
+	--PPM:RescaleMRIGPART(ent,{30},Vector(0,0,1))
+	PPM:RescaleMRIGPART(ent,{31},Vector(0,0,1-SCALEVAL_tail))
+	PPM:RescaleMRIGPART(ent,{32},Vector(SCALEVAL_tail*16.3-16.8,0,0))
+	PPM:RescaleMRIGPART(ent,{37},Vector(SCALEVAL_tail*15.6-15.6,0,0))
 	-----------------------------------------hairscale
 	--33,
 	--34,
 	--35,
 	--36,
-	local SCALEVAL_tail=pony.hairsize or 1
+	local SCALEVAL_tail=pony.hairsize+modelscale*.5-.5
 	local svts=(SCALEVAL_tail-1)*2+1
 	local svtc=(SCALEVAL_tail-1)*.5+1
 	PPM:RescaleOFFCETRIGPART(ent,{35},Vector(svtc,svtc,svtc))
 	PPM:RescaleOFFCETRIGPART(ent,{36},Vector(2-svts*2,1,1))
+	PPM:RescaleMRIGPART(ent,{34},Vector(svts*10.1-10.1,0,0))
+	PPM:RescaleMRIGPART(ent,{35},Vector(1-svts,0,0))
+	PPM:RescaleMRIGPART(ent,{36},Vector(svts*10-10,0,0))
 	PPM:RescaleRIGPART(ent,{33,34,35,36,},Vector(svts,svts,svts))
 	-----------------------------------------
 	--}wd
@@ -220,6 +234,7 @@ hook.Add("PostDrawOpaqueRenderables","test_Redraw",function()
 							PPM.copyLocalTextureDataTo(ent,plyrag)
 							plyrag.ponydata.useLocalData=true
 							PPM.setBodygroups(plyrag,true)
+							PPM.SetModelScale(plyrag,true)
 							plyrag:SetNoDraw(true)
 							if ent.ponydata!=nil then
 								if plyrag.clothes1==nil then

@@ -425,15 +425,22 @@ PPM.Editor3_nodes.pony_normal_body={
 				name="Height",
 				type="edit_number",
 				param="bodyheight",
-				min=-.75,
-				max=2
+				min=PPM.height_min,
+				max=PPM.height_max
 			},
 			{
 				name="Neck Legnth",
 				type="edit_number",
 				param="neckheight",
-				min=-.75,
-				max=2
+				min=PPM.height_min,
+				max=PPM.height_max
+			},
+			{
+				name="Model Scale",
+				type="edit_number",
+				param="modelscale",
+				min=PPM.scale_min,
+				max=PPM.scale_max
 			},--[[
 			{
 				name="Fullbright",
@@ -578,8 +585,8 @@ PPM.Editor3_nodes.pony_normal_body={
 				name="Hair size",
 				type="edit_number",
 				param="hairsize",
-				min=.65,
-				max=1.5,
+				min=.5,
+				max=2.1,
 			},
 			{
 				name="phongexponent",
@@ -695,18 +702,6 @@ PPM.Editor3_nodes.pony_normal_body={
 		}
 	},
 }
-local ppm_height_limits=function()
-	local min,max=GetConVar"ppm_height_min",GetConVar"ppm_height_max"
-	min,max=min and min:GetFloat()or -1,max and max:GetFloat()or 3
-	PPM.height_min=min
-	PPM.height_max=max
-	PPM.Editor3_nodes.pony_normal_body.body.controlls[5].min=min
-	PPM.Editor3_nodes.pony_normal_body.body.controlls[5].max=max
-	PPM.Editor3_nodes.pony_normal_body.body.controlls[6].min=min
-	PPM.Editor3_nodes.pony_normal_body.body.controlls[6].max=max
-end
-ppm_height_limits()
-timer.Create("ppm_height_limits",30,0,ppm_height_limits)
 hook.Add("PPM.PostLoadResources","editor3_body",function()
 	local choises=PPM.Editor3_nodes.pony_normal_body.ponymark.controlls[5].choises
 	for k,t in ipairs(PPM.m_cmarks)do

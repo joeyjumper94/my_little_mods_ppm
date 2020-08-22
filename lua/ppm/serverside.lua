@@ -55,17 +55,16 @@ local PlayerSetModel=function(ply)
 				end
 				PPM.setPonyValues(ply)
 				PPM.setBodygroups(ply)
+				PPM.SetModelScale(ply)
 				ply:SetViewOffset(Vector(0,0,64))
 				ply:SetViewOffsetDucked(Vector(0,0,28))
 				timer.Simple(.1,function()
 					if PPM.camoffcetenabled and ply:IsValid()then
-						ply:SetViewOffset(Vector(0,0,42))
-						ply:SetViewOffsetDucked(Vector(0,0,35))
+						PPM.SetModelScale(ply,nil,true)
 					end
 					timer.Simple(1,function()
 						if PPM.camoffcetenabled and ply:IsValid()then
-							ply:SetViewOffset(Vector(0,0,42))
-							ply:SetViewOffsetDucked(Vector(0,0,35))
+							PPM.SetModelScale(ply,nil,true)
 						end
 					end)
 				end)

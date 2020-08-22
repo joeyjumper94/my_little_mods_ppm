@@ -134,6 +134,7 @@ function PPM.randomizePony(ent)
 	ent.ponydata.bodyweight = math.Rand(0.8, 1.2)
 	ent.ponydata.bodyheight = math.Rand(-1,3)
 	ent.ponydata.neckheight = math.Rand(-1,3)
+	ent.ponydata.modelscale = math.Rand(.5,2)
 	ent.ponydata.bodyt0 = 1 --math.random(1,4))
 	ent.ponydata.bodyt1_color = Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1))
 
@@ -242,6 +243,17 @@ PPM.rig.leg_BR = {13, 14, 15, 16, 17}
 PPM.rig.leg_FL = {18, 19, 20, 21, 22, 23}
 PPM.rig.leg_FR = {24, 25, 26, 27, 28, 29}
 PPM.rig_tail = {38, 39, 40}
+PPM.SetModelScale=function(ent,localvals,camshift)
+	if not PPM.isValidPony(ent) then return end
+	local ponydata = PPM.getPonyValues(ent, localvals)
+	local scale=math.Clamp(ponydata.modelscale,PPM.scale_min,PPM.scale_max)
+	ent:SetModelScale(scale)
+	if camshift or SERVER and ent:IsPlayer()and PPM.camoffcetenabled then
+		ent:SetViewOffset(Vector(0,0,42*scale))
+		ent:SetViewOffsetDucked(Vector(0,0,35*scale))
+	end
+	return scale
+end
 
 function PPM.setBodygroups(ent, localvals)
 	if not PPM.isValidPony(ent) then return end
@@ -273,6 +285,7 @@ function PPM.setBodygroups(ent, localvals)
 	else
 		PPM.setBodygroupSafe(ent, BODYGROUP_EYELASH, 5)
 	end
+	PPM.SetModelScale(ent,localvals)
 end
 
 function PPM.setBodygroupSafe(ent, bgid, bgval)
@@ -473,6 +486,7 @@ if SERVER then
 			ent.ponyCacheTarget = ply:SteamID64()
 			PPM.setPonyValues(ent)
 			PPM.setBodygroups(ent)
+			PPM.SetModelScale(ent)
 		end
 	end)
 
@@ -484,6 +498,7 @@ if SERVER then
 				end
 
 				PPM.setBodygroups(ply, false)
+				PPM.SetModelScale(ply, false)
 				--PPM.setPonyValues(ply)
 				--PPM.ccmakr_onplyinitspawn(ply)
 			end

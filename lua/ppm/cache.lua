@@ -288,6 +288,7 @@ if SERVER then
 						--PPM.MarkData[ply] = { PPM.PonyData[ply][2].custom_mark, data }
 						PPM.UpdateSignature(ply,sig,nil,sid64)
 						PPM.setBodygroups(ply)
+						PPM.SetModelScale(ply)
 					else
 						PPM.MarkData[ply] = nil
 						PPM.RequestItem(true,ply)
@@ -295,6 +296,7 @@ if SERVER then
 				else
 					PPM.UpdateSignature(ply,sig,nil,sid64)
 					PPM.setBodygroups(ply)
+					PPM.SetModelScale(ply)
 				end
 			else
 				PPM.RequestItem(false, ply)
@@ -577,12 +579,14 @@ if SERVER then
 					--PPM.MarkData[ply] = { PPM.PonyData[ply][2].custom_mark, markData }
 					PPM.UpdateSignature(ply, sig)
 					PPM.setBodygroups(ply)
+					PPM.SetModelScale(ply)
 				else
 					PPM.RequestItem(true, ply)
 				end
 			else
 				PPM.UpdateSignature(ply, sig)
 				PPM.setBodygroups(ply)
+				PPM.SetModelScale(ply)
 			end
 			-- Mark
 			-- verify the signature
@@ -597,6 +601,7 @@ if SERVER then
 			if ponydata.custom_mark == sig then
 				PPM.UpdateSignature(ply, ocSig)
 				PPM.setBodygroups(ply)
+				PPM.SetModelScale(ply)
 			else
 				PPM.RequestItem(true, ply)
 			end
