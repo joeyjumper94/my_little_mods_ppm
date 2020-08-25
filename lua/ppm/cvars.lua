@@ -25,19 +25,22 @@ if SERVER then
 else
 	net.Receive("ppm_height",function(len,ply)
 		local n=net.ReadFloat()
+		local controlls=PPM.Editor3_nodes.pony_normal_body.body.controlls
 		if net.ReadBool()then
 			PPM.height_max=n
-			PPM.Editor3_nodes.pony_normal_body.body.controlls[5].max=n
-			PPM.Editor3_nodes.pony_normal_body.body.controlls[6].max=n
+			controlls[5].max=n
+			controlls[6].max=n
+			controlls[8].max=n
 		else
 			PPM.height_min=n
-			PPM.Editor3_nodes.pony_normal_body.body.controlls[5].min=n
-			PPM.Editor3_nodes.pony_normal_body.body.controlls[6].min=n
+			controlls[5].min=n
+			controlls[6].min=n
+--			controlls[8].min=n
 		end
 	end)
 end
 PPM.scale_min=CreateConVar("ppm_scale_min",".4",FCVAR_ARCHIVE_REPLICATED,"minimum for model scaling",.01,.99):GetFloat()or .5
-PPM.scale_max=CreateConVar("ppm_scale_max","2.4",FCVAR_ARCHIVE_REPLICATED,"maximum for model scaling",1.01,4):GetFloat()or 4
+PPM.scale_max=CreateConVar("ppm_scale_max","1.6",FCVAR_ARCHIVE_REPLICATED,"maximum for model scaling",1.01,4):GetFloat()or 4
 if SERVER then
 	util.AddNetworkString"ppm_scale"
 	cvars.AddChangeCallback("ppm_scale_min",function(v,o,n)
@@ -69,12 +72,13 @@ if SERVER then
 else
 	net.Receive("ppm_scale",function(len,ply)
 		local n=net.ReadFloat()
+		local controlls=PPM.Editor3_nodes.pony_normal_body.body.controlls
 		if net.ReadBool()then
 			PPM.scale_max=n
-			PPM.Editor3_nodes.pony_normal_body.body.controlls[7].max=n
+			controlls[7].max=n
 		else
 			PPM.scale_min=n
-			PPM.Editor3_nodes.pony_normal_body.body.controlls[7].min=n
+			controlls[7].min=n
 		end
 	end)
 end

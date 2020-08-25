@@ -63,13 +63,17 @@ function PPM.PrePonyDraw(ent,localvals)
 	PPM:RescaleRIGPART(ent,{3},Vector(1,1,0)*((SCALEVAL0-1)+SCALEVAL1*0.1+0.9)+Vector(0,0,1))
 	PPM:RescaleMRIGPART(ent,{18},Vector(0,0,SCALEVAL1*.5))
 	PPM:RescaleMRIGPART(ent,{24},Vector(0,0,-SCALEVAL1*.5))
+	--barrel length
+	local barrellength=math.Clamp(pony.barrellength,PPM.height_min,PPM.height_max)-1
+	PPM:RescaleMRIGPART(ent,PPM.rig.ribcage,Vector(1,.025,0)*barrellength)
+	PPM:RescaleMRIGPART(ent,PPM.rig.rear,Vector(-2,0,0)*barrellength)
 	--leg length
 	local leg_length=math.Clamp(pony.bodyheight,PPM.height_min,PPM.height_max)-1
-	PPM:RescaleMRIGPART(ent,PPM.rig.leg_FL,Vector(1,0,0)*leg_length)
-	PPM:RescaleMRIGPART(ent,PPM.rig.leg_FR,Vector(1,0,0)*leg_length)
+	PPM:RescaleMRIGPART(ent,PPM.rig.leg_FL,Vector(.78,0,0)*leg_length)
+	PPM:RescaleMRIGPART(ent,PPM.rig.leg_FR,Vector(.78,0,0)*leg_length)
 	PPM:RescaleMRIGPART(ent,PPM.rig.leg_BL,Vector(1,0,0)*leg_length)
 	PPM:RescaleMRIGPART(ent,PPM.rig.leg_BR,Vector(1,0,0)*leg_length)
-	PPM:RescaleMRIGPART(ent,PPM.rig.rear,Vector(0,0,4)*leg_length)
+	PPM:RescaleMRIGPART(ent,PPM.rig.rear,Vector(0,0,3.5)*leg_length+Vector(-2,0,0)*barrellength)
 	--neck length
 	local neck_length=math.Clamp(pony.neckheight,PPM.height_min,PPM.height_max)-1
 	PPM:RescaleMRIGPART(ent,PPM.rig.neck,Vector(1,-.5,0)*neck_length)

@@ -132,9 +132,10 @@ function PPM.randomizePony(ent)
 	MARK_COUNT=PPM.m_cmarks and #PPM.m_cmarks or MARK_COUNT
 	ent.ponydata.cmark = math.random(1,MARK_COUNT)
 	ent.ponydata.bodyweight = math.Rand(0.8, 1.2)
-	ent.ponydata.bodyheight = math.Rand(-1,3)
-	ent.ponydata.neckheight = math.Rand(-1,3)
-	ent.ponydata.modelscale = math.Rand(.5,2)
+	ent.ponydata.bodyheight = math.Rand(-2,3)
+	ent.ponydata.neckheight = math.Rand(-2,3)
+	ent.ponydata.modelscale = math.Rand(.4,1.4)
+	ent.ponydata.barrellength = math.Rand(0,3)
 	ent.ponydata.bodyt0 = 1 --math.random(1,4))
 	ent.ponydata.bodyt1_color = Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1))
 

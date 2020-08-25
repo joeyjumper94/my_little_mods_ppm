@@ -24,6 +24,7 @@ PPM.Pony_variables.default_pony={
 	bodyheight={default=1,min=-4,max=7},
 	neckheight={default=1,min=-4,max=7},
 	modelscale={default=1,min=.01,max=4},
+	barrellength={default=1,min=0,max=7},
 	
 	clothes={default="1_3_5_59_61_7_63_65_47"},--clothes data here
 

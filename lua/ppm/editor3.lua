@@ -57,6 +57,51 @@ PPM.E3_CURRENT_NODE=nil
 
 PPM.nodebuttons={}
 
+local bone_offsets={
+	[0]=Vector(-3.3330664634705,0.0024212002754211,28.161472320557),
+	[1]=Vector(-3.3330664634705,0.0024212002754211,28.161472320557),
+	[2]=Vector(2.0388174057007,0.016715928912163,28.344621658325),
+	[3]=Vector(7.3947377204895,0.036377370357513,28.79695892334),
+	[4]=Vector(7.3947377204895,0.036377370357513,28.79695892334),
+	[5]=Vector(9.3425626754761,-0.00022458657622337,32.237895965576),
+	[6]=Vector(9.0713481903076,-0.06925792992115,36.090991973877),
+	[7]=Vector(11.682905197144,-0.14576078951359,38.437377929688),
+	[8]=Vector(-7.0731310844421,3.8863604068756,25.773149490356),
+	[9]=Vector(-6.3640880584717,4.5090179443359,17.040433883667),
+	[10]=Vector(-10.183971405029,3.6159369945526,14.337207794189),
+	[11]=Vector(-14.370935440063,4.2843642234802,5.4655714035034),
+	[12]=Vector(-13.81724357605,4.1309480667114,1.9274878501892),
+	[13]=Vector(-7.0733480453491,-3.8771884441376,25.766466140747),
+	[14]=Vector(-5.4003829956055,-4.4421458244324,17.162475585938),
+	[15]=Vector(-8.8391304016113,-3.6168234348297,13.970238685608),
+	[16]=Vector(-13.626216888428,-4.1632342338562,5.3988590240479),
+	[17]=Vector(-13.33588218689,-3.8765244483948,1.8377285003662),
+	[18]=Vector(6.0389356613159,2.7768964767456,29.317590713501),
+	[19]=Vector(6.3247356414795,2.6087961196899,20.867740631104),
+	[20]=Vector(2.6272099018097,2.8099317550659,16.898740768433),
+	[21]=Vector(3.4035353660583,3.4313035011292,10.751828193665),
+	[22]=Vector(3.7144780158997,3.9734539985657,4.7342143058777),
+	[23]=Vector(5.0983467102051,3.9899649620056,1.5492520332336),
+	[24]=Vector(6.0388946533203,-2.7077684402466,29.298013687134),
+	[25]=Vector(6.1633815765381,-2.7524275779724,20.842697143555),
+	[26]=Vector(2.5053887367249,-2.656919002533,16.833312988281),
+	[27]=Vector(3.2547719478607,-3.1719884872437,10.673244476318),
+	[28]=Vector(3.6626029014587,-3.7564172744751,4.6653876304626),
+	[29]=Vector(5.1136150360107,-3.8954613208771,1.5134706497192),
+	[30]=Vector(0,0,0),
+	[31]=Vector(0,0,0),
+	[32]=Vector(0,0,0),
+	[33]=Vector(0,0,0),
+	[34]=Vector(0,0,0),
+	[35]=Vector(0,0,0),
+	[36]=Vector(0,0,0),
+	[37]=Vector(0,0,0),
+	[38]=Vector(0,0,0),
+	[39]=Vector(0,0,0),
+	[40]=Vector(0,0,0),
+	[41]=Vector(0,0,0),
+	[42]=Vector(0,0,0),
+}
 
 function PPM.Editor3Open()
 
@@ -182,9 +227,9 @@ function PPM.Editor3Open()
 		self:SetAnimated(false)
 		if PPM.faceviewmode then 
 			local attachmentID=self.Entity:LookupAttachment("eyes");
-			local attachpos=self.Entity:GetAttachment(attachmentID).Pos+Vector(-10,0,3)
+			local attachpos=self.Entity:GetAttachment(attachmentID).Pos+Vector(-10,0,7)
 			self.vLookatPos=self.vLookatPos + (attachpos-self.vLookatPos)/20
-			mdl.fFOV=mdl.fFOV+(30-mdl.fFOV)/50
+			mdl.fFOV=mdl.fFOV+(40-mdl.fFOV)/50
 		else
 			self.vLookatPos=self.vLookatPos+ (Vector(0,0,25)-self.vLookatPos)/20
 			mdl.fFOV=mdl.fFOV+(70-mdl.fFOV)/50
@@ -294,9 +339,16 @@ function PPM.Editor3Open()
 				end
 				--PPM.selector_circle[1]:Draw()
 				]]
-		if(PPM.E3_CURRENT_NODE!=nil and PPM.E3_CURRENT_NODE.name==nil)then
-		for k,v in pairs(PPM.E3_CURRENT_NODE) do 
-			 local x,y,viz=	VectorToLPCameraScreen(((mdl.Entity:GetPos()+ v.pos)- mdl.camvec-mdl.vLookatPos):GetNormal(),w,h,ang,math.rad(mdl.fFOV))
+		if PPM.E3_CURRENT_NODE and!PPM.E3_CURRENT_NODE.name then
+			for k,v in pairs(PPM.E3_CURRENT_NODE) do
+				local offset,bone=vector_origin,v.bone
+				if bone and!tonumber(bone)then
+					bone=mdl.Entity:LookupBone(bone)
+				end
+				if bone then
+					offset=mdl.Entity:GetBonePosition(bone)-bone_offsets[bone]
+				end
+				local x,y,viz=VectorToLPCameraScreen(((mdl.Entity:GetPos()+offset+v.pos)- mdl.camvec-mdl.vLookatPos):GetNormal(),w,h,ang,math.rad(mdl.fFOV))
 
 				local tt=50
 				local shift=25
@@ -564,7 +616,7 @@ end
 function _L.spawnValueEditor()
 	if PPM.ed3_selectedNode!=nil and PPM.ed3_selectedNode.controlls!=nil then
 		_L.spawnEditPanel()
-		for k,v in pairs(PPM.ed3_selectedNode.controlls) do
+		for k,v in ipairs(PPM.ed3_selectedNode.controlls) do
 		--MsgN("preset ",v.type," ",v.name)
 			if(PPM.Editor3_presets[v.type]!=nil) then
 				--MsgN("has ",v.type)

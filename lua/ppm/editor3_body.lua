@@ -100,6 +100,7 @@ PPM.Editor3_nodes.pony_equipment={
 }
 PPM.Editor3_nodes.pony_normal_face={
 	eyelashes={
+		bone="LrigScull",
 		name="Eyelashes",
 		pos=Vector(15,0,45),
 		controlls={
@@ -112,6 +113,7 @@ PPM.Editor3_nodes.pony_normal_face={
 		}
 	},
 	left_eye={
+		bone="LrigScull",
 		name="Left Eye part 1",
 		pos=Vector(15,5,42),
 		controlls={
@@ -185,6 +187,7 @@ PPM.Editor3_nodes.pony_normal_face={
 		}
 	},
 	left_eye2={
+		bone="LrigScull",
 		name="Left Eye part 2",
 		pos=Vector(15,5,38),
 		controlls={
@@ -226,6 +229,7 @@ PPM.Editor3_nodes.pony_normal_face={
 		}
 	},
 	right_eye={
+		bone="LrigScull",
 		name="Right Eye part 1",
 		pos=Vector(15,-5,42),
 		controlls={
@@ -299,6 +303,7 @@ PPM.Editor3_nodes.pony_normal_face={
 		}
 	},
 	right_eye2={
+		bone="LrigScull",
 		name="Right Eye part 2",
 		pos=Vector(15,-5,38),
 		controlls={
@@ -339,9 +344,8 @@ PPM.Editor3_nodes.pony_normal_face={
 			},
 		}
 	},
-}
-PPM.Editor3_nodes.pony_normal_body={
 	horn={
+		bone="LrigScull",
 		name="Horn",
 		pos=Vector(23,0,62),
 		controlls={
@@ -366,7 +370,78 @@ PPM.Editor3_nodes.pony_normal_body={
 			},
 		}
 	},
+	hair={
+		bone="LrigScull",
+		name="Hair",
+		pos=Vector(18,0,55),
+		controlls={
+			{
+				name="Hair Type",
+				type="edit_type",
+				param="mane",
+				choises={
+					"MAILCALL","FLOOFEH","ADVENTUROUS","SHOWBOAT","ASSERTIVE",
+					"BOLD","STUMPY","SPEEDSTER","RADICAL","SPIKED",
+					"BOOKWORM","BUMPKIN","POOFEH","CURLY","INSTRUCTOR","NONE"
+				}
+			},
+			{
+				name="Hair size",
+				type="edit_number",
+				param="hairsize",
+				min=.5,
+				max=2.1,
+			},
+			{
+				name="phongexponent",
+				type="edit_number",
+				param="hairphongexponent",
+				min=0,
+				max=255,
+			},
+			{
+				name="phongboost",
+				type="edit_number",
+				param="hairphongboost",
+				min=0,
+				max=255,
+			},
+			{
+				name="Color 1",
+				type="edit_color",
+				param="haircolor1"
+			},
+			{
+				name="Color 2",
+				type="edit_color",
+				param="haircolor2"
+			},
+			{
+				name="Color 3",
+				type="edit_color",
+				param="haircolor3"
+			},
+			{
+				name="Color 4",
+				type="edit_color",
+				param="haircolor4"
+			},
+			{
+				name="Color 5",
+				type="edit_color",
+				param="haircolor5"
+			},
+			{
+				name="Color 6",
+				type="edit_color",
+				param="haircolor6"
+			}
+		}
+	},
+}
+PPM.Editor3_nodes.pony_normal_body={
 	wings={
+		bone="LrigRibcage",
 		name="Wings",
 		pos=Vector(0,0,30),
 		controlls={
@@ -392,6 +467,7 @@ PPM.Editor3_nodes.pony_normal_body={
 		}
 	},
 	body={
+		bone="LrigRibcage",
 		name="Body",
 		pos=Vector(10,0,20),
 		controlls={
@@ -422,7 +498,7 @@ PPM.Editor3_nodes.pony_normal_body={
 				max=255,
 			},
 			{
-				name="Height",
+				name="Leg Length",
 				type="edit_number",
 				param="bodyheight",
 				min=PPM.height_min,
@@ -436,11 +512,18 @@ PPM.Editor3_nodes.pony_normal_body={
 				max=PPM.height_max
 			},
 			{
-				name="Model Scale",
+				name="Body Size",
 				type="edit_number",
 				param="modelscale",
 				min=PPM.scale_min,
 				max=PPM.scale_max
+			},
+			{
+				name="Torso Legnth",
+				type="edit_number",
+				param="barrellength",
+				min=0,--PPM.height_min,
+				max=PPM.height_max
 			},--[[
 			{
 				name="Fullbright",
@@ -452,6 +535,7 @@ PPM.Editor3_nodes.pony_normal_body={
 		}
 	},
 	ponymark={
+		bone="Lrig_LEG_BL_Femur",
 		name="Ponymark",
 		pos=Vector(-8,6,27),
 		controlls={
@@ -500,6 +584,7 @@ PPM.Editor3_nodes.pony_normal_body={
 		}
 	},
 	tail={
+		bone="LrigPelvis",
 		name="Tail",
 		pos=Vector(-22,0,34),
 		controlls=
@@ -567,76 +652,10 @@ PPM.Editor3_nodes.pony_normal_body={
 			}
 		}
 	},
-	hair={
-		name="Hair",
-		pos=Vector(18,0,55),
-		controlls={
-			{
-				name="Hair Type",
-				type="edit_type",
-				param="mane",
-				choises={
-					"MAILCALL","FLOOFEH","ADVENTUROUS","SHOWBOAT","ASSERTIVE",
-					"BOLD","STUMPY","SPEEDSTER","RADICAL","SPIKED",
-					"BOOKWORM","BUMPKIN","POOFEH","CURLY","INSTRUCTOR","NONE"
-				}
-			},
-			{
-				name="Hair size",
-				type="edit_number",
-				param="hairsize",
-				min=.5,
-				max=2.1,
-			},
-			{
-				name="phongexponent",
-				type="edit_number",
-				param="hairphongexponent",
-				min=0,
-				max=255,
-			},
-			{
-				name="phongboost",
-				type="edit_number",
-				param="hairphongboost",
-				min=0,
-				max=255,
-			},
-			{
-				name="Color 1",
-				type="edit_color",
-				param="haircolor1"
-			},
-			{
-				name="Color 2",
-				type="edit_color",
-				param="haircolor2"
-			},
-			{
-				name="Color 3",
-				type="edit_color",
-				param="haircolor3"
-			},
-			{
-				name="Color 4",
-				type="edit_color",
-				param="haircolor4"
-			},
-			{
-				name="Color 5",
-				type="edit_color",
-				param="haircolor5"
-			},
-			{
-				name="Color 6",
-				type="edit_color",
-				param="haircolor6"
-			}
-		}
-	},
 	mane={
+		bone="LrigScull",
 		name="Mane",
-		pos=Vector(5,0,40),
+		pos=Vector(2,0,35),
 		controlls={
 			{
 				name="Mane Type",
