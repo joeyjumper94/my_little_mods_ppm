@@ -76,7 +76,7 @@ function PPM.loadResources()
 	}
 	-- Procedurally generate the material objects from their paths
 	for i,t in ipairs(PPM.m_cmarks) do
-		PPM.m_cmarks[i][2] = Material(t[1])
+		t[2]=Material(t[1])
 	end
 	PPM.m_bodyt0 = {
 		Material"models/ppm/texclothes/clothes_wbs_light.png",
@@ -89,10 +89,17 @@ function PPM.loadResources()
 	PPM.m_eyes={
 		Material"models/ppm/partrender/eye_oval.png",
 		Material"models/ppm/partrender/eye_oval_aperture.png",
+		Material"models/ppm/partrender/eye_oval_mecha.png",
 	}
 	PPM.m_eye_grads={
 		Material"models/ppm/partrender/eye_grad.png",
 		Material"models/ppm/partrender/eye_grad_aperture.png",
+		Material"models/ppm/partrender/eye_grad_mecha.png",
+	}
+	PPM.m_eye_pupils={
+		nil,
+		Material"models/ppm/partrender/eye_pupil_aperture.png",
+		Material"models/ppm/partrender/eye_pupil_mecha.png",
 	}
 	PPM.m_eye_reflections={
 		Material"models/ppm/partrender/eye_reflection.png",
@@ -119,8 +126,8 @@ function PPM.loadResources()
 		{Material"models/ppm/partrender/pony_socks1bl.png","Socks 1 Back Left"},
 		{Material"models/ppm/partrender/pony_socks1br.png","Socks 1 Back Right"},
 		{Material"models/ppm/partrender/pony_socks1f.png","Socks 1 Front"},
-		{Material"models/ppm/partrender/pony_socks1b.png","Socks 1 Front Left"},
-		{Material"models/ppm/partrender/pony_socks1b.png","Socks 1 Front Right"},
+		{Material"models/ppm/partrender/pony_socks1fl.png","Socks 1 Front Left"},
+		{Material"models/ppm/partrender/pony_socks1fr.png","Socks 1 Front Right"},
 		{Material"models/ppm/partrender/pony_socks2.png","Socks 2"},
 		{Material"models/ppm/partrender/pony_socks2b.png","Socks 2 Back"},
 		{Material"models/ppm/partrender/pony_socks2bl.png","Socks 2 Back Left"},
@@ -162,18 +169,28 @@ function PPM.loadResources()
 		{Material"models/ppm/partrender/xperiment.png","Experiment3"},
 		{Material"models/ppm/partrender/xperiment.png","Experiment4"},
 	}
+	PPM.f_bodydetails={}
+	for k,v in ipairs(PPM.m_bodydetails)do
+		local name=v[1]:GetName():Replace("models/ppm/partrender/","models/ppm/partrender/mare/")..".png"
+		if file.Exists("materials/"..name,"GAME")then
+			PPM.f_bodydetails[k]={Material(name),v[2]}
+		else
+			PPM.f_bodydetails[k]=v
+		end
+	end
 	hook.Run("PPM.PreValidateResources")
 	for key,bool in SortedPairs{
 		m_eye_grads=true,
+		m_eye_pupils=true,
 		m_eye_reflections=true,
 		m_eyes=true,
 	}do
 		hook.Run("PPM.PreValidateResource",key)
-		for k,v in ipairs(PPM[key])do
+--		PrintTable(PPM[key])
+		for k,v in SortedPairs(PPM[key])do
 			if type(v)!="IMaterial"then
-				timer.Simple(0,function()
-					table.remove(PPM[key],k)
-				end)
+--				MsgN("PPM.",key,"[",k,"]=",tostring(v))
+				PPM[key][k]=PPM[key][1]
 			elseif v:IsError() then
 				PPM[key][k]=PPM[key][1]
 			end
@@ -181,7 +198,7 @@ function PPM.loadResources()
 		hook.Run("PPM.PostValidateResource",key)
 	end
 	hook.Run("PPM.PreValidateResource","m_bodydetails")
-	for k,v in ipairs(PPM.m_bodydetails)do
+	for k,v in SortedPairs(PPM.m_bodydetails)do
 		if type(v[1])!="IMaterial"then
 			timer.Simple(0,function()
 				table.remove(PPM.m_bodydetails,k)
@@ -196,6 +213,8 @@ function PPM.loadResources()
 	PPM.Pony_variables.default_pony.cmark.max=#PPM.m_cmarks
 	PPM.Pony_variables.default_pony.eye_reflect_type_r.max=#PPM.m_eyes
 	PPM.Pony_variables.default_pony.eye_reflect_type.max=#PPM.m_eyes
+	PPM.Pony_variables.default_pony.eye_type_r.max=#PPM.m_eyes
+	PPM.Pony_variables.default_pony.eye_type.max=#PPM.m_eyes
 	PPM.Pony_variables.default_pony.eye_reflect_type_r.max=#PPM.m_eye_reflections
 	PPM.Pony_variables.default_pony.eye_reflect_type.max=#PPM.m_eye_reflections
 	hook.Run("PPM.PostLoadResources")

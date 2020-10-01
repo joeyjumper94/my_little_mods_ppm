@@ -16,7 +16,6 @@ PPM.Editor3_presets["view_cmark"]={
 		IMAGER:SetSize(200,200)
 		--IMAGER:SetColor(Color(255,255,255,255))
 		IMAGER:Dock(TOP)
-
 		IMAGER.Think=function()
 			--Mat:SetTexture("$basetexture",LocalPlayer().ponydata_tex.eyeltex)
 			if LocalPlayer().ponydata.custom_mark then
@@ -27,7 +26,6 @@ PPM.Editor3_presets["view_cmark"]={
 		end
 	end
 }
-
 --IMAGER:FixVertexLitMaterial()
 PPM.Editor3_presets["view_eye"]={
 	spawn=function(parent,variable)
@@ -47,34 +45,51 @@ PPM.Editor3_presets["view_eye"]={
 		--IMAGER:SetColor(Color(255,255,255,255))
 		IMAGER:Dock(TOP)
 		local Mat=CreateMaterial("tempeyematerialtest","UnlitGeneric")
-
+		local Entity=PPM.modelview and PPM.modelview.Entity or LocalPlayer()
+		Mat:SetTexture("$basetexture",Entity.ponydata_tex.eyeltex)
 		IMAGER.Paint=function()
 			render.SetMaterial(Mat)
 			render.DrawQuadEasy(Vector(40+80,100+80,0),Vector(0,0,-1),160,160,Color(255,255,255,255),-90)--position of the rect
 		end
-
 		--direction to face in
 		--size of the rect
 		--color
 		--rotate 90 degrees
-		IMAGER.Think=function()
-			--/* 
-			Mat:SetTexture("$basetexture",LocalPlayer().ponydata_tex.eyeltex)
-			IMAGER:SetMaterial(Mat)
+	end
+}
+PPM.Editor3_presets["view_eye_r"]={
+	spawn=function(parent,variable)
+		local CONTAINER_FAKE=vgui.Create("DPanel",parent)
+		CONTAINER_FAKE:SetSize(200,200)
+		CONTAINER_FAKE:Dock(TOP)
+		local CONTAINER=vgui.Create("DPanel",parent:GetParent())
+		CONTAINER:SetSize(200,200)
+		CONTAINER:Dock(TOP)
+		local HEADER=vgui.Create("DImageButton",CONTAINER)
+		HEADER:SetSize(200,200)
+		HEADER:SetColor(Color(0,0,0,255))
+		HEADER:SetImage("gui/editor/pictorect.png")
+		HEADER:Dock(TOP)
+		local IMAGER=vgui.Create("DImage",HEADER)
+		IMAGER:SetSize(200,200)
+		IMAGER:Dock(TOP)
+		local Mat=CreateMaterial("tempeyematerialtest","UnlitGeneric")
+		local Entity=PPM.modelview and PPM.modelview.Entity or LocalPlayer()
+		Mat:SetTexture("$basetexture",Entity.ponydata_tex.eyertex)
+		IMAGER.Paint=function()
+			render.SetMaterial(Mat)
+			render.DrawQuadEasy(Vector(40+80,100+80,0),Vector(0,0,-1),160,160,Color(255,255,255,255),-90)--position of the rect
 		end
 	end
 }
-
 --*/
 --IMAGER:SetMaterial(PPM.m_eyel)
 local WEARSLOTS={}
 local item_selection_panel=nil
-
 local function PPM_UpdateSlot(k,eqSlot)
 	if eqSlot~=nil and eqSlot~=NULL then
 		--MsgN(k,eqSlot.weareditem)
 		eqSlot.weareditem=LocalPlayer().pi_wear[k]
-
 		if(eqSlot.weareditem~=nil)then
 			--eqSlot.btn:SetTooltip(eqSlot.weareditem.name)
 			eqSlot:SetImage("gui/items/" .. eqSlot.weareditem.img .. ".png")
@@ -84,24 +99,20 @@ local function PPM_UpdateSlot(k,eqSlot)
 		end
 	end
 end
-
 local function PPM_UpdateSlots()
 	for k,eqSlot in pairs(WEARSLOTS)do
 		PPM_UpdateSlot(k,eqSlot)
 	end
 end
-
 local function OpenItemMenu(slotid,container)
 	local plymodel=LocalPlayer():GetInfo("cl_playermodel")
 	local avitems=PPM:GetAvailItems(plymodel,slotid)
 	local posx,posy=container:LocalToScreen()
-
 	--local paddx,paddy=container:GetParent():GetParent():GetPos()
 	--MsgN(posx,posy)
 	if(item_selection_panel~=nil)then
 		item_selection_panel:Remove()
 	end
-
 	if avitems~=nil then
 		local PanelSelect=PPM.Editor3:Add("DPanelSelect")
 		item_selection_panel=PanelSelect
@@ -110,35 +121,29 @@ local function OpenItemMenu(slotid,container)
 		PanelSelect:SetSize(5 * 70,3 * 70)
 		--PanelSelect:SetAlpha(255)
 		selection_box=PanelSelect
-
 		for name,item in SortedPairs(avitems)do
 			local icon=vgui.Create("DImageButton")
 			icon:SetImage("gui/items/" .. item.img .. ".png")
 			icon:SetSize(64,64)
 			icon:SetTooltip(item.name)
-
 			icon.OnMousePressed=function()
 				for i,slot in pairs(item.slot)do
 					LocalPlayer().pi_wear[slot]=item
 					--MsgN("set slot["..slot.."]="..item.name)
 				end
-
 				if(item.issuit)then
 					LocalPlayer().ponydata[item.varslot]=item.wearid
 				end
-
 				net.Start("player_equip_item")
 				net.WriteFloat(item.id)
 				net.SendToServer()
 				PanelSelect.Remove(PanelSelect)
 				PPM_UpdateSlots()
 			end
-
 			PanelSelect:AddPanel(icon,{})
 		end
 	end
 end
-
 function PPM_OpenCCmarkSelectorMenu(parent)
 	local R,G,B=255,0,255
 	local allw=512+256
@@ -150,7 +155,6 @@ function PPM_OpenCCmarkSelectorMenu(parent)
 	local BACKGROUND=vgui.Create("DImage",PANEL)
 	BACKGROUND:SetSize(512,512)
 	BACKGROUND:SetImage("color")
-
 	--BACKGROUND:SetColor(255,0,255,255)
 	BACKGROUND.Paint=function()
 		local coatcolor=PPM.modelview and PPM.modelview.Entity and PPM.modelview.Entity.ponydata and PPM.modelview.Entity.ponydata.coatcolor
@@ -161,7 +165,6 @@ function PPM_OpenCCmarkSelectorMenu(parent)
 		render.SetMaterial(Material("color"))
 		render.DrawQuadEasy(Vector(uppercorner_x+256,uppercorner_y+256,0),Vector(0,0,-1),512,512,Color(R,G,B,255),-90)--position of the rect
 	end
-
 	--direction to face in
 	--size of the rect
 	--color
@@ -178,17 +181,14 @@ function PPM_OpenCCmarkSelectorMenu(parent)
 	LIST:AddColumn("Avaliable images")
 	LIST:Clear()
 	local files=file.Find("materials/ppm_custom/*.png","GAME")
-
 	for k,v in pairs(files)do
 		--if(!string.match(v,"*/_*",0))then
 		LIST:AddLine(v)
 		--end
 	end
-
 	LIST.OnClickLine=function(parent,line,isselected)
 		IMAGE:SetImage("materials/ppm_custom/" .. line:GetValue(1))
 	end
-
 	local BUTTON=vgui.Create("DButton",PANEL)
 	local CLOSEBUTTON=vgui.Create("DButton",PANEL)
 	BUTTON:SetText("Select Image")
@@ -228,17 +228,14 @@ function PPM_OpenCCmarkSelectorMenu(parent)
 		if scan_process_activated then
 			render.CapturePixels()
 			local localdata=""
-
 			for i=0,16 do
 				for y=0,512,2 do
 					local r,g,b=render.ReadPixel(uppercorner_x+x,uppercorner_y+y)
 					--print(r,g,b)
 					--bytecount=bytecount+3
 					--print(r,"\t\t",g,"\t\t",b)
-					
 					localdata=localdata..string.char(r)..string.char(g)..string.char(b)
 				end
-
 				if x >=511 then
 					--print(string.len(data))
 					--print(data)
@@ -249,12 +246,10 @@ function PPM_OpenCCmarkSelectorMenu(parent)
 					x=0
 					return
 				end
-
 				x=x+2
 			end
-
 			--[[
-				if x >=511 then 
+				if x >=511 then
 					print(string.len(data))
 					//print(data)
 					PPM.cmarksys_beginsend(data)
@@ -270,12 +265,9 @@ function PPM_OpenCCmarkSelectorMenu(parent)
 			--x=x+1
 		end
 	end)
-
 end
-
 local usedcolors={}
 local last=1
-
 function PPM.rgbtoHex(r,g,b)
 	--[[
 	local value=string.char(r)..string.char(g)..string.char(b)
@@ -284,7 +276,7 @@ function PPM.rgbtoHex(r,g,b)
 	if index==nil then
 		usedcolors[value]=last
 		oldnumber=last
-		last=last+1 
+		last=last+1
 	else
 		oldnumber=index
 	end
@@ -294,7 +286,6 @@ function PPM.rgbtoHex(r,g,b)
 	//]]
 	return string.char(r).. string.char(g).. string.char(b)
 end
-
 PPM.Editor3_presets["edit_equipment_slot"]={
 	spawn=function(parent,variable)
 		local SLOTID=variable.slotid
@@ -313,17 +304,14 @@ PPM.Editor3_presets["edit_equipment_slot"]={
 		DISPLAY_CASE:SetColor(Color(255,255,255,255))
 		local plymodel=LocalPlayer():GetInfo("cl_playermodel")
 		local avitems=PPM:GetAvailItems(plymodel,SLOTID)
-
 		if(avitems~=nil and table.Count(avitems)> 0)then
 			DISPLAY_CASE:SetImage("gui/item.png")
-
 			DISPLAY_CASE.DoClick=function()
 				OpenItemMenu(SLOTID,CONTAINER)
 			end
 		else
 			DISPLAY_CASE:SetImage("gui/editor/gui_cross.png")
 		end
-
 		--DISPLAY:Dock(TOP)
 		local HEADERLABEL=vgui.Create("DLabel",CONTAINER)
 		HEADERLABEL:SetPos(80,10)
@@ -341,7 +329,6 @@ PPM.Editor3_presets["edit_equipment_slot"]={
 		PPM_UpdateSlot(SLOTID,DISPLAY)
 	end
 }
-
 PPM.Editor3_presets["select_custom_cmark"]={
 	spawn=function(parent,variable)
 		local CONTAINER=vgui.Create("DPanel",parent)
@@ -359,21 +346,17 @@ PPM.Editor3_presets["select_custom_cmark"]={
 		local BUTTON=vgui.Create("DButton",CONTAINER)
 		BUTTON:SetText("Select")
 		BUTTON:Dock(TOP)
-
 		BUTTON.DoClick=function()
 			PPM_OpenCCmarkSelectorMenu(parent)
 		end
-
 		local CLEARBUTTON=vgui.Create("DButton",CONTAINER)
 		CLEARBUTTON:SetText("Clean custom cmark")
 		CLEARBUTTON:Dock(TOP)
-
 		CLEARBUTTON.DoClick=function()
 			PPM.cmarksys_clearcmark()
 		end
 	end
 }
-
 PPM.Editor3_presets["edit_bool"]={
 	spawn=function(parent,variable)
 		local CONTAINER=vgui.Create("DPanel",parent)
@@ -394,7 +377,6 @@ PPM.Editor3_presets["edit_bool"]={
 		SELECTOR:SetPos(20,20)
 		SELECTOR:Dock(FILL)
 		SELECTOR:SetValue(LocalPlayer().ponydata[variable.param]==variable.onvalue)
-
 		SELECTOR.OnChange=function(pSelf,fValue)
 			if(fValue)then
 				LocalPlayer().ponydata[variable.param]=variable.onvalue
@@ -404,7 +386,6 @@ PPM.Editor3_presets["edit_bool"]={
 		end
 	end
 }
-
 PPM.Editor3_presets["edit_number"]={
 	spawn=function(parent,variable)
 		local CONTAINER=vgui.Create("DPanel",parent)
@@ -427,14 +408,12 @@ PPM.Editor3_presets["edit_number"]={
 		SELECTOR:SetPos(20,20)
 		SELECTOR:Dock(FILL)
 		SELECTOR:SetValue(LocalPlayer().ponydata[variable.param])
-
 		SELECTOR.OnValueChanged=function()
 			--local value=variable.min+SELECTOR:GetValue()*(variable.max-variable.min)
 			LocalPlayer().ponydata[variable.param]=SELECTOR:GetValue()
 		end
 	end
 }
-
 PPM.Editor3_presets["edit_color"]={
 	spawn=function(parent,variable)
 		local VALUE=LocalPlayer().ponydata[variable.param] or Vector(1,1,1)
@@ -478,7 +457,6 @@ PPM.Editor3_presets["edit_color"]={
 		SELECTOR:SetColor(Color(VALUE.x * 255,VALUE.y * 255,VALUE.z * 255,255))
 		INDICATOR:SetColor(Color(VALUE.x * 255,VALUE.y * 255,VALUE.z * 255,255))
 		SELECTOR:Dock(FILL)
-
 		SELECTOR.ValueChanged=function()
 			local v2=SELECTOR:GetVector()
 			LocalPlayer().ponydata[variable.param]=v2
@@ -486,7 +464,6 @@ PPM.Editor3_presets["edit_color"]={
 		end
 	end
 }
-
 PPM.Editor3_presets["edit_type"]={
 	spawn=function(parent,variable)
 		local VALUE=LocalPlayer().ponydata[variable.param] or 0
@@ -514,8 +491,6 @@ PPM.Editor3_presets["edit_type"]={
 	SELECTOR:SetPos(10,35)
 	SELECTOR:SetSize(100,185)
 	//SELECTOR:SetMultiple(false)
-	
-	 
 	SELECTOR:Dock(TOP)
 	if variable.choises !=nill then
 		for k ,v in pairs(variable.choises)do
@@ -523,8 +498,8 @@ PPM.Editor3_presets["edit_type"]={
 		end
 		SELECTOR:ChooseOptionID(LocalPlayer().ponydata[variable.param] or 1)
 		SELECTOR.OnSelect=function(panel,index,value,data)
-			LocalPlayer().ponydata[variable.param]=index 
-		end 
+			LocalPlayer().ponydata[variable.param]=index
+		end
 	end
 	]]
 		local SELECTOR=vgui.Create("DPanel",CONTAINER)
@@ -547,11 +522,9 @@ PPM.Editor3_presets["edit_type"]={
 		--SELECTOR_INNER:SetPos(0,SCROLL:GetOffset())
 		local VARIABLE=LocalPlayer().ponydata[variable.param] or 1
 		SELECTOR.buttons={}
-
 		if variable.choises~=nill then
 			CONTAINER:SetSize(100,table.Count(variable.choises)* 20+20)
 			SELECTOR:SetSize(100,table.Count(variable.choises)* 20)
-
 			for k,v in pairs(variable.choises)do
 				local ITEM_CONTAINER=vgui.Create("DPanel",SELECTOR_INNER)
 				ITEM_CONTAINER:SetSize(100,20)
@@ -561,32 +534,26 @@ PPM.Editor3_presets["edit_type"]={
 				ITEM_INDICATOR:SetSize(20,20)
 				ITEM_INDICATOR:Dock(LEFT)
 				SELECTOR.buttons[k]=ITEM_INDICATOR
-
 				if(k==VARIABLE)then
 					ITEM_INDICATOR:SetColor(Color(200,255,200))--PPM.colorcircles(k))
 				else
 					ITEM_INDICATOR:SetColor(Color(100,100,100))
 				end
-
 				local ITEM=vgui.Create("DButton",ITEM_CONTAINER)
 				ITEM:SetSize(200,20)
 				ITEM:SetBGColor(PPM.colorcircles(k))
 				--ITEM:SetImage("gui/editor/pictorect.png")
 				ITEM:Dock(FILL)
 				ITEM:SetText(v)
-
 				ITEM.OnCursorEntered=function()
 					LocalPlayer().ponydata[variable.param]=k
 				end
-
 				ITEM.OnCursorExited=function()
 					LocalPlayer().ponydata[variable.param]=VARIABLE
 				end
-
 				ITEM.DoClick=function()
 					VARIABLE=k
 					LocalPlayer().ponydata[variable.param]=VARIABLE
-
 					for k2,v2 in pairs(variable.choises)do
 						if(k2==VARIABLE)then
 							SELECTOR.buttons[k2]:SetColor(Color(200,255,200))
@@ -599,79 +566,23 @@ PPM.Editor3_presets["edit_type"]={
 		end
 	end
 }
-
 local INDICATOR_ONE=nil
 local INDICATOR_TWO=nil
-
 function PPM.colorFlash(controll,time,color,defcolor)
 	controll:SetColor(color)
-
 	timer.Simple(time,function()
 		controll:SetColor(defcolor)
 	end)
 end
-local function LoadFileList(CTL)
-	CTL:Clear()
+local function LoadFileList(dPresetList)
+	dPresetList:Clear()
 	local files=file.Find("data/ppm/*.txt","GAME")
-
 	for k,v in pairs(files)do
 		if(not string.match(v,"*/_*",0))then
-			CTL:AddLine(v)
+			dPresetList:AddLine(v)
 		end
 	end
 end
-local function NewPresetMenu(parent)
-	if(curmenupanel~=nil)then
-		curmenupanel:Remove()
-		curmenupanel=nil
-	end
-
-	local smenupanel=vgui.Create("DPanel",parent:GetParent())
-	local x,y=0,0--parent:GetParent():GetPos()
-	local px,py=0,0--parent:GetPos()
-	local w,h=parent:GetSize()
-	smenupanel:SetSize(w,h * 3)
-	smenupanel:SetPos(parent:GetPos())
-	smenupanel:SetKeyboardInputEnabled(true)
-	curmenupanel=smenupanel
-	local nfNInput=vgui.Create("DTextEntry",smenupanel)
-	nfNInput:SetText("NewFileName")
-	nfNInput:SetSize(20,h)
-	nfNInput:Dock(TOP)
-	nfNInput:SetKeyboardInputEnabled(true)
-	local bPSave=vgui.Create("DButton",smenupanel)
-	bPSave:SetSize(20,h)
-	bPSave:Dock(BOTTOM)
-	bPSave:SetPos(0,0)
-	bPSave:SetText("SAVE")
-
-	bPSave.DoClick=function(button)
-		local selected_fname=nfNInput:GetValue()
-		if(selected_fname==nil or string.Trim(selected_fname)=="")then--PPM.colorFlash(bPSave,0.1,Color(200,0,0),Color(255,255,255))
---PPM.colorFlash(PPM.button_save,0.1,Color(200,0,0),Color(255,255,255))
-return end
-		if(table.HasValue(PPM.reservedPresetNames,selected_fname))then--PPM.colorFlash(bPSave,0.1,Color(200,0,0),Color(255,255,255))
---PPM.colorFlash(PPM.button_save,0.1,Color(200,0,0),Color(255,255,255))
-return end
-		PPM.Save(selected_fname,LocalPlayer().ponydata)
-		--PPM.colorFlash(PPM.button_save,0.1,Color(0,200,0),Color(255,255,255))
-		LoadFileList(PPM.dPresetList)
-		smenupanel:Remove()
-		curmenupanel=nil
-	end
-
-	local bExit=vgui.Create("DButton",smenupanel)
-	bExit:SetSize(20,h)
-	bExit:Dock(BOTTOM)
-	bExit:SetPos(0,0)
-	bExit:SetText("CANCEL")
-
-	bExit.DoClick=function(button)
-		smenupanel:Remove()
-		curmenupanel=nil
-	end
-end
-
 PPM.Editor3_presets["menu_save_load"]={
 	spawn=function(parent,variable)
 		local VALUE=LocalPlayer().ponydata[variable.param] or Vector(1,1,1)
@@ -695,64 +606,102 @@ PPM.Editor3_presets["menu_save_load"]={
 		dPresetList:SetSize(ScrW()/ 8,ScrH()* 1 / 2)
 		dPresetList:SetMultiSelect(false)
 		dPresetList:Dock(TOP)
-		dPresetList:AddColumn("Preset list")
+		dPresetList:AddColumn"Preset list"
 		PPM.dPresetList=dPresetList
-		local bAddPreset=vgui.Create("DButton",CONTAINER)
-		bAddPreset:SetSize(180,30)
-		bAddPreset:Dock(TOP)
-		bAddPreset:SetText("New Preset")
-
-		bAddPreset.DoClick=function(button)
-			NewPresetMenu(bAddPreset)
+		local bAddPony=vgui.Create("DButton",CONTAINER)
+		bAddPony:SetSize(180,30)
+		bAddPony:Dock(TOP)
+		bAddPony:SetText("New Pony")
+		bAddPony.DoClick=function(self)
+			if curmenupanel then
+				if curmenupanel:IsValid()then
+					curmenupanel:Remove()
+				end
+				curmenupanel=nil
+			end
+			local smenupanel=vgui.Create("DPanel",bAddPony:GetParent())
+			local x,y=0,0--bAddPony:GetParent():GetPos()
+			local px,py=0,0--bAddPony:GetPos()
+			local w,h=bAddPony:GetSize()
+			smenupanel:SetSize(w,h * 3)
+			smenupanel:SetPos(bAddPony:GetPos())
+			smenupanel:SetKeyboardInputEnabled(true)
+			curmenupanel=smenupanel
+			local nfNInput=vgui.Create("DTextEntry",smenupanel)
+			nfNInput:SetText("NewFileName")
+			nfNInput:SetSize(20,h)
+			nfNInput:Dock(TOP)
+			nfNInput:SetKeyboardInputEnabled(true)
+			local bPSave=vgui.Create("DButton",smenupanel)
+			bPSave:SetSize(20,h)
+			bPSave:Dock(BOTTOM)
+			bPSave:SetPos(0,0)
+			bPSave:SetText("SAVE")
+			bPSave.DoClick=function(button)
+				local selected_fname=nfNInput:GetValue()
+				if(selected_fname==nil or selected_fname:Trim()=="")then
+					--PPM.colorFlash(bPSave,0.1,Color(200,0,0),Color(255,255,255))
+					--PPM.colorFlash(PPM.button_save,0.1,Color(200,0,0),Color(255,255,255))
+					return
+				end
+				if(table.HasValue(PPM.reservedPresetNames,selected_fname))then
+					--PPM.colorFlash(bPSave,0.1,Color(200,0,0),Color(255,255,255))
+					--PPM.colorFlash(PPM.button_save,0.1,Color(200,0,0),Color(255,255,255))
+					return
+				end
+				PPM.Save(selected_fname,LocalPlayer().ponydata)
+				--PPM.colorFlash(PPM.button_save,0.1,Color(0,200,0),Color(255,255,255))
+				LoadFileList(PPM.dPresetList)
+				smenupanel:Remove()
+				curmenupanel=nil
+			end
+			local bExit=vgui.Create("DButton",smenupanel)
+			bExit:SetSize(20,h)
+			bExit:Dock(BOTTOM)
+			bExit:SetPos(0,0)
+			bExit:SetText("CANCEL")
+			bExit.DoClick=function(button)
+				smenupanel:Remove()
+				curmenupanel=nil
+			end
 		end
-
 		local bDelPreset=vgui.Create("DButton",CONTAINER)
 		local SPACE=vgui.Create("DImageButton",CONTAINER)
 		local button_save=vgui.Create("DButton",CONTAINER)
-
 		bDelPreset.goDef=function()
-			if bDelPreset.bdel~=nil then
-				bDelPreset.bdel:Remove()
+			if bDelPreset.bdel then
+				if bDelPreset:IsValid()then
+					bDelPreset.bdel:Remove()
+				end
 				bDelPreset.bdel=nil
 			end
-
 			bDelPreset:SetSize(180,30)
 			bDelPreset:Dock(TOP)
 			bDelPreset:SetText("Delete")
 			bDelPreset.sure=false
 			button_save:SetSize(180,30)
 		end
-
 		bDelPreset.goDef()
-
 		bDelPreset.DoClick=function(button)
 			local selline=dPresetList:GetSelectedLine()
-
 			if(selline==nil)then
 				PPM.colorFlash(INDICATOR_ONE,0.1,Color(200,0,0),Color(0,0,0))
 				PPM.colorFlash(INDICATOR_TWO,0.1,Color(200,0,0),Color(0,0,0))
 				bDelPreset.goDef()
-
 				return
 			end
-
 			local selected_fname=dPresetList:GetLine(selline):GetColumnText(1)
-
 			if(selected_fname==nil)then
 				PPM.colorFlash(INDICATOR_ONE,0.1,Color(200,0,0),Color(0,0,0))
 				PPM.colorFlash(INDICATOR_TWO,0.1,Color(200,0,0),Color(0,0,0))
 				bDelPreset.goDef()
-
 				return
 			end
-
 			if(table.HasValue(PPM.reservedPresetNames,selected_fname))then
 				PPM.colorFlash(INDICATOR_ONE,0.1,Color(200,0,0),Color(255,255,255))
 				PPM.colorFlash(INDICATOR_TWO,0.1,Color(200,0,0),Color(255,255,255))
-
 				return
 			end
-
 			if not bDelPreset.sure then
 				bDelPreset:SetText("NO!")
 				bDelPreset:SetSize(180,15)
@@ -762,7 +711,6 @@ PPM.Editor3_presets["menu_save_load"]={
 				bDelPreset.bdel:SetSize(180,15)
 				bDelPreset.bdel:Dock(BOTTOM)
 				bDelPreset.bdel:SetText("YES,DELETE!")
-
 				bDelPreset.bdel.DoClick=function(button)
 					file.Delete("ppm/" .. selected_fname)
 					LoadFileList(PPM.dPresetList)
@@ -772,7 +720,6 @@ PPM.Editor3_presets["menu_save_load"]={
 				bDelPreset.goDef()
 			end
 		end
-
 		SPACE:Dock(TOP)
 		SPACE:SetSize(180,30)
 		--INDICATOR:SetImage("gui/editor/pictorect.png")
@@ -782,64 +729,47 @@ PPM.Editor3_presets["menu_save_load"]={
 		button_save:SetText("SAVE")
 		button_save:Dock(TOP)
 		PPM.button_save=button_save
-
 		button_save.DoClick=function(button)
 			local selline=dPresetList:GetSelectedLine()
-
 			if(selline==nil)then
 				PPM.colorFlash(INDICATOR_ONE,0.1,Color(200,0,0),Color(255,255,255))
 				PPM.colorFlash(INDICATOR_TWO,0.1,Color(200,0,0),Color(255,255,255))
-
 				return
 			end
-
 			local selected_fname=dPresetList:GetLine(selline):GetColumnText(1)
-
 			if(selected_fname==nil)then
 				PPM.colorFlash(INDICATOR_ONE,0.1,Color(200,0,0),Color(255,255,255))
 				PPM.colorFlash(INDICATOR_TWO,0.1,Color(200,0,0),Color(255,255,255))
-
 				return
 			end
-
 			if(table.HasValue(PPM.reservedPresetNames,selected_fname))then
 				PPM.colorFlash(INDICATOR_ONE,0.1,Color(200,0,0),Color(255,255,255))
 				PPM.colorFlash(INDICATOR_TWO,0.1,Color(200,0,0),Color(255,255,255))
-
 				return
 			end
-
 			PPM.Save(selected_fname,LocalPlayer().ponydata)
 			PPM.colorFlash(INDICATOR_ONE,0.1,Color(0,200,0),Color(255,255,255))
 			PPM.colorFlash(INDICATOR_TWO,0.1,Color(0,200,0),Color(255,255,255))
 			LoadFileList(PPM.dPresetList)
 		end
-
 		local button_load=vgui.Create("DButton",CONTAINER)
 		button_load:SetSize(180,30)
 		--button_load:SetImage("gui/editor/group_circle.png")
 		button_load:Dock(TOP)
 		button_load:SetText("LOAD")
-
 		button_load.DoClick=function(button)
 			local selline=dPresetList:GetSelectedLine()
-
 			if(selline==nil)then
 				PPM.colorFlash(INDICATOR_ONE,0.1,Color(200,0,0),Color(255,255,255))
 				PPM.colorFlash(INDICATOR_TWO,0.1,Color(200,0,0),Color(255,255,255))
-
 				return
 			end
-
 			local selected_fname=dPresetList:GetLine(selline):GetColumnText(1)
-
 			if(selected_fname==nil)then
 				PPM.colorFlash(INDICATOR_ONE,0.1,Color(200,0,0),Color(255,255,255))
 				PPM.colorFlash(INDICATOR_TWO,0.1,Color(200,0,0),Color(255,255,255))
-
 				return
 			end
-
 			--if(PPM.selected_filename==nil)then return end
 			--if(PPM.selected_filename=="@NEWFILE@")then return end
 			--PPM.ReadFile(PPM.selected_filename)
@@ -852,7 +782,6 @@ PPM.Editor3_presets["menu_save_load"]={
 			local sig=PPM.Save_settings()
 			PPM.UpdateSignature(sig)
 		end
-
 		local SPACE2=vgui.Create("DImageButton",CONTAINER)
 		SPACE2:Dock(TOP)
 		SPACE2:SetSize(180,30)
@@ -861,24 +790,20 @@ PPM.Editor3_presets["menu_save_load"]={
 		button_reset:SetSize(180,30)
 		button_reset:SetText("Clear")
 		button_reset:Dock(TOP)
-
 		button_reset.DoClick=function(button)
 			PPM.cleanPony(LocalPlayer())
 			PPM.colorFlash(INDICATOR_ONE,0.1,Color(0,200,0),Color(255,255,255))
 			PPM.colorFlash(INDICATOR_TWO,0.1,Color(0,200,0),Color(255,255,255))
 		end
-
 		local button_rnd=vgui.Create("DButton",CONTAINER)
 		button_rnd:SetSize(180,30)
 		button_rnd:SetText("Randomize")
 		button_rnd:Dock(TOP)
-
 		button_rnd.DoClick=function(button)
 			PPM.randomizePony(LocalPlayer())
 			PPM.colorFlash(INDICATOR_ONE,0.1,Color(0,200,0),Color(255,255,255))
 			PPM.colorFlash(INDICATOR_TWO,0.1,Color(0,200,0),Color(255,255,255))
 		end
-
 		LoadFileList(dPresetList)
 	end
 }

@@ -1,15 +1,15 @@
 PPM.Editor3_ponies={}--PPM.Editor3_ponies or {}
 PPM.Editor3_ponies.pony={
 	node_main="node_main",
-	node_body="pony_normal_body",
-	node_face="pony_normal_face",
+	node_body="pony_body",
+	node_face="pony_head",
 	node_equipment="pony_equipment",
 	node_presets="node_presets"
 }
 PPM.Editor3_ponies.ponynj={
 	node_main="node_main",
-	node_body="pony_normal_body",
-	node_face="pony_normal_face",
+	node_body="pony_body",
+	node_face="pony_head",
 	node_equipment="pony_equipment",
 	node_presets="node_presets"
 }
@@ -98,7 +98,7 @@ PPM.Editor3_nodes.pony_equipment={
 		}
 	}
 }
-PPM.Editor3_nodes.pony_normal_face={
+PPM.Editor3_nodes.pony_head={--head
 	eyelashes={
 		bone="LrigScull",
 		name="Eyelashes",
@@ -118,12 +118,17 @@ PPM.Editor3_nodes.pony_normal_face={
 		pos=Vector(15,5,42),
 		controlls={
 			{
+				name="View",
+				type="view_eye"
+			},
+			{
 				name="Eye type",
 				type="edit_type",
 				param="eye_type",
 				choises={
 					"normal",
 					"aperture",
+					"mecha",
 				},
 			},
 			{
@@ -192,6 +197,10 @@ PPM.Editor3_nodes.pony_normal_face={
 		pos=Vector(15,5,38),
 		controlls={
 			{
+				name="View",
+				type="view_eye"
+			},
+			{
 				name="Reflect type",
 				type="edit_type",
 				param="eye_reflect_type",
@@ -234,12 +243,17 @@ PPM.Editor3_nodes.pony_normal_face={
 		pos=Vector(15,-5,42),
 		controlls={
 			{
+				name="View",
+				type="view_eye_r"
+			},
+			{
 				name="Eye type",
 				type="edit_type",
 				param="eye_type_r",
 				choises={
 					"normal",
 					"aperture",
+					"mecha",
 				},
 			},
 			{
@@ -308,6 +322,10 @@ PPM.Editor3_nodes.pony_normal_face={
 		pos=Vector(15,-5,38),
 		controlls={
 			{
+				name="View",
+				type="view_eye_r"
+			},
+			{
 				name="Reflect type",
 				type="edit_type",
 				param="eye_reflect_type_r",
@@ -372,7 +390,7 @@ PPM.Editor3_nodes.pony_normal_face={
 	},
 	hair={
 		bone="LrigScull",
-		name="Hair",
+		name="Upper Mane",
 		pos=Vector(18,0,55),
 		controlls={
 			{
@@ -438,8 +456,76 @@ PPM.Editor3_nodes.pony_normal_face={
 			}
 		}
 	},
+	mane={
+		bone="LrigScull",
+		name="Lower Mane",
+		pos=Vector(2,0,35),
+		controlls={
+			{
+				name="Mane Type",
+				type="edit_type",
+				param="manel",
+				choises={
+					"MAILCALL","FLOOFEH","ADVENTUROUS","SHOWBOAT","ASSERTIVE",
+					"BOLD","STUMPY","HIPPIE","SPEEDSTER","BOOKWORM",
+					"BUMPKIN","CURLY","NONE"
+				}
+			},
+			{
+				name="Mane size",
+				type="edit_number",
+				param="manesize",
+				min=.65,
+				max=1.5
+			},
+			{
+				name="phongexponent",
+				type="edit_number",
+				param="manephongexponent",
+				min=0,
+				max=255,
+			},
+			{
+				name="phongboost",
+				type="edit_number",
+				param="manephongboost",
+				min=0,
+				max=255,
+			},
+			{
+				name="Color 1",
+				type="edit_color",
+				param="manecolor1"
+			},
+			{
+				name="Color 2",
+				type="edit_color",
+				param="manecolor2"
+			},
+			{
+				name="Color 3",
+				type="edit_color",
+				param="manecolor3"
+			},
+			{
+				name="Color 4",
+				type="edit_color",
+				param="manecolor4"
+			},
+			{
+				name="Color 5",
+				type="edit_color",
+				param="manecolor5"
+			},
+			{
+				name="Color 6",
+				type="edit_color",
+				param="manecolor6"
+			}
+		}
+	},
 }
-PPM.Editor3_nodes.pony_normal_body={
+PPM.Editor3_nodes.pony_body={
 	wings={
 		bone="LrigRibcage",
 		name="Wings",
@@ -652,77 +738,9 @@ PPM.Editor3_nodes.pony_normal_body={
 			}
 		}
 	},
-	mane={
-		bone="LrigScull",
-		name="Mane",
-		pos=Vector(2,0,35),
-		controlls={
-			{
-				name="Mane Type",
-				type="edit_type",
-				param="manel",
-				choises={
-					"MAILCALL","FLOOFEH","ADVENTUROUS","SHOWBOAT","ASSERTIVE",
-					"BOLD","STUMPY","HIPPIE","SPEEDSTER","BOOKWORM",
-					"BUMPKIN","CURLY","NONE"
-				}
-			},
-			{
-				name="Mane size",
-				type="edit_number",
-				param="manesize",
-				min=.65,
-				max=1.5
-			},
-			{
-				name="phongexponent",
-				type="edit_number",
-				param="manephongexponent",
-				min=0,
-				max=255,
-			},
-			{
-				name="phongboost",
-				type="edit_number",
-				param="manephongboost",
-				min=0,
-				max=255,
-			},
-			{
-				name="Color 1",
-				type="edit_color",
-				param="manecolor1"
-			},
-			{
-				name="Color 2",
-				type="edit_color",
-				param="manecolor2"
-			},
-			{
-				name="Color 3",
-				type="edit_color",
-				param="manecolor3"
-			},
-			{
-				name="Color 4",
-				type="edit_color",
-				param="manecolor4"
-			},
-			{
-				name="Color 5",
-				type="edit_color",
-				param="manecolor5"
-			},
-			{
-				name="Color 6",
-				type="edit_color",
-				param="manecolor6"
-			}
-		}
-	},
 }
 hook.Add("PPM.PostLoadResources","editor3_body",function()
-	local choises=PPM.Editor3_nodes.pony_normal_body.ponymark.controlls[5].choises
+	local choises=PPM.Editor3_nodes.pony_body.ponymark.controlls[5].choises
 	for k,t in ipairs(PPM.m_cmarks)do
 		local str=t[1]or""
 		str=str:Split"."or{}
@@ -737,22 +755,22 @@ hook.Add("PPM.PostLoadResources","editor3_body",function()
 	for k,v in ipairs(PPM.m_bodydetails)do
 		choises[k+1]=v[2]
 	end
-	for i=1,8 do
-		local div=math.rad(i*45)
-		PPM.Editor3_nodes.pony_normal_body["bdetail"..i]={
-			name="B"..i,
-			pos=Vector(math.cos(div)*25,math.sin(div)*25,-5),
+	for C=1,12 do
+		local rad=math.rad(C*30)
+		PPM.Editor3_nodes.pony_body["bdetail"..C]={
+			name="Tattoo "..C,
+			pos=Vector(math.cos(rad)*25,math.sin(rad)*25,-5),
 			controlls={
 				{
 					name="Detail type",
 					type="edit_type",
-					param="bodydetail"..i,
+					param="bodydetail"..C,
 					choises=choises,
 				},
 				{
 					name="Color",
 					type="edit_color",
-					param="bodydetail"..i.."_c",
+					param="bodydetail"..C.."_c",
 				},
 			}
 		}

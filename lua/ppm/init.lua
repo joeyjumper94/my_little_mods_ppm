@@ -36,6 +36,7 @@ for k,v in ipairs(I)do
 	if v:StartWith"cl_"and CLIENT--clientside only
 	or v:StartWith"sv_"and SERVER--serverside only
 	or v:StartWith"sh_"then--shared
+		MsgN("ppm/custom_scripts/",v)
 		include("ppm/custom_scripts/"..v)
 	end
 end
