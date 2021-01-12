@@ -25,7 +25,7 @@ if SERVER then
 else
 	net.Receive("ppm_height",function(len,ply)
 		local n=net.ReadFloat()
-		local controlls=PPM.Editor3_nodes.pony_normal_body.body.controlls
+		local controlls=PPM.Editor3_nodes.pony_body.body.controlls
 		if net.ReadBool()then
 			PPM.height_max=n
 			controlls[5].max=n
@@ -72,7 +72,7 @@ if SERVER then
 else
 	net.Receive("ppm_scale",function(len,ply)
 		local n=net.ReadFloat()
-		local controlls=PPM.Editor3_nodes.pony_normal_body.body.controlls
+		local controlls=PPM.Editor3_nodes.pony_body.body.controlls
 		if net.ReadBool()then
 			PPM.scale_max=n
 			controlls[7].max=n
