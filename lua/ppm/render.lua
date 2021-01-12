@@ -148,7 +148,7 @@ function PPM.PrePonyDraw(ent,localvals)
 	--MATE:SetTexture("$basetexture",PPM.t_eyes[pony.eye][1])
 	--MATE:SetFloat("$ignorez",0)
 	--MATE:SetFloat("$additive",0) 
-	if ent.ponydata_tex!=nil then
+	if ent.ponydata_tex!=nil and PPM.isLoaded then
 		for k,v in pairs(PPM.rendertargettasks) do
 			if ent.ponydata_tex[k] and ent.ponydata_tex[k]!=NULL and ent.ponydata_tex[k.."_draw"] and type(ent.ponydata_tex[k])=="ITexture" and not ent.ponydata_tex[k]:IsError() then
 				v.renderTrue(ent,pony)

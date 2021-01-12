@@ -144,11 +144,83 @@ local function OpenItemMenu(slotid,container)
 		end
 	end
 end
-function PPM_OpenCCmarkSelectorMenu(parent)
+local scan_process_activated=false
+local caching=false
+local x=0
+local data=""
+local uppercorner_x=0
+local uppercorner_y=0
+local BUTTON
+local CLOSEBUTTON
+local _cmark_raw=""
+local ponydata_read=function(k)
+	local ponydata1=PPM.modelview and PPM.modelview.Entity and PPM.modelview.Entity.ponydata
+	if ponydata1 then
+		local v=ponydata1[k]
+		if v then
+			return v
+		end
+	end
+	local ponydata2=LocalPlayer().ponydata
+	if ponydata2 then
+		local v=ponydata2[k]
+		if v then
+			return v
+		end
+	end	
+end
+local ponydata_write=function(k,v)
+	local ponydata1=PPM.modelview and PPM.modelview.Entity and PPM.modelview.Entity.ponydata or{}
+	local ponydata2=LocalPlayer().ponydata or{}
+	ponydata1[k]=v
+	ponydata2[k]=v
+end
+
+hook.Add("PostRender","PPM_image",function()
+	if scan_process_activated then
+		render.CapturePixels()
+		local localdata=""
+		for i=0,16 do
+			for y=0,512,2 do
+				local r,g,b=render.ReadPixel(uppercorner_x+x,uppercorner_y+y)
+				--print(r,g,b)
+				--bytecount=bytecount+3
+				--print(r,"\t\t",g,"\t\t",b)
+				localdata=localdata..string.char(r)..string.char(g)..string.char(b)
+				_cmark_raw=_cmark_raw..r.."_"..g.."_"..b.."\n"
+			end
+			if x >=511 then
+				local ponydata=PPM.modelview and PPM.modelview.Entity and PPM.modelview.Entity.ponydata
+				if ponydata then
+					ponydata._cmark=data
+					ponydata._cmark_enabled=true
+				end
+				ponydata_write("_cmark_raw",_cmark_raw)
+				--print(string.len(data))
+				--print(data)
+				PPM.cmarksys_beginsend(data)
+				scan_process_activated=false
+				x=0
+				if BUTTON and BUTTON:IsValid()then
+					BUTTON:SetText("Scan Image")
+					CLOSEBUTTON:SetText("Close")
+				end
+				return
+			end
+			x=x+2
+		end
+		data=data..localdata
+		if BUTTON and BUTTON:IsValid()then
+			BUTTON:SetText("SCANNING("..math.Round(x*.1953125).."%)")
+		end
+		--x=x+1
+	end
+end)
+local function PPM_CMarkFile(parent)
 	local R,G,B=255,0,255
-	local allw=512+256
-	local uppercorner_x=ScrW()/ 2-allw / 2
-	local uppercorner_y=ScrH()/ 2-256
+	local allw=768
+	uppercorner_x=ScrW()*.5-allw*.5
+	uppercorner_y=ScrH()*.5-256
 	local PANEL=vgui.Create("DPanel",PPM.Editor3)
 	PANEL:SetPos(uppercorner_x,uppercorner_y)
 	PANEL:SetSize(allw,512)
@@ -189,8 +261,8 @@ function PPM_OpenCCmarkSelectorMenu(parent)
 	LIST.OnClickLine=function(parent,line,isselected)
 		IMAGE:SetImage("materials/ppm_custom/" .. line:GetValue(1))
 	end
-	local BUTTON=vgui.Create("DButton",PANEL)
-	local CLOSEBUTTON=vgui.Create("DButton",PANEL)
+	BUTTON=vgui.Create("DButton",PANEL)
+	CLOSEBUTTON=vgui.Create("DButton",PANEL)
 	BUTTON:SetText("Select Image")
 	CLOSEBUTTON:SetText("Close")
 	--BUTTON:Dock(RIGHT)
@@ -199,18 +271,11 @@ function PPM_OpenCCmarkSelectorMenu(parent)
 	CLOSEBUTTON:SetPos(512,384+20)
 	BUTTON:SetSize(256,20)
 	CLOSEBUTTON:SetSize(256,20)
-	local scan_process_activated=false
-	local caching=false
-	--local x=0
-	local data=""
 	BUTTON.DoClick=function()
 		if !scan_process_activated then
 			timer.Remove("ppm_create_texture")
-			usedcolors={}
-			last=1
---			render.CapturePixels()
 			data=""
-			local bytecount=0
+			_cmark_raw=""
 			BUTTON:SetText("SCANNING...")
 			CLOSEBUTTON:SetText("SCANNING...")
 			x=0
@@ -223,67 +288,124 @@ function PPM_OpenCCmarkSelectorMenu(parent)
 			timer.Remove("ppm_create_texture")
 		end
 	end
---	BUTTON.Think=(function()
-	hook.Add("PostRender","PPM_image",function()
-		if scan_process_activated then
-			render.CapturePixels()
-			local localdata=""
-			for i=0,16 do
-				for y=0,512,2 do
-					local r,g,b=render.ReadPixel(uppercorner_x+x,uppercorner_y+y)
-					--print(r,g,b)
-					--bytecount=bytecount+3
-					--print(r,"\t\t",g,"\t\t",b)
-					localdata=localdata..string.char(r)..string.char(g)..string.char(b)
-				end
-				if x >=511 then
-					--print(string.len(data))
-					--print(data)
-					PPM.cmarksys_beginsend(data)
-					scan_process_activated=false
-					BUTTON:SetText("Scan Image")
-					CLOSEBUTTON:SetText("Close")
-					x=0
-					return
-				end
-				x=x+2
-			end
-			--[[
-				if x >=511 then
-					print(string.len(data))
-					//print(data)
-					PPM.cmarksys_beginsend(data)
-					scan_process_activated=false
-					BUTTON:SetText("Scan Image")
-					CLOSEBUTTON:SetText("Close")
-					x=0
-				end
-				x=x+1
-				]]
-			BUTTON:SetText("SCANNING("..math.Round(x*.1953125).."%)")
-			data=data..localdata
-			--x=x+1
-		end
-	end)
 end
-local usedcolors={}
-local last=1
-function PPM.rgbtoHex(r,g,b)
-	--[[
-	local value=string.char(r)..string.char(g)..string.char(b)
-	local index=usedcolors[value]
-	local oldnumber=0
-	if index==nil then
-		usedcolors[value]=last
-		oldnumber=last
-		last=last+1
-	else
-		oldnumber=index
+local function PPM_CMarkURL(parent)
+	local R,G,B=255,0,255
+	local allw=768
+	uppercorner_x=ScrW()*.5-allw*.5
+	uppercorner_y=ScrH()*.5-256
+	local PANEL=vgui.Create("DPanel",PPM.Editor3)
+	PANEL:SetPos(uppercorner_x,uppercorner_y)
+	PANEL:SetSize(allw,512)
+	local BACKGROUND=vgui.Create("DImage",PANEL)
+	BACKGROUND:SetSize(512,512)
+	BACKGROUND:SetImage("color")
+	--BACKGROUND:SetColor(255,0,255,255)
+	local coatcolor=ponydata_read"coatcolor"
+	BACKGROUND.Paint=function()
+		if coatcolor then
+			local col=coatcolor*255
+			R,G,B=col.x,col.y,col.z
+		end
+		render.SetMaterial(Material("color"))
+		render.DrawQuadEasy(Vector(uppercorner_x+256,uppercorner_y+256,0),Vector(0,0,-1),512,512,Color(R,G,B,255),-90)--position of the rect
 	end
-	local nextnumber=math.floor(oldnumber/256)
-	local prevnumber=oldnumber-nextnumber*256
-	return string.char(nextnumber)..string.char(prevnumber)
-	//]]
+	--direction to face in
+	--size of the rect
+	--color
+	--rotate 90 degrees
+	local DHTML=vgui.Create("DHTML",PANEL)
+	DHTML.Setup=function(self,data)
+		self.URL=data.URL or self.URL or""
+		self.margin=data.margin or self.margin or 0
+		DHTML:SetHTML([[
+			<html><head><style type="text/css">
+				html
+				{
+					overflow:hidden;
+					margin: ]]..self.margin..[[px ]]..self.margin..[[px;
+				}
+				body {
+					background-image: url(]]..self.URL..[[);
+					background-size: contain;
+					background-position: center;
+					background-repeat: no-repeat;
+					height: 100%;
+					width: 100%;
+				}
+			</style></head><body></body></html>
+		]])
+	end
+	DHTML:SetSize(512,512)
+	--DHTML:SetImage("gui/items/none.png")
+	local DTextEntry=vgui.Create("DTextEntry")
+	DTextEntry:SetParent(PANEL)
+	DTextEntry:SetSize(256,49)
+	DTextEntry:SetPos(512,0)
+	DTextEntry.OnEnter=function(self,URL)
+		ponydata_write("cmark_url",URL)
+		DHTML:Setup{URL=URL}
+	end
+	local DNumSlider = vgui.Create( "DNumSlider", PANEL )
+	DNumSlider:SetPos(512,40)	-- Set the position
+	DNumSlider:SetSize(256,40)	-- Set the size
+	DNumSlider:SetText"margin"	-- Set the text above the slider
+	DNumSlider:SetMin(-256)		-- Set the minimum number you can slide to
+	DNumSlider:SetMax(255)		-- Set the maximum number you can slide to
+	DNumSlider:SetDecimals(0)	-- Decimal places - zero for whole number
+	-- If not using convars, you can use this hook + Panel.SetValue()
+	DNumSlider.OnValueChanged=function(self,margin)
+		ponydata_write("cmark_url_margin",margin)
+		DHTML:Setup{margin=margin}
+	end
+	local cmark_url=ponydata_read"cmark_url"
+	local cmark_url_margin=ponydata_read"cmark_url_margin"
+	if type(cmark_url_margin)=="number"then
+		cmark_url_margin=math.min(cmark_url_margin,255)
+		DNumSlider:SetValue(cmark_url_margin)
+		DHTML.margin=cmark_url_margin
+	else
+		local scale=ponydata_read"cmark_scale"
+		if type(scale)=="number"then
+			cmark_url_margin=-math.Remap(scale,0,2,-255,256)
+			cmark_url_margin=math.min(cmark_url_margin,255)
+			DNumSlider:SetValue(cmark_url_margin)
+			DHTML.margin=cmark_url_margin
+			ponydata_write("cmark_url_margin",cmark_url_margin)
+		end
+	end
+	if type(cmark_url)=="string"then
+		DTextEntry:SetText(cmark_url)
+		DHTML:Setup{URL=cmark_url}
+	end
+	BUTTON=vgui.Create("DButton",PANEL)
+	CLOSEBUTTON=vgui.Create("DButton",PANEL)
+	BUTTON:SetText("Select Image")
+	CLOSEBUTTON:SetText("Close")
+	--BUTTON:Dock(RIGHT)
+	--BUTTON:Dock(RIGHT)
+	BUTTON:SetPos(512,80)
+	CLOSEBUTTON:SetPos(512,120)
+	BUTTON:SetSize(256,40)
+	CLOSEBUTTON:SetSize(256,40)
+	BUTTON.DoClick=function()
+		if !scan_process_activated then
+			data=""
+			_cmark_raw=""
+			BUTTON:SetText("SCANNING...")
+			CLOSEBUTTON:SetText("SCANNING...")
+			x=0
+			scan_process_activated=true
+		end
+	end
+	CLOSEBUTTON.DoClick=function()
+		if not scan_process_activated then
+			PANEL:Remove()
+		end
+	end
+end
+
+function PPM.rgbtoHex(r,g,b)
 	return string.char(r).. string.char(g).. string.char(b)
 end
 PPM.Editor3_presets["edit_equipment_slot"]={
@@ -343,11 +465,17 @@ PPM.Editor3_presets["select_custom_cmark"]={
 		--HEADERLABEL:Dock(TOP)
 		HEADERLABEL:SetPos(80,0)
 		HEADERLABEL:SetText(variable.name)
-		local BUTTON=vgui.Create("DButton",CONTAINER)
-		BUTTON:SetText("Select")
-		BUTTON:Dock(TOP)
-		BUTTON.DoClick=function()
-			PPM_OpenCCmarkSelectorMenu(parent)
+		local BUTTON_FILE=vgui.Create("DButton",CONTAINER)
+		BUTTON_FILE:SetText("Select from file")
+		BUTTON_FILE:Dock(TOP)
+		BUTTON_FILE.DoClick=function()
+			PPM_CMarkFile(parent)
+		end
+		local BUTTON_URL=vgui.Create("DButton",CONTAINER)
+		BUTTON_URL:SetText("Select from url")
+		BUTTON_URL:Dock(TOP)
+		BUTTON_URL.DoClick=function()
+			PPM_CMarkURL(parent)
 		end
 		local CLEARBUTTON=vgui.Create("DButton",CONTAINER)
 		CLEARBUTTON:SetText("Clean custom cmark")
@@ -603,7 +731,7 @@ PPM.Editor3_presets["menu_save_load"]={
 		local dPresetList=vgui.Create("DListView")
 		dPresetList:SetParent(CONTAINER)
 		dPresetList:SetPos(0,0)
-		dPresetList:SetSize(ScrW()/ 8,ScrH()* 1 / 2)
+		dPresetList:SetSize(ScrW()/ 8,ScrH()* 1 *.5)
 		dPresetList:SetMultiSelect(false)
 		dPresetList:Dock(TOP)
 		dPresetList:AddColumn"Preset list"

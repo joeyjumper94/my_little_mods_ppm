@@ -1,5 +1,6 @@
 PPM.bannedVars={
 	m_bodyt0=true,
+	_cmark_raw=true,
 	_cmark=true,
 	_cmark_loaded=true,
 	bodydetail1_b=true,
@@ -171,17 +172,16 @@ if CLIENT then
 		if!string.EndsWith(filename,".txt")then
 			filename=filename..".txt"
 		end
-		if!file.Exists("ppm","DATA") then
-			file.CreateDir( "ppm")
+		if!file.Exists("ppm/cmark_cache","DATA") then
+			file.CreateDir("ppm/cmark_cache")
 		end
 		MsgN("saving .... ppm/"..filename)
-		file.Write("ppm/"..filename,saveframe)--[[
-		if!file.Exists( "ppm_cmark_cache","DATA") then
-			file.CreateDir"ppm_cmark_cache"
+		file.Write("ppm/"..filename,saveframe)
+		if ponydata._cmark_raw and ponydata._cmark_raw:len()>0 then
+			file.Write("ppm/cmark_cache/"..filename,ponydata._cmark_raw)
+		else
+			file.Delete("ppm/cmark_cache/"..filename)
 		end
-		if ponydata._cmark and ponydata._cmark_loaded then
-			file.Write("ppm_cmark_cache/"..filename,tostring(ponydata._cmark))
-		end--]]
 		return PPM.SaveToCache( PPM.CacheGroups.OC_DATA,LocalPlayer(),filename,saveframe )
 	end
 	local bool_sending=false
@@ -210,26 +210,35 @@ if CLIENT then
 					end
 				end)
 			end
-		end--[[
-		local _cmark=file.Read("data/ppm_cmark_cache/"..filename,"GAME")
-		if _cmark and!bool_sending then
-			bool_sending=true
-			local packcount=math.ceil(_cmark:len()/32768)
-			for i=1,packcount do
-				timer.Simple(0.25*i,function()
-					PPM.cmarksys_send(_cmark,i-1,packcount)
-					if i==packcount then
-						bool_sending=false
+		end
+		local _cmark_raw=file.Read("data/ppm/cmark_cache/"..filename,"GAME")
+		if _cmark_raw then
+			ponydata._cmark_raw=_cmark_raw
+			local c=ponydata.coatcolor*255
+			local R,G,B=math.Round(c.x),math.Round(c.y),math.Round(c.z)
+			local _cmark=""
+			local match=0
+			for a,line in ipairs(_cmark_raw:Split"\n")do
+				line=line:Split"_"
+				local r,g,b=tonumber(line[1]),tonumber(line[2]),tonumber(line[3])
+				if a==1 then
+					if g==R and b==G and r==B then
+						_cmark="\0"
+					elseif b==R and r==G and g==B then
+						_cmark="\0\0"
 					end
-				end)
+				end
+				for b,RGB in ipairs(line)do
+					local char=tonumber(RGB)
+					if char then
+						_cmark=_cmark..string.char(char)
+					end
+				end
 			end
 			ponydata._cmark=_cmark
 			ponydata._cmark_loaded=true
-		elseif!_cmark then
-			PPM.cmarksys_clearcmark()
-		end--]]
+			PPM.cmarksys_beginsend(_cmark)
+		end	
 		return ponydata
 	end
 end
-
-

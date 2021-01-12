@@ -81,6 +81,7 @@ if SERVER then
 		local packetoffcet=packetnumber*32768
 		net.Start("player_pony_cm_send")
 		local subdata=data:sub(packetoffcet,packetoffcet+32768)
+		subdata=subdata..string.char(0):rep(32768-subdata:len())
 		net.WriteEntity(ent)
 		net.WriteFloat(packetnumber)
 		net.WriteFloat(packetcount)
@@ -122,6 +123,7 @@ if CLIENT then
 		local packetoffcet=packetnumber*32768
 		net.Start("player_pony_cm_send")
 		local subdata=string.sub(data,packetoffcet,packetoffcet+32768)
+		subdata=subdata..string.char(0):rep(32768-subdata:len())
 		net.WriteFloat(packetnumber)
 		net.WriteFloat(packetcount)
 		net.WriteData(subdata,32768)
@@ -160,10 +162,7 @@ if CLIENT then
 		local pall=net.ReadFloat()
 		local newdata=net.ReadData(32768)
 		ent.ponydata._cmark_loaded=false
-		ent.ponydata._cmark=ent.ponydata._cmark or ""
-
-
-		ent.ponydata._cmark=ent.ponydata._cmark..newdata
+		ent.ponydata._cmark=(ent.ponydata._cmark or"")..newdata
 
 		--//print("received packet num: ",pnum," of all packets count ",pall
 		--//," new data len ",string.len(newdata or "")," current length ",string.len(ply.ponydata._cmark or ""))
