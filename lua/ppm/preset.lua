@@ -217,7 +217,6 @@ if CLIENT then
 			local c=ponydata.coatcolor*255
 			local R,G,B=math.Round(c.x),math.Round(c.y),math.Round(c.z)
 			local _cmark=""
-			local match=0
 			for a,line in ipairs(_cmark_raw:Split"\n")do
 				line=line:Split"_"
 				local r,g,b=tonumber(line[1]),tonumber(line[2]),tonumber(line[3])

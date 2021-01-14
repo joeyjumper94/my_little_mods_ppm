@@ -258,7 +258,7 @@ hook.Add("HUDPaint","pony_render_textures",function()
 	end
 end)
 local INRANGE=function(check,of)
-	if of-5<check and check<of+5 then
+	if of-5<=check and check<=of+5 then
 		return true
 	end
 	return false

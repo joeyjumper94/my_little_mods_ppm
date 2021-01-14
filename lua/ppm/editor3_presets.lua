@@ -152,6 +152,7 @@ local uppercorner_x=0
 local uppercorner_y=0
 local BUTTON
 local CLOSEBUTTON
+local coat=Vector(0,0,0)
 local _cmark_raw=""
 local ponydata_read=function(k)
 	local ponydata1=PPM.modelview and PPM.modelview.Entity and PPM.modelview.Entity.ponydata
@@ -176,6 +177,49 @@ local ponydata_write=function(k,v)
 	ponydata2[k]=v
 end
 
+local INRANGE=function(check,of)
+	if of-6<=check and check<=of+6 then
+		return true
+	end
+	return false
+end
+local corrections={
+	[0]=3,
+	[1]=6,
+	[2]=8,
+	[3]=10,
+	[4]=12,
+	[5]=13,
+	[6]=14,
+	[7]=15,
+	[8]=16,
+	[9]=17,
+	[10]=18,
+	[11]=19,
+	[12]=20,
+	[13]=21,
+	[14]=22,
+	[16]=23,
+	[17]=24,
+	[18]=25,
+	[19]=26,
+	[20]=27,
+	[21]=28,
+	[23]=29,
+	[24]=30,
+	[25]=31,
+	[26]=32,
+	[27]=33,
+	[28]=34,
+	[29]=35,
+	[31]=36,
+	[32]=37,
+	[33]=38,
+	[34]=39,
+	[35]=40,
+	[36]=41,
+	[37]=42,
+}
 hook.Add("PostRender","PPM_image",function()
 	if scan_process_activated then
 		render.CapturePixels()
@@ -183,6 +227,13 @@ hook.Add("PostRender","PPM_image",function()
 		for i=0,16 do
 			for y=0,512,2 do
 				local r,g,b=render.ReadPixel(uppercorner_x+x,uppercorner_y+y)
+				local a=255
+				r=corrections[r]or r
+				g=corrections[g]or g
+				b=corrections[b]or b
+				if INRANGE(r,coat.x)and INRANGE(g,coat.y)and INRANGE(r,coat.z)then
+					r,g,b,a=coat.x,coat.y,coat.z,0
+				end
 				--print(r,g,b)
 				--bytecount=bytecount+3
 				--print(r,"\t\t",g,"\t\t",b)
@@ -196,6 +247,8 @@ hook.Add("PostRender","PPM_image",function()
 					ponydata._cmark_enabled=true
 				end
 				ponydata_write("_cmark_raw",_cmark_raw)
+				ponydata_write("_cmark",data)
+				ponydata_write("_cmark_enabled",true)
 				--print(string.len(data))
 				--print(data)
 				PPM.cmarksys_beginsend(data)
@@ -216,16 +269,24 @@ hook.Add("PostRender","PPM_image",function()
 		--x=x+1
 	end
 end)
+local PANEL=NULL
 local function PPM_CMarkFile(parent)
+	if PANEL:IsValid()then
+		if scan_process_activated then
+			return
+		end
+		PANEL:Remove()
+	end
 	local R,G,B=255,0,255
 	local allw=768
 	uppercorner_x=ScrW()*.5-allw*.5
 	uppercorner_y=ScrH()*.5-256
-	local PANEL=vgui.Create("DPanel",PPM.Editor3)
+	PANEL=vgui.Create("DPanel",PPM.Editor3)
 	PANEL:SetPos(uppercorner_x,uppercorner_y)
 	PANEL:SetSize(allw,512)
 	local BACKGROUND=vgui.Create("DImage",PANEL)
 	BACKGROUND:SetSize(512,512)
+	local material=Material("gui/pixel.png")
 	BACKGROUND:SetImage("color")
 	--BACKGROUND:SetColor(255,0,255,255)
 	BACKGROUND.Paint=function()
@@ -279,6 +340,7 @@ local function PPM_CMarkFile(parent)
 			BUTTON:SetText("SCANNING...")
 			CLOSEBUTTON:SetText("SCANNING...")
 			x=0
+			coat=ponydata_read"coatcolor"*255
 			scan_process_activated=true
 		end
 	end
@@ -290,11 +352,17 @@ local function PPM_CMarkFile(parent)
 	end
 end
 local function PPM_CMarkURL(parent)
+	if PANEL:IsValid()then
+		if scan_process_activated then
+			return
+		end
+		PANEL:Remove()
+	end
 	local R,G,B=255,0,255
 	local allw=768
 	uppercorner_x=ScrW()*.5-allw*.5
 	uppercorner_y=ScrH()*.5-256
-	local PANEL=vgui.Create("DPanel",PPM.Editor3)
+	PANEL=vgui.Create("DPanel",PPM.Editor3)
 	PANEL:SetPos(uppercorner_x,uppercorner_y)
 	PANEL:SetSize(allw,512)
 	local BACKGROUND=vgui.Create("DImage",PANEL)
@@ -338,10 +406,30 @@ local function PPM_CMarkURL(parent)
 	end
 	DHTML:SetSize(512,512)
 	--DHTML:SetImage("gui/items/none.png")
-	local DTextEntry=vgui.Create("DTextEntry")
-	DTextEntry:SetParent(PANEL)
+	local DTextEntry=vgui.Create("DTextEntry",PANEL)
 	DTextEntry:SetSize(256,49)
 	DTextEntry:SetPos(512,0)
+	local format=""
+	DTextEntry.OnChange=function(self)
+		local URL=self:GetText()
+		local tbl,code,find=URL:Split"/","",find
+		if URL:find"imgur.com/"then
+			code=tbl[#tbl]
+			code=code:Split".png"[1]
+			format="https://i.imgur.com/%s.png"
+		end
+		local new=string.format(format,code)
+		if new!=URL then
+			URL=new
+			self:SetText(URL)
+			ponydata_write("cmark_url",URL)
+			timer.Create("PPM_DHTML",1,1,function()
+				if DHTML:IsValid()then
+					DHTML:Setup{URL=URL}
+				end
+			end)
+		end
+	end
 	DTextEntry.OnEnter=function(self,URL)
 		ponydata_write("cmark_url",URL)
 		DHTML:Setup{URL=URL}
@@ -395,6 +483,7 @@ local function PPM_CMarkURL(parent)
 			BUTTON:SetText("SCANNING...")
 			CLOSEBUTTON:SetText("SCANNING...")
 			x=0
+			coat=ponydata_read"coatcolor"*255
 			scan_process_activated=true
 		end
 	end
@@ -454,7 +543,7 @@ PPM.Editor3_presets["edit_equipment_slot"]={
 PPM.Editor3_presets["select_custom_cmark"]={
 	spawn=function(parent,variable)
 		local CONTAINER=vgui.Create("DPanel",parent)
-		CONTAINER:SetSize(200,60)
+		CONTAINER:SetSize(200,85)
 		CONTAINER:Dock(TOP)
 		local HEADER=vgui.Create("DImageButton",CONTAINER)
 		HEADER:SetSize(200,20)
@@ -481,6 +570,12 @@ PPM.Editor3_presets["select_custom_cmark"]={
 		CLEARBUTTON:SetText("Clean custom cmark")
 		CLEARBUTTON:Dock(TOP)
 		CLEARBUTTON.DoClick=function()
+			if PANEL:IsValid()then
+				if scan_process_activated then
+					return
+				end
+				PANEL:Remove()
+			end
 			PPM.cmarksys_clearcmark()
 		end
 	end
