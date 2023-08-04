@@ -78,6 +78,10 @@ PPM.Pony_variables.default_pony={
 	bodydetail6={default=1,min=1},
 	bodydetail7={default=1,min=1},
 	bodydetail8={default=1,min=1},
+	bodydetail9={default=1,min=1},
+	bodydetail10={default=1,min=1},
+	bodydetail11={default=1,min=1},
+	bodydetail12={default=1,min=1},
 	
 	bodydetail1_c={default=Vector(1,1,1),min=Vector(0,0,0),max=Vector(1,1,1)},
 	bodydetail2_c={default=Vector(1,1,1),min=Vector(0,0,0),max=Vector(1,1,1)},
@@ -87,6 +91,10 @@ PPM.Pony_variables.default_pony={
 	bodydetail6_c={default=Vector(1,1,1),min=Vector(0,0,0),max=Vector(1,1,1)},
 	bodydetail7_c={default=Vector(1,1,1),min=Vector(0,0,0),max=Vector(1,1,1)},
 	bodydetail8_c={default=Vector(1,1,1),min=Vector(0,0,0),max=Vector(1,1,1)},
+	bodydetail9_c={default=Vector(1,1,1),min=Vector(0,0,0),max=Vector(1,1,1)},
+	bodydetail10_c={default=Vector(1,1,1),min=Vector(0,0,0),max=Vector(1,1,1)},
+	bodydetail11_c={default=Vector(1,1,1),min=Vector(0,0,0),max=Vector(1,1,1)},
+	bodydetail12_c={default=Vector(1,1,1),min=Vector(0,0,0),max=Vector(1,1,1)},
 
 	eyelash={default=1,min=1,max=6},--eyelash bodygroup
 	--left eye
