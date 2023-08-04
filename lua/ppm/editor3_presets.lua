@@ -224,7 +224,7 @@ hook.Add("PostRender","PPM_image",function()
 	if scan_process_activated then
 		render.CapturePixels()
 		local localdata=""
-		for i=0,16 do
+		--for i=0,16 do
 			for y=0,512,2 do
 				local r,g,b=render.ReadPixel(uppercorner_x+x,uppercorner_y+y)
 				local a=255
@@ -241,11 +241,6 @@ hook.Add("PostRender","PPM_image",function()
 				_cmark_raw=_cmark_raw..r.."_"..g.."_"..b.."\n"
 			end
 			if x >=511 then
-				local ponydata=PPM.modelview and PPM.modelview.Entity and PPM.modelview.Entity.ponydata
-				if ponydata then
-					ponydata._cmark=data
-					ponydata._cmark_enabled=true
-				end
 				ponydata_write("_cmark_raw",_cmark_raw)
 				ponydata_write("_cmark",data)
 				ponydata_write("_cmark_enabled",true)
@@ -261,7 +256,7 @@ hook.Add("PostRender","PPM_image",function()
 				return
 			end
 			x=x+2
-		end
+		--end
 		data=data..localdata
 		if BUTTON and BUTTON:IsValid()then
 			BUTTON:SetText("SCANNING("..math.Round(x*.1953125).."%)")
@@ -794,7 +789,9 @@ local INDICATOR_TWO=nil
 function PPM.colorFlash(controll,time,color,defcolor)
 	controll:SetColor(color)
 	timer.Simple(time,function()
-		controll:SetColor(defcolor)
+		if controll:IsValid()then
+			controll:SetColor(defcolor)
+		end
 	end)
 end
 local function LoadFileList(dPresetList)

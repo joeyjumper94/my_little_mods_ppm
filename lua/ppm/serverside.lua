@@ -101,6 +101,16 @@ end
 hook.Add("PlayerSetModel","items_Flush",PlayerSetModel)
 hook.Add("playerSpawn","items_Flush",PlayerSetModel)
 hook.Add("OnPlayerChangedTeam","items_Flush",PlayerSetModel)
+hook.Add("PlayerDroppedWeapon","pony_weapons_autohide",function(Player,Weapon)
+	if Weapon.PPMColor then
+		Weapon:SetColor(Weapon.PPMColor)
+		Weapon.PPMColor=nil
+	end
+	if Weapon.PPMMaterial then
+		Weapon:SetMaterial(Weapon.PPMMaterial)
+		Weapon.PPMMaterial=nil
+	end
+end)
 PPM.hide_weapon=CreateConVar("ppm_hide_weapon","1",bit.bor(FCVAR_REPLICATED,FCVAR_ARCHIVE),"hide weapons held by ponies"):GetBool()
 cvars.AddChangeCallback("ppm_hide_weapon",function(v,o,n)
 	PPM.hide_weapon=n!="0"

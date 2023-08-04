@@ -192,7 +192,7 @@ PPM.VALIDPONY_CLASSES={
 	prop_physics=true,
 	prop_ragdoll=true,
 	cpm_pony_npc=true,
-	["class C_HL2MPRagdoll"]=false,
+	["class C_HL2MPRagdoll"]=true,
 }
 hook.Add("PostDrawOpaqueRenderables","test_Redraw",function()
 	--PPM.bones_testDraw("pony_mature") 	
@@ -211,7 +211,7 @@ hook.Add("PostDrawOpaqueRenderables","test_Redraw",function()
 				if PPM.isValidPonyLight(ent) then
 					if ent:IsNPC() or PPM.VALIDPONY_CLASSES[ent:GetClass()]==false then
 						ent:SetNoDraw(true)
-						PPM.PrePonyDraw(ent,false)
+						PPM.PrePonyDraw(ent,true)
 						ent:DrawModel()
 					elseif PPM.VALIDPONY_CLASSES[ent:GetClass()] then
 						if (not ent.isEditorPony) then
@@ -228,6 +228,7 @@ hook.Add("PostDrawOpaqueRenderables","test_Redraw",function()
 						end
 					end
 				end
+			--[[
 			else
 				local plyrag=ent:GetRagdollEntity()
 				if plyrag!=nil then
@@ -261,18 +262,58 @@ hook.Add("PostDrawOpaqueRenderables","test_Redraw",function()
 						end
 					end
 				else
-					if ent.ponydata==nil then PPM.setupPony(ent) end
+					if ent.ponydata==nil then
+						PPM.setupPony(ent)
+					end
 					if ent.ponydata.clothes1==nil or ent.ponydata.clothes1==NULL then
 						ent.ponydata.clothes1=ent:GetNWEntity("pny_clothing")
 					end
-				end
+				end--]]
 			end
 		end
+	end
+end)
+hook.Add("ShouldDrawLocalPlayer","pony_corpse",function(ply)
+	if!ply:Alive()and PPM.isValidPonyLight(ply)then
+		return true
 	end
 end)
 hook.Add("PrePlayerDraw","pony_draw",function(PLY)
 	PPM.PrePonyDraw(PLY,false)
 	if PLY.Alive and!PLY:Alive()then
+		local ent=PLY
+		local plyrag=ent:GetRagdollEntity()
+		if plyrag!=nil then
+			if PPM.isValidPonyLight(plyrag) then
+				if !PPM.isValidPony(plyrag) then
+					PPM.setupPony(plyrag)
+					PPM.copyPonyTo(ent,plyrag)
+					PPM.copyLocalTextureDataTo(ent,plyrag)
+					plyrag.ponydata.useLocalData=true
+					PPM.setBodygroups(plyrag,true)
+					PPM.SetModelScale(plyrag,true)
+					plyrag:SetNoDraw(true)
+					if ent.ponydata!=nil then
+						if plyrag.clothes1==nil then
+							plyrag.clothes1=ClientsideModel("models/ppm/player_default_clothes1.mdl",RENDERGROUP_TRANSLUCENT)
+							plyrag.clothes1:SetParent(plyrag)
+							plyrag.clothes1:AddEffects(EF_BONEMERGE)
+							if IsValid(ent.ponydata.clothes1) then
+								for I=1,14 do
+									PPM.setBodygroupSafe(plyrag.clothes1,I,ent.ponydata.clothes1:GetBodygroup(I))
+								end
+							end
+							plyrag:CallOnRemove("clothing del",function()
+								plyrag.clothes1:Remove()
+							end)
+						end
+					end
+				else
+					PPM.PrePonyDraw(plyrag,true)
+					plyrag:DrawModel()
+				end
+			end
+		end
 		return true
 	end
 end)
