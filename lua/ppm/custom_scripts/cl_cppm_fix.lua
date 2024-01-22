@@ -41,9 +41,9 @@ hook.Add("PreDrawPlayerHands","CPPM_handfix",function(hand,vm,ply,wpn)
 	if!cppm_usehands:GetBool()or!cppm_active:GetBool()then return end
 	ply=ply or LocalPlayer()
 	wpn=wpn or NULL
+	if!hand:IsValid()then return end
+	if!PPM.isValidPony(ply)then return end
 	if wpn:IsValid()and wpn:GetWeaponViewModel():StartWith"models/weapons/c_"then
-		if!hand:IsValid()then return end
-		if!PPM.isValidPony(ply)then return end
 		if!hand.ponydata then
 			PPM.setupPony(hand)
 			hand.isEditorPony = true
@@ -56,6 +56,6 @@ hook.Add("PreDrawPlayerHands","CPPM_handfix",function(hand,vm,ply,wpn)
 		return true
 	end
 end)
-timer.Create("CPPM_handfix",1,0,function()--execute every second
+timer.Create("CPPM_handfix",5,0,function()--execute every 5 seconds
 	hook.Remove("PreDrawPlayerHands","CPPMHook#4")--never let CPPM's normal hook exist
 end)
