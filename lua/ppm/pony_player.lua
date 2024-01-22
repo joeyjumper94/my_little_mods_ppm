@@ -243,7 +243,7 @@ PPM.rig.leg_BL = {8, 9, 10, 11, 12}
 PPM.rig.leg_BR = {13, 14, 15, 16, 17}
 PPM.rig.leg_FL = {18, 19, 20, 21, 22, 23}
 PPM.rig.leg_FR = {24, 25, 26, 27, 28, 29}
-PPM.rig_tail = {38, 39, 40}
+PPM.rig.tail = {38, 39, 40}
 PPM.SetModelScale=function(ent,localvals,camshift)
 	if not PPM.isValidPony(ent) then return end
 	local ponydata = PPM.getPonyValues(ent, localvals)

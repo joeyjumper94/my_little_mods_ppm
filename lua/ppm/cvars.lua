@@ -3,23 +3,23 @@ if SERVER then
 	FCVAR_ARCHIVE_REPLICATED=bit.bor(FCVAR_REPLICATED,FCVAR_ARCHIVE)
 end
 PPM.height_min=CreateConVar("ppm_height_min","-2",FCVAR_ARCHIVE_REPLICATED,"minimum for leg and neck scaling",-4,.99):GetFloat()or -2
-PPM.height_max=CreateConVar("ppm_height_max","3",FCVAR_ARCHIVE_REPLICATED,"maximum for leg and neck scaling",1.01,7):GetFloat()or 3
+PPM.height_max=CreateConVar("ppm_height_max","2",FCVAR_ARCHIVE_REPLICATED,"maximum for leg and neck scaling",1.01,7):GetFloat()or 3
 if SERVER then
 	util.AddNetworkString"ppm_height"
+	cvars.AddChangeCallback("ppm_height_max",function(v,o,n)
+		n=tonumber(n)or 2
+		PPM.height_max=n
+		net.Start"ppm_height"
+		net.WriteFloat(n)
+		net.WriteBool(true)
+		net.Broadcast()
+	end,"ppm_height")
 	cvars.AddChangeCallback("ppm_height_min",function(v,o,n)
 		n=tonumber(n)or -2
 		PPM.height_min=n
 		net.Start"ppm_height"
 		net.WriteFloat(n)
 		net.WriteBool(false)
-		net.Broadcast()
-	end,"ppm_height")
-	cvars.AddChangeCallback("ppm_height_max",function(v,o,n)
-		n=tonumber(n)or 3
-		PPM.height_max=n
-		net.Start"ppm_height"
-		net.WriteFloat(n)
-		net.WriteBool(true)
 		net.Broadcast()
 	end,"ppm_height")
 else

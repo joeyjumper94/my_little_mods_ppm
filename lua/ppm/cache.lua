@@ -8,8 +8,10 @@ PPM.MarkData = PPM.MarkData or {}
 PPM.timerInc = PPM.timerInc or 1
 
 -- Create a modified version of the built in CRC to force inclusion of null characters
+local CHAR_1=string.char(1)
 function PPM.DataCRC(data)
-	return util.CRC(string.Replace(data, "\0", string.char(1)))
+	local CRC=util.CRC(data:Replace("\0",CHAR_1))
+	return CRC
 end
 
 function PPM.SaveToCache(group, ply, name, data, skipNameResolve)

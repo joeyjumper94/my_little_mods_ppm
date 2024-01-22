@@ -176,10 +176,21 @@ end
 --	function PonyPropDraw(ent) end
 PPM.Ents={}
 timer.Create("PPM_ENT_CACHE",2.5,0,function()
+	local old=PPM.Ents
+	local now={}
 	PPM.Ents={}
 	for i,ent in ipairs(ents.GetAll()) do
 		if PPM.isValidPonyLight(ent) or ent.isEditorPony or ent.ISPONYNEXTBOT then
 			table.insert(PPM.Ents,ent)
+			now[ent]=ent
+		end
+	end
+	for k,ent in ipairs(old)do--list of entities that were ponies earlier
+		if ent:IsValid()and!now[ent]then--if someone changed models and is now no longer a pony,
+			for v=0,40 do--reset the position and scale bones 0 to 40, 
+				ent:ManipulateBoneScale(v,Vector(1,1,1))
+				ent:ManipulateBonePosition(v,Vector(0,0,0))
+			end
 		end
 	end
 end)
