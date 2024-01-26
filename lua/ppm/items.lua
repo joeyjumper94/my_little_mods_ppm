@@ -47,11 +47,18 @@ function PPM:AddItem( basemodel, itemname, itemimg, itemBodygroupId, itemBodygro
 	PPM.pony_items[PPM.cid] = pitem2
 	PPM.cid=PPM.cid+1
 	
+	timer.Simple(0,function()
+		for k,v in pairs(pitem)do
+			if!pitem2[k]then
+				pitem2[k]=v
+			end
+		end
+	end)
 	
 	return pitem
 	//table.Add(pony_items,pitem)
 end
-function PPM:AddFakeItem( basemodel, itemname, itemimg, itemBodygroupId, itemBodygroupValue, slot,varslot )
+function PPM:AddFakeItem( basemodel, itemname, itemimg, itemBodygroupId, itemBodygroupValue, slot,varslot,tbl)
 	local pitem = {}
 	pitem.id = PPM.cid
 	pitem.model = basemodel
@@ -61,7 +68,6 @@ function PPM:AddFakeItem( basemodel, itemname, itemimg, itemBodygroupId, itemBod
 	pitem.bval = itemBodygroupValue
 	pitem.slot = slot
 	pitem.varslot = varslot
-	 
 	pitem.issuit = true
 	
 	PPM.pony_items[PPM.cid] = pitem
@@ -81,7 +87,20 @@ function PPM:AddFakeItem( basemodel, itemname, itemimg, itemBodygroupId, itemBod
 	PPM.pony_items[PPM.cid] = pitem2
 	PPM.cid=PPM.cid+1
 	
-	
+	if tbl then
+		for k,v in pairs(tbl)do
+			pitem[k]=v
+			pitem2[k]=v
+		end
+	end
+	timer.Simple(0,function()
+		for k,v in pairs(pitem)do
+			if!pitem2[k]then
+				pitem2[k]=v
+			end
+		end
+	end)
+
 	return pitem
 	
 	//table.Add(pony_items,pitem)
@@ -232,12 +251,12 @@ PPM:AddItem("pony","mono_r","monocle",8,6,{7});
 PPM:AddItem("pony","eyepatch_l","eyepatch",8,7,{7}); 
 PPM:AddItem("pony","eyepatch_r","eyepatch",8,8,{7}); 
 
-PPM:AddFakeItem("pony","None","none",99,99,{50},"bodyt0").wearid = 1 
-PPM:AddFakeItem("pony","Wonderforce light","unf_wnd",99,99,{50},"bodyt0").wearid = 2
-PPM:AddFakeItem("pony","Wonderforce","unf_wnd",99,99,{50},"bodyt0").wearid = 3
-PPM:AddFakeItem("pony","Shadowforce","unf_sbs",99,99,{50},"bodyt0").wearid = 4
-PPM:AddFakeItem("pony","Shadowforce light","unf_sbs",99,99,{50},"bodyt0").wearid = 5
-PPM:AddFakeItem("pony","Royal guard captain","unf_rgc",99,99,{50},"bodyt0").wearid = 6
+PPM:AddFakeItem("pony","None","none",99,99,{50},"bodyt0",{wearid = 1})
+PPM:AddFakeItem("pony","Wonderforce light","unf_wnd",99,99,{50},"bodyt0",{wearid = 2})
+PPM:AddFakeItem("pony","Wonderforce","unf_wnd",99,99,{50},"bodyt0",{wearid = 3})
+PPM:AddFakeItem("pony","Shadowforce","unf_sbs",99,99,{50},"bodyt0",{wearid = 4})
+PPM:AddFakeItem("pony","Shadowforce light","unf_sbs",99,99,{50},"bodyt0",{wearid = 5})
+PPM:AddFakeItem("pony","Royal guard captain","unf_rgc",99,99,{50},"bodyt0",{wearid = 6})
 /*
 PPM:AddPPMEDItem({
 	model = basemodel,

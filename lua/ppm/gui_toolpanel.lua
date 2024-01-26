@@ -53,8 +53,15 @@ if CLIENT then
 		RunConsoleCommand"kill"
 	end)
 	concommand.Add("ppm_fix_render",function(ply)
-		RunConsoleCommand"ppm_reload"
-		RunConsoleCommand"ppm_update"
+		net.Start"ppm_reload"
+		net.SendToServer()
+		PPM.isLoaded = false
+		PPM.RequestUpdate()
+		--fixes hands
+		local hand=LocalPlayer():GetHands()
+		if hand and hand:IsValid()then
+			hand.ponydata=nil
+		end
 	end)
 	concommand.Add("ppm_fix_giraffe",function(ply)
 		RunConsoleCommand"ppm_update"
