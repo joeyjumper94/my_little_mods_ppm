@@ -14,9 +14,6 @@ if SERVER then
 			add_files(dir..folder_name.."/")
 		end
 	end
-	timer.Simple(1,function()
-		resource.AddWorkshop"945735699"--make clients download the addon
-	end)
 	add_files("ppm/")
 else
 	list.Set("PlayerOptionsModel","pony","models/ppm/player_default_base.mdl") 

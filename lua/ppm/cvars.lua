@@ -82,3 +82,20 @@ else
 		end
 	end)
 end
+
+local ppm_force_workshop=CreateConVar("ppm_force_workshop","1",FCVAR_ARCHIVE_REPLICATED,"should clients download ppm before joining, requires restart after disabling",0,1)
+if SERVER then
+	cvars.AddChangeCallback("ppm_force_workshop",function(v,o,n)
+		if n!="0"then
+			resource.AddWorkshop"945735699"
+		else
+			PrintMessage(HUD_PRINTTALK,"ppm_force_workshop has been set to 0, a restart is required to have an effect")
+			print"ppm_force_workshop has been set to 0, a restart is required to have an effect"
+		end
+	end,"ppm_force_workshop")
+	timer.Simple(1,function()
+		if ppm_force_workshop:GetBool()then
+			resource.AddWorkshop"945735699"--make clients download the addon
+		end
+	end)
+end
