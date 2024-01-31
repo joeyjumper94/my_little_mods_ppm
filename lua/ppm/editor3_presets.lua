@@ -87,7 +87,7 @@ PPM.Editor3_presets["view_eye_r"]={
 local WEARSLOTS={}
 local item_selection_panel=nil
 local function PPM_UpdateSlot(k,eqSlot)
-	if eqSlot~=nil and eqSlot~=NULL then
+	if eqSlot and eqSlot:IsValid()then
 		--MsgN(k,eqSlot.weareditem)
 		eqSlot.weareditem=LocalPlayer().pi_wear[k]
 		if(eqSlot.weareditem~=nil)then
@@ -104,25 +104,29 @@ local function PPM_UpdateSlots()
 		PPM_UpdateSlot(k,eqSlot)
 	end
 end
+local item_selection_panel
 local function OpenItemMenu(slotid,container)
 	local plymodel=LocalPlayer():GetInfo("cl_playermodel")
 	local avitems=PPM:GetAvailItems(plymodel,slotid)
 	local posx,posy=container:LocalToScreen()
 	--local paddx,paddy=container:GetParent():GetParent():GetPos()
 	--MsgN(posx,posy)
-	if(item_selection_panel~=nil)then
+	if item_selection_panel and item_selection_panel:IsValid()then
 		item_selection_panel:Remove()
 	end
 	if avitems~=nil then
 		local PanelSelect=PPM.Editor3:Add("DPanelSelect")
+		container.OnRemove=function(self)
+			if PanelSelect:IsValid()then
+				PanelSelect:Remove()
+			end
+		end
 		item_selection_panel=PanelSelect
-		local xw=math.Clamp(table.Count(avitems),1,5)* 70
 		PanelSelect:SetPos(posx,posy)
 		PanelSelect:SetSize(5 * 70,3 * 70)
 		--PanelSelect:SetAlpha(255)
-		selection_box=PanelSelect
 		for name,item in SortedPairs(avitems)do
-			local icon=vgui.Create("DImageButton")
+			local icon=vgui.Create("DImageButton",PanelSelect)
 			icon:SetImage("gui/items/" .. item.img .. ".png")
 			icon:SetSize(64,64)
 			icon:SetTooltip(item.name)
@@ -178,7 +182,7 @@ local ponydata_write=function(k,v)
 end
 
 local INRANGE=function(check,of)
-	if of-6<=check and check<=of+6 then
+	if math.abs(of-check)<6 then
 		return true
 	end
 	return false
@@ -186,8 +190,8 @@ end
 local corrections={
 	[0]=3,
 	[1]=6,
-	[2]=8,
-	[3]=10,
+	[2]=9,
+	[3]=11,
 	[4]=12,
 	[5]=13,
 	[6]=14,
@@ -219,8 +223,174 @@ local corrections={
 	[35]=40,
 	[36]=41,
 	[37]=42,
+	[39]=43,
+	[40]=44,
+	[41]=45,
+	[42]=46,
+	[43]=47,
+	[44]=48,
+	[45]=49,
+	[46]=50,
+	[47]=51,
+	[49]=52,
+	[50]=53,
+	[51]=54,
+	[52]=55,
+	[53]=56,
+	[54]=57,
+	[55]=58,
+	[56]=59,
+	[57]=60,
+	[59]=61,
+	[60]=62,
+	[61]=63,
+	[62]=64,
+	[63]=65,
+	[64]=66,
+	[65]=67,
+	[66]=68,
+	[67]=69,
+	[68]=70,
+	[69]=71,
+	[70]=72,
+	[71]=73,
+	[73]=74,
+	[74]=75,
+	[75]=76,
+	[76]=77,
+	[77]=78,
+	[78]=79,
+	[79]=80,
+	[80]=81,
+	[81]=82,
+	[82]=83,
+	[83]=84,
+	[84]=85,
+	[85]=86,
+	[86]=87,
+	[87]=88,
+	[111]=110,
+	[113]=112,
+	[115]=114,
+	[116]=115,
+	[117]=116,
+	[118]=117,
+	[119]=118,
+	[120]=119,
+	[121]=120,
+	[122]=121,
+	[123]=122,
+	[124]=123,
+	[125]=124,
+	[126]=125,
+	[127]=126,
+	[128]=127,
+	[129]=128,
+	[130]=129,
+	[131]=130,
+	[132]=131,
+	[133]=132,
+	[134]=133,
+	[135]=134,
+	[136]=135,
+	[137]=136,
+	[138]=137,
+	[139]=138,
+	[140]=139,
+	[141]=140,
+	[142]=141,
+	[143]=142,
+	[144]=143,
+	[145]=144,
+	[146]=145,
+	[147]=146,
+	[148]=147,
+	[149]=148,
+	[150]=149,
+	[151]=150,
+	[152]=151,
+	[153]=152,
+	[154]=153,
+	[155]=154,
+	[156]=155,
+	[157]=156,
+	[158]=157,
+	[160]=158,
+	[161]=159,
+	[162]=160,
+	[163]=162,
+	[164]=163,
+	[165]=164,
+	[166]=165,
+	[168]=167,
+	[169]=168,
+	[171]=170,
+	[173]=172,
+	[175]=174,
+	[177]=176,
+	[178]=177,
+	[180]=178,
+	[181]=180,
+	[182]=181,
+	[183]=182,
+	[184]=183,
+	[185]=184,
+	[186]=185,
+	[187]=186,
+	[188]=187,
+	[189]=188,
+	[190]=189,
+	[191]=190,
+	[192]=191,
+	[193]=192,
+	[194]=193,
+	[195]=194,
+	[196]=195,
+	[197]=196,
+	[198]=197,
+	[199]=198,
+	[200]=199,
+	[201]=200,
+	[202]=201,
+	[203]=202,
+	[204]=203,
+	[205]=204,
+	[206]=205,
+	[207]=206,
+	[208]=207,
+	[209]=208,
+	[210]=209,
+	[211]=210,
+	[212]=211,
+	[213]=212,
+	[214]=213,
+	[215]=214,
+	[216]=215,
+	[217]=216,
+	[218]=217,
+	[219]=218,
+	[220]=219,
+	[221]=220,
+	[222]=221,
+	[223]=222,
+	[224]=223,
+	[225]=224,
+	[226]=225,
+	[227]=226,
+	[228]=227,
+	[229]=228,
+	[230]=229,
+	[231]=230,
+	[232]=231,
+	[233]=232,
+	[234]=233,
+	[235]=234,
+	[236]=235,
+	[239]=238,
+	[240]=239,
+	[241]=240,
 }
-hook.Add("PostRender","PPM_image",function()
+local PPM_image=function()
 	if scan_process_activated then
 		render.CapturePixels()
 		local localdata=""
@@ -243,7 +413,7 @@ hook.Add("PostRender","PPM_image",function()
 			if x >=511 then
 				ponydata_write("_cmark_raw",_cmark_raw)
 				ponydata_write("_cmark",data)
-				ponydata_write("_cmark_enabled",true)
+				ponydata_write("cmark_enabled",1)
 				--print(string.len(data))
 				--print(data)
 				PPM.cmarksys_beginsend(data)
@@ -259,24 +429,18 @@ hook.Add("PostRender","PPM_image",function()
 		--end
 		data=data..localdata
 		if BUTTON and BUTTON:IsValid()then
-			BUTTON:SetText("SCANNING("..math.Round(x*.1953125).."%)")
+			BUTTON:SetText("SCANNING("..math.floor(x*.1953125).."%)")
 		end
 		--x=x+1
 	end
-end)
+end
+--hook.Add("PostRender","PPM_image",PPM_image)
 local PANEL=NULL
-local function PPM_CMarkFile(parent)
-	if PANEL:IsValid()then
-		if scan_process_activated then
-			return
-		end
-		PANEL:Remove()
-	end
+local base=function(parent,isDHTML,IMAGE)
 	local R,G,B=255,0,255
 	local allw=768
 	uppercorner_x=ScrW()*.5-allw*.5
 	uppercorner_y=ScrH()*.5-256
-	PANEL=vgui.Create("DPanel",PPM.Editor3)
 	PANEL:SetPos(uppercorner_x,uppercorner_y)
 	PANEL:SetSize(allw,512)
 	local BACKGROUND=vgui.Create("DImage",PANEL)
@@ -292,11 +456,60 @@ local function PPM_CMarkFile(parent)
 		end
 		render.SetMaterial(Material("color"))
 		render.DrawQuadEasy(Vector(uppercorner_x+256,uppercorner_y+256,0),Vector(0,0,-1),512,512,Color(R,G,B,255),-90)--position of the rect
+		if isDHTML then
+			IMAGE:PaintAt(uppercorner_x,uppercorner_y)
+		else
+			IMAGE:PaintAt(0,0)
+		end
+		PPM_image()
 	end
 	--direction to face in
 	--size of the rect
 	--color
 	--rotate 90 degrees
+	IMAGE.paint=function()end
+	IMAGE:SetSize(512,512)
+	--IMAGE:SetImage("gui/items/none.png")
+	BUTTON=vgui.Create("DButton",PANEL)
+	BUTTON:SetText("Select Image")
+	--BUTTON:Dock(RIGHT)
+	--BUTTON:Dock(RIGHT)
+	BUTTON:SetPos(512,384)
+	BUTTON:SetSize(256,40)
+	BUTTON.DoClick=function()
+		if !scan_process_activated then
+			timer.Remove("ppm_create_texture")
+			data=""
+			_cmark_raw=""
+			BUTTON:SetText("SCANNING...")
+			CLOSEBUTTON:SetText("SCANNING...")
+			x=0
+			coat=ponydata_read"coatcolor"*255
+			coat.x=math.Round(coat.x)
+			coat.y=math.Round(coat.y)
+			coat.z=math.Round(coat.z)
+			scan_process_activated=true
+		end
+	end
+	CLOSEBUTTON=vgui.Create("DButton",PANEL)
+	CLOSEBUTTON:SetText("Close")
+	CLOSEBUTTON:SetPos(512,384+40)
+	CLOSEBUTTON:SetSize(256,40)
+	CLOSEBUTTON.DoClick=function()
+		if not scan_process_activated then
+			PANEL:Remove()
+			timer.Remove("ppm_create_texture")
+		end
+	end
+end
+local function PPM_CMarkFile(parent)
+	if PANEL:IsValid()then
+		if scan_process_activated then
+			return
+		end
+		PANEL:Remove()
+	end
+	PANEL=vgui.Create("DPanel",PPM.Editor3)
 	local IMAGE=vgui.Create("DImage",PANEL)
 	IMAGE:SetSize(512,512)
 	--IMAGE:SetImage("gui/items/none.png")
@@ -317,34 +530,7 @@ local function PPM_CMarkFile(parent)
 	LIST.OnClickLine=function(parent,line,isselected)
 		IMAGE:SetImage("materials/ppm_custom/" .. line:GetValue(1))
 	end
-	BUTTON=vgui.Create("DButton",PANEL)
-	CLOSEBUTTON=vgui.Create("DButton",PANEL)
-	BUTTON:SetText("Select Image")
-	CLOSEBUTTON:SetText("Close")
-	--BUTTON:Dock(RIGHT)
-	--BUTTON:Dock(RIGHT)
-	BUTTON:SetPos(512,384)
-	CLOSEBUTTON:SetPos(512,384+20)
-	BUTTON:SetSize(256,20)
-	CLOSEBUTTON:SetSize(256,20)
-	BUTTON.DoClick=function()
-		if !scan_process_activated then
-			timer.Remove("ppm_create_texture")
-			data=""
-			_cmark_raw=""
-			BUTTON:SetText("SCANNING...")
-			CLOSEBUTTON:SetText("SCANNING...")
-			x=0
-			coat=ponydata_read"coatcolor"*255
-			scan_process_activated=true
-		end
-	end
-	CLOSEBUTTON.DoClick=function()
-		if not scan_process_activated then
-			PANEL:Remove()
-			timer.Remove("ppm_create_texture")
-		end
-	end
+	base(parent,false,IMAGE)
 end
 local function PPM_CMarkURL(parent)
 	if PANEL:IsValid()then
@@ -353,30 +539,7 @@ local function PPM_CMarkURL(parent)
 		end
 		PANEL:Remove()
 	end
-	local R,G,B=255,0,255
-	local allw=768
-	uppercorner_x=ScrW()*.5-allw*.5
-	uppercorner_y=ScrH()*.5-256
 	PANEL=vgui.Create("DPanel",PPM.Editor3)
-	PANEL:SetPos(uppercorner_x,uppercorner_y)
-	PANEL:SetSize(allw,512)
-	local BACKGROUND=vgui.Create("DImage",PANEL)
-	BACKGROUND:SetSize(512,512)
-	BACKGROUND:SetImage("color")
-	--BACKGROUND:SetColor(255,0,255,255)
-	local coatcolor=ponydata_read"coatcolor"
-	BACKGROUND.Paint=function()
-		if coatcolor then
-			local col=coatcolor*255
-			R,G,B=col.x,col.y,col.z
-		end
-		render.SetMaterial(Material("color"))
-		render.DrawQuadEasy(Vector(uppercorner_x+256,uppercorner_y+256,0),Vector(0,0,-1),512,512,Color(R,G,B,255),-90)--position of the rect
-	end
-	--direction to face in
-	--size of the rect
-	--color
-	--rotate 90 degrees
 	local DHTML=vgui.Create("DHTML",PANEL)
 	DHTML.Setup=function(self,data)
 		self.URL=data.URL or self.URL or""
@@ -461,32 +624,7 @@ local function PPM_CMarkURL(parent)
 		DTextEntry:SetText(cmark_url)
 		DHTML:Setup{URL=cmark_url}
 	end
-	BUTTON=vgui.Create("DButton",PANEL)
-	CLOSEBUTTON=vgui.Create("DButton",PANEL)
-	BUTTON:SetText("Select Image")
-	CLOSEBUTTON:SetText("Close")
-	--BUTTON:Dock(RIGHT)
-	--BUTTON:Dock(RIGHT)
-	BUTTON:SetPos(512,80)
-	CLOSEBUTTON:SetPos(512,120)
-	BUTTON:SetSize(256,40)
-	CLOSEBUTTON:SetSize(256,40)
-	BUTTON.DoClick=function()
-		if !scan_process_activated then
-			data=""
-			_cmark_raw=""
-			BUTTON:SetText("SCANNING...")
-			CLOSEBUTTON:SetText("SCANNING...")
-			x=0
-			coat=ponydata_read"coatcolor"*255
-			scan_process_activated=true
-		end
-	end
-	CLOSEBUTTON.DoClick=function()
-		if not scan_process_activated then
-			PANEL:Remove()
-		end
-	end
+	base(parent,true,DHTML)
 end
 
 function PPM.rgbtoHex(r,g,b)
@@ -590,7 +728,7 @@ PPM.Editor3_presets["edit_bool"]={
 		HEADERLABEL:SetPos(80,0)
 		HEADERLABEL:SetText(variable.name)
 		local SELECTOR=vgui.Create("DCheckBoxLabel",CONTAINER)
-		--SELECTOR:SetText("Value")
+		SELECTOR:SetText(variable.name)
 		--SELECTOR:SetSize(100,100)
 		SELECTOR:SetPos(20,20)
 		SELECTOR:Dock(FILL)
@@ -1011,7 +1149,7 @@ PPM.Editor3_presets["menu_save_load"]={
 		button_reset:SetText("Clear")
 		button_reset:Dock(TOP)
 		button_reset.DoClick=function(button)
-			PPM.cleanPony(LocalPlayer())
+			PPM.cleanPony(LocalPlayer(),true)
 			PPM.colorFlash(INDICATOR_ONE,0.1,Color(0,200,0),Color(255,255,255))
 			PPM.colorFlash(INDICATOR_TWO,0.1,Color(0,200,0),Color(255,255,255))
 		end

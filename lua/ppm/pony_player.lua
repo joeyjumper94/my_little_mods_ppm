@@ -80,11 +80,35 @@ end
 function PPM.reValidatePonies()
 end
 
-function PPM.cleanPony(ent)
+function PPM.cleanPony(ent,clear_items)
 	PPM.setupPony(ent)
 
 	for k, v in SortedPairs(PPM.Pony_variables.default_pony) do
 		ent.ponydata[k] = v.default
+	end
+	if CLIENT and clear_items then
+		local queue={}
+		for k,item in pairs(PPM.pony_items)do
+			if item.name=="None"then
+				table.insert(queue,function()
+					for i,slot in pairs(item.slot)do
+						LocalPlayer().pi_wear[slot]=item
+					end
+					if(item.issuit)then
+						LocalPlayer().ponydata[item.varslot]=item.wearid
+					end
+					net.Start("player_equip_item")
+					net.WriteFloat(item.id)
+					net.SendToServer()
+				end)
+			end
+		end
+		timer.Create("PPM.cleanPony",0,#queue,function()
+			local fn=table.remove(queue,1)
+			if fn then
+				fn()
+			end
+		end)
 	end
 	--ent.ponydata._cmark=nil
 	--ent.ponydata._cmark_loaded=false 

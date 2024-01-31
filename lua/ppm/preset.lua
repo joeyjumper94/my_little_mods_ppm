@@ -221,7 +221,8 @@ if CLIENT then
 				line=line:Split"_"
 				local r,g,b=tonumber(line[1]),tonumber(line[2]),tonumber(line[3])
 				if a==1 then
-					if g==R and b==G and r==B then
+					if r==R and g==G and b==B then
+					elseif g==R and b==G and r==B then
 						_cmark="\0"
 					elseif b==R and r==G and g==B then
 						_cmark="\0\0"
