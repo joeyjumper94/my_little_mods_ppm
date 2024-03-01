@@ -7,23 +7,6 @@ for k,v in ipairs{--list of DMG enumatations
 }do
 	DMG_NORAGDOLL=bit.bor(DMG_NORAGDOLL,v)
 end
-hook.Add("DoPlayerDeath",name,function(Player,_,CTakeDamageInfo)
-	local Entity=Player:GetNWEntity(name,NULL)--try to find their serverside ragdoll
-	if Entity:IsValid()then
-		Entity:Remove()
-	end
-	if ConVar:GetBool()then
-		if 0==bit.band(DMG_NORAGDOLL,CTakeDamageInfo:GetDamageType())and PPM.isValidPonyLight(Player)then--as long as it isn't dissolve damage
-			Player:SetShouldServerRagdoll(true)--mark them as a about to server ragdoll
-		end
-		timer.Simple(0,function()
-			local Entity=Player:GetRagdollEntity()or NULL--try to find the ragdoll from the normal code
-			if Entity:IsValid()then--and if we do get it
-				Entity:Remove()--remove it
-			end
-		end)
-	end
-end)
 --[[just some dummied out stuff from testing
 local tbl={}
 for k,v in pairs(_G)do
@@ -39,22 +22,31 @@ for k,v in ipairs{
 	local b=math.BinToInt(v)
 	print(b,tbl[b])
 end
-hook.Add("EntityTakeDamage",name,function(Player,CTakeDamageInfo)--player left the game
-	if Player:IsPlayer()then
+hook.Add("EntityTakeDamage",name,function(Player,CTakeDamageInfo)--called if an entity takes damage
+	if Player:IsPlayer()then--if it's a player
 		local k=CTakeDamageInfo:GetDamageType()
 		print(k,tbl[k])
 	end
 end)
 print(2147483648,tbl[2147483648])
 --]]
-hook.Add("PlayerDisconnected",name,function(Player)--player left the game
+hook.Add("DoPlayerDeath",name,function(Player,_,CTakeDamageInfo)--when a player has taken fatal damage and is about to die
 	local Entity=Player:GetNWEntity(name,NULL)--try to find their serverside ragdoll
 	if Entity:IsValid()then--if we find it
 		Entity:Remove()--remove it
-	end	
+	end
+	if ConVar:GetBool()and 0==bit.band(DMG_NORAGDOLL,CTakeDamageInfo:GetDamageType())and PPM.isValidPonyLight(Player)then--as long as it isn't dissolve damage
+		Player:SetShouldServerRagdoll(true)--mark them as a about to server ragdoll
+		timer.Simple(0,function()
+			local Entity=Player:GetRagdollEntity()or NULL--try to find the ragdoll from the normal code
+			if Entity:IsValid()then--and if we do get it
+				Entity:Remove()--remove it
+			end
+		end)
+	end
 end)
-hook.Add("CreateEntityRagdoll",name,function(Player,Entity)
-	if PPM.isValidPonyLight(Player)then--if it was a pony player who died
+hook.Add("CreateEntityRagdoll",name,function(Player,Entity)--corpse setup
+	if ConVar:GetBool()and PPM.isValidPonyLight(Player)then--if it was a pony player who died
 		Player:SetNWEntity(name,Entity)--so we can track their death ragdoll later.
 		Entity:SetNWEntity(name,Player)--and link the ragdoll back to their owner.
 		PPM.setupPony(Entity)--setup the pony for the dragoll
@@ -78,4 +70,10 @@ hook.Add("PlayerSpawn",name,function(Player)--when a player respawns
 	if Entity:IsValid()then--if we do find it,
 		Entity:Remove()--remove it
 	end
+end)
+hook.Add("PlayerDisconnected",name,function(Player)--player left the game
+	local Entity=Player:GetNWEntity(name,NULL)--try to find their serverside ragdoll
+	if Entity:IsValid()then--if we find it
+		Entity:Remove()--remove it
+	end	
 end)
