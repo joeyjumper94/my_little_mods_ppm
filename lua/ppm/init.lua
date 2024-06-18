@@ -32,7 +32,20 @@ else
 	include("serverside.lua")
 end
 local I,O=file.Find("ppm/custom_scripts/*.lua","LUA")
+local autorefresh={
+--	["sh_pony_debug.lua"]=true,
+--	["sv_pony_hull.lua"]=true,
+}
+for v in SortedPairs(autorefresh)do
+	if v:StartWith"cl_"and CLIENT--clientside only
+	or v:StartWith"sv_"and SERVER--serverside only
+	or v:StartWith"sh_"then--shared
+		MsgN("ppm/custom_scripts/",v)
+		include("ppm/custom_scripts/"..v)
+	end
+end
 for k,v in ipairs(I)do
+	if autorefresh[v]then continue end
 	if v:StartWith"cl_"and CLIENT--clientside only
 	or v:StartWith"sv_"and SERVER--serverside only
 	or v:StartWith"sh_"then--shared

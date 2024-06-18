@@ -274,6 +274,9 @@ PPM.SetModelScale=function(ent,localvals,camshift)
 	local scale=math.Clamp(ponydata.modelscale,PPM.scale_min,PPM.scale_max)
 	ent:SetModelScale(scale)
 	if camshift or SERVER and ent:IsPlayer()and PPM.camoffcetenabled then
+		local bodyheight=math.Clamp(ponydata.bodyheight,PPM.height_min,PPM.height_max)*.05
+		local neckheight=math.Clamp(ponydata.neckheight,PPM.height_min,PPM.height_max)*.05
+		local scale=scale*.9+bodyheight+neckheight
 		ent:SetViewOffset(Vector(0,0,42*scale))
 		ent:SetViewOffsetDucked(Vector(0,0,35*scale))
 	end
@@ -311,6 +314,9 @@ function PPM.setBodygroups(ent, localvals)
 		PPM.setBodygroupSafe(ent, BODYGROUP_EYELASH, 5)
 	end
 	PPM.SetModelScale(ent,localvals)
+	if PPM.SetHull then
+		PPM.SetHull(ent,localvals)
+	end
 end
 
 function PPM.setBodygroupSafe(ent, bgid, bgval)

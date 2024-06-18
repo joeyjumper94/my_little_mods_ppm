@@ -30,11 +30,14 @@ hook.Add("EntityTakeDamage",name,function(Player,CTakeDamageInfo)--called if an 
 end)
 print(2147483648,tbl[2147483648])
 --]]
-hook.Add("DoPlayerDeath",name,function(Player,_,CTakeDamageInfo)--when a player has taken fatal damage and is about to die
+local Remove=function(Player)
 	local Entity=Player:GetNWEntity(name,NULL)--try to find their serverside ragdoll
 	if Entity:IsValid()then--if we find it
 		Entity:Remove()--remove it
-	end
+	end	
+end
+hook.Add("DoPlayerDeath",name,function(Player,_,CTakeDamageInfo)--when a player has taken fatal damage and is about to die
+	Remove(Player)--delete any pre existing ragdoll
 	if ConVar:GetBool()and 0==bit.band(DMG_NORAGDOLL,CTakeDamageInfo:GetDamageType())and PPM.isValidPonyLight(Player)then--as long as it isn't dissolve damage
 		Player:SetShouldServerRagdoll(true)--mark them as a about to server ragdoll
 		timer.Simple(0,function()
@@ -65,15 +68,5 @@ hook.Add("CreateEntityRagdoll",name,function(Player,Entity)--corpse setup
 		Entity:SetCollisionGroup(COLLISION_GROUP_WEAPON)--make ragdolls not collide with players/vehicles
 	end
 end)
-hook.Add("PlayerSpawn",name,function(Player)--when a player respawns
-	local Entity=Player:GetNWEntity(name,NULL)--find their ragdoll entity if possible
-	if Entity:IsValid()then--if we do find it,
-		Entity:Remove()--remove it
-	end
-end)
-hook.Add("PlayerDisconnected",name,function(Player)--player left the game
-	local Entity=Player:GetNWEntity(name,NULL)--try to find their serverside ragdoll
-	if Entity:IsValid()then--if we find it
-		Entity:Remove()--remove it
-	end	
-end)
+hook.Add("PlayerSpawn",name,remove)--when a player respawns
+hook.Add("PlayerDisconnected",name,remove)--player left the game
