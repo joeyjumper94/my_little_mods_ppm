@@ -99,7 +99,7 @@ local PlayerSetModel=function(ply)
 	end)
 end
 hook.Add("PlayerSetModel","items_Flush",PlayerSetModel)
-hook.Add("playerSpawn","items_Flush",PlayerSetModel)
+hook.Add("PlayerSpawn","items_Flush",PlayerSetModel)
 hook.Add("OnPlayerChangedTeam","items_Flush",PlayerSetModel)
 hook.Add("PlayerDroppedWeapon","pony_weapons_autohide",function(Player,Weapon)
 	if Weapon.PPMColor then

@@ -7,7 +7,6 @@ PPM.SetHull=function(Player,localvals)
 		local bodyheight=math.Clamp(ponydata.bodyheight,PPM.height_min,PPM.height_max)*.05
 		local neckheight=math.Clamp(ponydata.neckheight,PPM.height_min,PPM.height_max)*.05
 		local scale=0.9+bodyheight+neckheight
-		print(scale*55)
 		Player:SetHull(Vector(-16,-16,0),Vector(16,16,55*scale))
 	elseif Player[name]then
 		Player:ResetHull()
@@ -16,5 +15,6 @@ PPM.SetHull=function(Player,localvals)
 end
 hook.Add("PlayerLoadout",name,PPM.SetHull)
 hook.Add("PlayerSetModel",name,PPM.SetHull)
-hook.Add("playerSpawn",name,PPM.SetHull)
+hook.Add("PlayerSpawn",name,PPM.SetHull)
 hook.Add("OnPlayerChangedTeam",name,PPM.SetHull)
+cvars.addchange
