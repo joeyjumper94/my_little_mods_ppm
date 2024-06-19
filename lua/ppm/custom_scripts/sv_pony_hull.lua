@@ -17,4 +17,8 @@ hook.Add("PlayerLoadout",name,PPM.SetHull)
 hook.Add("PlayerSetModel",name,PPM.SetHull)
 hook.Add("PlayerSpawn",name,PPM.SetHull)
 hook.Add("OnPlayerChangedTeam",name,PPM.SetHull)
-cvars.addchange
+cvars.AddChangeCallback(name,function(v,o,n)
+	for k,Player in ipairs(player.GetAll())do
+		PPM.SetHull(Player)
+	end
+end,name)
