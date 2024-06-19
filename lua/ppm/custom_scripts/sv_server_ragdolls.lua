@@ -30,14 +30,14 @@ hook.Add("EntityTakeDamage",name,function(Player,CTakeDamageInfo)--called if an 
 end)
 print(2147483648,tbl[2147483648])
 --]]
-local Remove=function(Player)
+local remove=function(Player)
 	local Entity=Player:GetNWEntity(name,NULL)--try to find their serverside ragdoll
 	if Entity:IsValid()then--if we find it
 		Entity:Remove()--remove it
 	end	
 end
 hook.Add("DoPlayerDeath",name,function(Player,_,CTakeDamageInfo)--when a player has taken fatal damage and is about to die
-	Remove(Player)--delete any pre existing ragdoll
+	remove(Player)--delete any pre existing ragdoll
 	if ConVar:GetBool()and 0==bit.band(DMG_NORAGDOLL,CTakeDamageInfo:GetDamageType())and PPM.isValidPonyLight(Player)then--as long as it isn't dissolve damage
 		Player:SetShouldServerRagdoll(true)--mark them as a about to server ragdoll
 		timer.Simple(0,function()
