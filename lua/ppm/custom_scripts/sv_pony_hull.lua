@@ -2,7 +2,7 @@ local name="ppm_pony_hull"
 local ConVar=CreateConVar(name,"1",bit.bor(FCVAR_ARCHIVE,FCVAR_REPLICATED),"enable modified hull sizes for ponies",0,1)
 PPM.SetHull=function(Player,localvals)
 	timer.Simple(0,function()
-		if Player:isValid()then
+		if Player:IsValid()then
 			if Player:IsPlayer()and PPM.isValidPonyLight(Player)and ConVar:GetBool()then
 				Player[name]=true
 				local ponydata=PPM.getPonyValues(Player,localvals)
