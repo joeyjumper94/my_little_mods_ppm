@@ -73,6 +73,7 @@ function PPM.loadResources()
 		{"models/ppm/cmarks/smiley.vtf"},
 		{"models/ppm/cmarks/dawsome.vtf"},
 		{"models/ppm/cmarks/weegee.vtf"},
+		{"models/ppm/cmarks/celestia.vtf"},
 	}
 	-- Procedurally generate the material objects from their paths
 	for i,t in ipairs(PPM.m_cmarks) do
