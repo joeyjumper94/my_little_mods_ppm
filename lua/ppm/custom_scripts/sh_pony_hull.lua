@@ -6,14 +6,16 @@ end
 local ConVar=CreateConVar(name,"1",FCVAR_ARCHIVE_REPLICATED,"enable modified hull sizes for ponies",0,1)
 local SetHull=function(Player,scale1,scale2)
 	timer.Simple(0,function()
-		if Player:IsValid()then
-			if scale1!=0 and scale2!=0 then
-				Player:SetHull(Vector(-16,-16,0),Vector(16,16,50*scale1))
-				Player:SetHullDuck(Vector(-16,-16,0),Vector(16,16,40*scale2))
-			else
-				Player:ResetHull()
+		timer.Simple(0,function()--delay by 2 frames
+			if Player:IsValid()then
+				if scale1!=1 or scale2!=1 then
+					Player:SetHull(Vector(-16,-16,0),Vector(16,16,50*scale1))
+					Player:SetHullDuck(Vector(-16,-16,0),Vector(16,16,40*scale2))
+				else
+					Player:ResetHull()
+				end
 			end
-		end
+		end)
 	end)
 end
 if SERVER then
@@ -38,13 +40,13 @@ if SERVER then
 			net.WriteFloat(scale2)
 			net.Broadcast()
 		elseif Player[name]then
-			SetHull(Player,0,0)
+			SetHull(Player,1,1)
 			Player[name]=nil
 			net.Start(name)
 			net.WriteUInt(1,8)
 			net.WritePlayer(Player)
-			net.WriteFloat(0)
-			net.WriteFloat(0)
+			net.WriteFloat(1)
+			net.WriteFloat(1)
 			net.Broadcast()
 		end
 	end
