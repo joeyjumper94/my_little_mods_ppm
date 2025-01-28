@@ -182,7 +182,8 @@ if CLIENT then
 		else
 			file.Delete("ppm/cmark_cache/"..filename)
 		end
-		return PPM.SaveToCache( PPM.CacheGroups.OC_DATA,LocalPlayer(),filename,saveframe )
+		local sig=PPM.SaveToCache( PPM.CacheGroups.OC_DATA,LocalPlayer(),filename,saveframe )
+		return sig
 	end
 	local bool_sending=false
 	function PPM.Load(filename)

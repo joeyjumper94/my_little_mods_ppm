@@ -2,5 +2,5 @@
         "title"     :   "My little Mods PPM",
         "type"      :   "model",
         "tags"      :   [ "cartoon", "roleplay" ],
-        "ignore"    :   [".zip"]
+        "ignore"    :   ["*.zip"]
 }

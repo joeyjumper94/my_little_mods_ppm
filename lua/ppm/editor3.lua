@@ -551,7 +551,8 @@ function PPM.colorcircles(id)
 	return Color(math.sin(id-30)*255,math.sin(id)*255,math.sin(id+30)*255)
 end
 function PPM.Save_settings() 
-	return PPM.Save("_current.txt",LocalPlayer().ponydata) 
+	local sig=PPM.Save("_current.txt",LocalPlayer().ponydata) 
+	return sig
 end
 function PPM.Load_settings() 
 	if (file.Exists("ppm/_current.txt","DATA")) then

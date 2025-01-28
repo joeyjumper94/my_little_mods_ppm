@@ -22,7 +22,12 @@ if CLIENT then
 			return
 		end
 		b=d
-		PPM.UpdateSignature(PPM.Save_settings())
+		timer.Create("PPM.UpdateSignature(PPM.Save_settings())",1,10,function()
+			if LocalPlayer().ponydata then
+				PPM.UpdateSignature(PPM.Save_settings())
+				timer.Remove"PPM.UpdateSignature(PPM.Save_settings())"
+			end
+		end)
 	end)
 	return
 end
@@ -39,7 +44,12 @@ if game.SinglePlayer() then
 			return
 		end
 		b=d
-		PPM.NetworkLua(ply,'PPM.UpdateSignature(PPM.Save_settings())')
+		PPM.NetworkLua(ply,[[timer.Create("PPM.UpdateSignature(PPM.Save_settings())",1,10,function()
+			if LocalPlayer().ponydata then
+				PPM.UpdateSignature(PPM.Save_settings())
+				timer.Remove"PPM.UpdateSignature(PPM.Save_settings())"
+			end
+		end)]])
 	end)
 end
 util.AddNetworkString("ppm_lua_net")
